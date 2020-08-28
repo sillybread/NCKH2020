@@ -1,24 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import SChart3D from './components/SChart.js'
+
+function sillyStuff(component){
+  setInterval(function(){
+    component.setState({bg_color: component.state.bg_color + Math.random()*100});
+  },1000)
+}
 
 export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <SChart3D ref={self => {sillyStuff(self)}} />
     </div>
   );
 }
