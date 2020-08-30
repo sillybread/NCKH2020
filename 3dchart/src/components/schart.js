@@ -2,16 +2,18 @@ import React,{Component} from 'react';
 import * as THREE from 'three';
 import OrbitControls from 'orbit-controls-es6';
 import './SChart.css'
+import Axios from 'axios';
 export default class SChart3D extends Component{
     state = {
-        map: [],
-        slice_mode: 0,
+        aMap: [],
+        aMesh: [],
+        iSliceMode: 0,
         bg_color: 0xaaffaa,
     }
 
-    // constructor(props){
-    //     super(props);
-    // }
+    constructor(props){
+        super(props);
+    }
 
     componentDidMount() {
         var scene = new THREE.Scene();
@@ -72,12 +74,6 @@ export default class SChart3D extends Component{
 
     componentDidUpdate(){
         this.scene.background = new THREE.Color(this.state.bg_color);
-        let lmap = this.state.map;
-        for (let ii=0;ii<lmap.length;ii++)
-            for (let jj=0;jj<lmap[0].length;jj++)
-                for (let kk=0;kk<lmap[0][0].length;kk++){
-                    this.meshCube(ii,jj,kk,lmap[ii][jj][kk]);
-                }
     }
 
     render(){
