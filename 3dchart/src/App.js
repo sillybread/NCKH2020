@@ -18,7 +18,7 @@ export default function App() {
   //Axios.get("http://localhost:5000/").then((res) => {console.log(res)});
   return (
     <div>
-      <SChart3D  X="3" Y="5" Z="7"/>
+      <SChart3D  X="20" Y="3" Z="3"/>
     </div>
   );
 }

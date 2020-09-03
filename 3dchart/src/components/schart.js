@@ -41,10 +41,10 @@ export default class SChart3D extends Component {
         controls.dampingFactor = 0.05;
         controls.screenSpacePanning = false;
         controls.minDistance = 10;
-        controls.maxDistance = 40;
-        controls.maxPolarAngle = Math.PI * 2;
+        controls.maxDistance = 30;
+        controls.maxPolarAngle = Math.PI/2;
 
-        var axesHelper = new THREE.AxesHelper(9999);
+        var axesHelper = new THREE.AxesHelper(30);
         scene.add(axesHelper);
 
         window.addEventListener('resize', function () {
@@ -72,7 +72,7 @@ export default class SChart3D extends Component {
         for (let ii = 0; ii < this.size; ii++) {
             let pos = this.i2p(ii);
             console.log(pos.x + " " + pos.y + " " + pos.z + " " + ii);
-            this.updateCube(ii, ii*1.7-55);
+            this.updateCube(ii, ii*(180/this.size)-55);
         }
 
         var animate = function () {
