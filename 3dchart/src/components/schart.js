@@ -1,19 +1,23 @@
-import React,{Component} from 'react';
+import React, {
+    Component
+} from 'react';
 import * as THREE from 'three';
 import OrbitControls from 'orbit-controls-es6';
-import './SChart.css'
-import Axios from 'axios';
-export default class SChart3D extends Component{
+import './SChart.css';
+//import Axios from 'axios';
+
+export default class SChart3D extends Component {
     state = {
         aMap: [],
-        aMesh: [],
         iSliceMode: 0,
         bg_color: 0xaaffaa,
     }
 
-    constructor(props){
-        super(props);
-    }
+    aMesh = [];
+    X = parseInt(this.props.X);
+    Y = parseInt(this.props.Y);
+    Z = parseInt(this.props.Z);
+    size = this.X * this.Y * this.Z;
 
     componentDidMount() {
         var scene = new THREE.Scene();
@@ -25,62 +29,106 @@ export default class SChart3D extends Component{
             1,
             1000
         );
-        camera.position.set( 17.7, 19.8, 30 );
+        camera.up.set(0, 0, 1);
+        camera.position.set(17.7, 19.8, 30);
 
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
-        this.container.appendChild(renderer.domElement);    
-        
-        var controls = new OrbitControls( camera, renderer.domElement );
-		controls.enableDamping = true;
-		controls.dampingFactor = 0.05;
-		controls.screenSpacePanning = false;
-		controls.minDistance = 10;
-		controls.maxDistance = 40;
-        controls.maxPolarAngle = Math.PI / 2;
-        
-        var axesHelper = new THREE.AxesHelper(9999);
-        scene.add( axesHelper );
-        
-        window.addEventListener( 'resize', function(){
-            camera.aspect = window.innerWidth / window.innerHeight;
-			camera.updateProjectionMatrix();
-			renderer.setSize( window.innerWidth, window.innerHeight );
-        }, false );
+        this.container.appendChild(renderer.domElement);
 
-        var animate = function() {
+        var controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.screenSpacePanning = false;
+        controls.minDistance = 10;
+        controls.maxDistance = 40;
+        controls.maxPolarAngle = Math.PI * 2;
+
+        var axesHelper = new THREE.AxesHelper(9999);
+        scene.add(axesHelper);
+
+        window.addEventListener('resize', function () {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }, false);
+
+        for (let ii = 0; ii < this.size; ii++) {
+            let geometry = new THREE.BoxGeometry(1, 1, 1);
+            let color = new THREE.Color(0xff00ff);
+            let material = new THREE.MeshBasicMaterial({
+                color: color
+            });
+            let mesh = new THREE.Mesh(geometry, material)
+            this.scene.add(mesh);
+            let pos = this.i2p(ii);
+            let vector = new THREE.Vector3(pos.x, pos.y, pos.z);
+            mesh.position.copy(vector);
+            geometry.dispose();
+            material.dispose();
+            this.aMesh.push(mesh);
+        }
+
+        for (let ii = 0; ii < this.size; ii++) {
+            let pos = this.i2p(ii);
+            console.log(pos.x + " " + pos.y + " " + pos.z + " " + ii);
+            this.updateCube(ii, ii*1.7-55);
+        }
+
+        var animate = function () {
             requestAnimationFrame(animate);
             controls.update();
             renderer.render(scene, camera);
         };
         animate();
-    }    
-    
-    meshCube( x, y, z, tempC){
-        let geometry = new THREE.BoxGeometry( 1, 1, 1);
+    }
+
+
+    i2p(iIndex) {
+        let rX = iIndex % this.X;
+        let iX = Math.trunc(iIndex / this.X);
+
+        let rY = iX % this.Y;
+        let iY = Math.trunc(iX / this.Y);
+
+        let rZ = iY % this.Z;
+        return {
+            x: rX,
+            y: rY,
+            z: rZ
+        }
+    }
+
+    p2i(x, y, z) {
+        return x + y * this.X + z * this.Y * this.X;
+    }
+
+    updateCube(index, tempC) {
         //temperature -55 ~ 125
         //hue 0 ~ 255
-        let hue = 256-(tempC+55)*256/(125+55);
-        let color = new THREE.Color("hsl("+hue+",100%,50%)");
-        let material = new THREE.MeshBasicMaterial({color: color});
-        let mesh = new THREE.Mesh( geometry, material )
-        this.scene.add(mesh);
-        let vector = new THREE.Vector3(x,y,z);
-        mesh.position.copy(vector);
-        geometry.dispose();
-        material.dispose();
-        return mesh;
+        let hue = 256 - (tempC + 55) * 256 / (125 + 55);
+        let color = new THREE.Color("hsl(" + hue + ",100%,50%)");
+        this.aMesh[index].material.color = color;
+        //this.aMesh[index].updateMatrix();
     };
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         this.scene.background = new THREE.Color(this.state.bg_color);
     }
 
-    render(){
-        return(
-            <div
-                style={{width: 0, height: 0}} 
-                ref={thisDiv => {this.container = thisDiv}}
+    render() {
+        return ( <
+            div style = {
+                {
+                    width: 0,
+                    height: 0
+                }
+            }
+            ref = {
+                thisDiv => {
+                    this.container = thisDiv
+                }
+            }
             />
         );
     }

@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
 import SChart3D from './components/SChart.js'
-import Axios from 'axios';
-
+//import Axios from 'axios';
+/*
 function Sample(){
   let rd = function(){
     return Math.random()*180-55;
@@ -12,12 +12,13 @@ function Sample(){
   }
   return JSON.stringify(map);
 }
+*/
 
 export default function App() {
-  Axios.get("http://localhost:5000/").then((res) => {console.log(res)});
+  //Axios.get("http://localhost:5000/").then((res) => {console.log(res)});
   return (
     <div>
-      <SChart3D />
+      <SChart3D  X="3" Y="5" Z="7"/>
     </div>
   );
 }
