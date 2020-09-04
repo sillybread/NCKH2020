@@ -4,7 +4,7 @@ import React, {
 import * as THREE from 'three';
 import OrbitControls from 'orbit-controls-es6';
 import './SChart.css';
-//import Axios from 'axios';
+import Axios from 'axios';
 
 export default class SChart3D extends Component {
     state = {
@@ -42,7 +42,7 @@ export default class SChart3D extends Component {
         controls.screenSpacePanning = false;
         controls.minDistance = 10;
         controls.maxDistance = 30;
-        controls.maxPolarAngle = Math.PI/2;
+        controls.maxPolarAngle = Math.PI;
 
         var axesHelper = new THREE.AxesHelper(30);
         scene.add(axesHelper);
@@ -70,10 +70,18 @@ export default class SChart3D extends Component {
         }
 
         for (let ii = 0; ii < this.size; ii++) {
-            let pos = this.i2p(ii);
-            console.log(pos.x + " " + pos.y + " " + pos.z + " " + ii);
+            //let pos = this.i2p(ii);
+            //console.log(pos.x + " " + pos.y + " " + pos.z + " " + ii);
             this.updateCube(ii, ii*(180/this.size)-55);
         }
+        
+        var obj = this;
+        let fetch = function() {
+            Axios.get(obj.props.data).then((response) => {
+                obj.setState({aMap: response.data.data})
+            });
+        }
+        setInterval(fetch, 1000);
 
         var animate = function () {
             requestAnimationFrame(animate);
@@ -109,11 +117,13 @@ export default class SChart3D extends Component {
         let hue = 256 - (tempC + 55) * 256 / (125 + 55);
         let color = new THREE.Color("hsl(" + hue + ",100%,50%)");
         this.aMesh[index].material.color = color;
-        //this.aMesh[index].updateMatrix();
     };
 
     componentDidUpdate() {
         this.scene.background = new THREE.Color(this.state.bg_color);
+        for (let ii = 0; ii < this.size; ii++) {
+            this.updateCube(ii, this.state.aMap[ii]);
+        }
     }
 
     render() {
