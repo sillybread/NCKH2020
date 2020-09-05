@@ -80,7 +80,7 @@ export default class SChart3D extends Component {
                     aMap: response.data.data
                 })
             });
-            setTimeout(fetch, 1000);
+            setTimeout(fetch, 2000);
         }
         fetch();
 
@@ -117,22 +117,18 @@ export default class SChart3D extends Component {
         //hue 0 ~ 255
         let hue = 256 - (tempC + 55) * 256 / (125 + 55);
         this.aMesh[index].material.color.set("hsl(" + hue + ",100%,50%)");
+        this.aMesh[index].visible = true;
     };
 
     componentDidUpdate() {
         this.scene.background.setHex= this.state.bg_color;
         if (this.state.aMap.length !== this.size) return;
         for (let ii = 0; ii < this.size; ii++) {
-            if (this.state.iSliceLevel>0){
-                let sSliceAxis = this.state.sSliceAxis.toLowerCase();
-                let iSliceLevel = this[sSliceAxis.toUpperCase()] - this.state.iSliceLevel;
-                if (this.i2p(ii)[sSliceAxis] >= iSliceLevel){
-                    this.aMesh[ii].visible = false;
-                    continue;
-                }
+            if (this.state.iSliceLevel>0 && this.i2p(ii)[this.state.sSliceAxis.toLowerCase()] >= this[this.state.sSliceAxis.toUpperCase()] - this.state.iSliceLevel){
+                this.aMesh[ii].visible = false;
+                continue;
             }
             this.updateCube(ii, this.state.aMap[ii]);
-            this.aMesh[ii].visible = true;
         }
     }
 
