@@ -108,7 +108,7 @@ void handleRead(){
 
 
 void handleReadFile(String fileName){
-    File f = SPIFFS.open("/index.htm","r");
+    File f = SPIFFS.open(fileName,"r");
     Serial.println("file open "+String((f!=NULL)?"success":"failed"));
     
     String sContent;
@@ -116,11 +116,12 @@ void handleReadFile(String fileName){
       sContent += (char)f.read();
     }
     f.close();
-    server.send(200,"text/html",sContent);
+    server.send(200,"text/plain",sContent);
 }
 
 
 void handleNotFound() {
+  
   digitalWrite(led, ON);
   String message = "File Not Found\n\n";
   message += "URI: ";
@@ -135,10 +136,6 @@ void handleNotFound() {
   }
   server.send(404, "text/plain", message);
   digitalWrite(led, OFF);
-}
-
-void handleRoot(){
-  handleReadFile("/index.htm");
 }
 
 void handleQuery(){
@@ -185,7 +182,8 @@ void setup(void) {
   digitalWrite(led, OFF);
   
   WiFi.mode(WIFI_AP_STA);
-  WiFi.begin(ssid, password);
+  //WiFi.begin(ssid, password);
+  WiFi.begin("LRC", "");
 
   int iCounter = 0;
   while (WiFi.status() != WL_CONNECTED) {
@@ -210,14 +208,37 @@ void setup(void) {
   if (MDNS.begin("esp8266")) {
     Serial.println("MDNS responder started");
   }
-  server.on("/", handleRoot);
+    
+  server.on("/", [](){handleReadFile("/index.html");});
   server.on("/write", handleWrite);
   server.on("/read", handleRead);
   server.on("/eep", handleDumpEEP);
   server.on("/rs", handleRestart);
   server.on("/sensor", handleSensor);
   server.onNotFound(handleNotFound);
+/*
+  server.on("/about.html", [](){handleReadFile("/about.html");});
+  server.on("/all.min.js", [](){handleReadFile("/all.min.js");});
+  server.on("/bootstrap.min.css", [](){handleReadFile("/bootstrap.min.css");});
+  server.on("/bootstrap.min.js", [](){handleReadFile("/bootstrap.min.js");});
+  server.on("/Chart.min.js", [](){handleReadFile("/Chart.min.js");});
+  server.on("/device.html", [](){handleReadFile("/device.html");});
+  server.on("/favicon.ico", [](){handleReadFile("/favicon.ico");});
+  server.on("/fl.au3", [](){handleReadFile("/fl.au3");});
+  server.on("/index.html", [](){handleReadFile("/index.html");});
+  server.on("/index2.htm", [](){handleReadFile("/index2.htm");});
+  server.on("/jquery-3.5.1.slim.min.js", [](){handleReadFile("/jquery-3.5.1.slim.min.js");});
+  server.on("/khan.jpg", [](){handleReadFile("/khan.jpg");});
+  server.on("/login.html", [](){handleReadFile("/login.html");});
+  server.on("/logo.png", [](){handleReadFile("/logo.png");});
+  server.on("/mqtt.html", [](){handleReadFile("/mqtt.html");});
+  server.on("/nguyen.jpg", [](){handleReadFile("/nguyen.jpg");});
+  server.on("/popper.min.js", [](){handleReadFile("/popper.min.js");});
+  server.on("/scripts.js", [](){handleReadFile("/scripts.js");});
+  server.on("/toan.jpg", [](){handleReadFile("/toan.jpg");});
+  server.on("/wifi.html", [](){handleReadFile("/wifi.html");});
 
+*/
   server.begin();
   Serial.println("HTTP server started");
 }

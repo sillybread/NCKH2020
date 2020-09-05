@@ -9,7 +9,8 @@ import Axios from 'axios';
 export default class SChart3D extends Component {
     state = {
         aMap: [],
-        iSliceMode: 0,
+        sSliceAxis: "x",
+        iSliceLevel: 0,
         bg_color: 0xaaffaa,
     }
 
@@ -30,7 +31,7 @@ export default class SChart3D extends Component {
             1000
         );
         camera.up.set(0, 0, 1);
-        camera.position.set(17.7, 19.8, 30);
+        camera.position.set(30, 30, 30);
 
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -55,33 +56,33 @@ export default class SChart3D extends Component {
 
         for (let ii = 0; ii < this.size; ii++) {
             let geometry = new THREE.BoxGeometry(1, 1, 1);
-            let color = new THREE.Color(0xff00ff);
-            let material = new THREE.MeshBasicMaterial({
-                color: color
-            });
+            let material = new THREE.MeshBasicMaterial();
             let mesh = new THREE.Mesh(geometry, material)
             this.scene.add(mesh);
             let pos = this.i2p(ii);
-            let vector = new THREE.Vector3(pos.x, pos.y, pos.z);
-            mesh.position.copy(vector);
+            mesh.position.set(pos.x, pos.y, pos.z);
             geometry.dispose();
             material.dispose();
+            mesh.visible = false;
             this.aMesh.push(mesh);
         }
 
-        for (let ii = 0; ii < this.size; ii++) {
+        //for (let ii = 0; ii < this.size; ii++) {
             //let pos = this.i2p(ii);
             //console.log(pos.x + " " + pos.y + " " + pos.z + " " + ii);
-            this.updateCube(ii, ii*(180/this.size)-55);
-        }
-        
+            //this.updateCube(ii, ii * (180 / this.size) - 55);
+        //}
+
         var obj = this;
-        let fetch = function() {
-            Axios.get(obj.props.data).then((response) => {
-                obj.setState({aMap: response.data.data})
+        let fetch = function () {
+            Axios.get(obj.props.src).then((response) => {
+                obj.setState({
+                    aMap: response.data.data
+                })
             });
+            setTimeout(fetch, 1000);
         }
-        setInterval(fetch, 1000);
+        fetch();
 
         var animate = function () {
             requestAnimationFrame(animate);
@@ -115,14 +116,23 @@ export default class SChart3D extends Component {
         //temperature -55 ~ 125
         //hue 0 ~ 255
         let hue = 256 - (tempC + 55) * 256 / (125 + 55);
-        let color = new THREE.Color("hsl(" + hue + ",100%,50%)");
-        this.aMesh[index].material.color = color;
+        this.aMesh[index].material.color.set("hsl(" + hue + ",100%,50%)");
     };
 
     componentDidUpdate() {
-        this.scene.background = new THREE.Color(this.state.bg_color);
+        this.scene.background.setHex= this.state.bg_color;
+        if (this.state.aMap.length !== this.size) return;
         for (let ii = 0; ii < this.size; ii++) {
+            if (this.state.iSliceLevel>0){
+                let sSliceAxis = this.state.sSliceAxis.toLowerCase();
+                let iSliceLevel = this[sSliceAxis.toUpperCase()] - this.state.iSliceLevel;
+                if (this.i2p(ii)[sSliceAxis] >= iSliceLevel){
+                    this.aMesh[ii].visible = false;
+                    continue;
+                }
+            }
             this.updateCube(ii, this.state.aMap[ii]);
+            this.aMesh[ii].visible = true;
         }
     }
 
