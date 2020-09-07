@@ -16,6 +16,7 @@ function status(props) {
                     <Select
                         className="react-select bg-white"
                         classNamePrefix="react-select"
+                        defaultValue={{ value: 'WH0001', label: 'Room 1' }}
                         options={[
                             { value: 'WH0001', label: 'Room 1' },
                             { value: 'WH0002', label: 'Ware House 2' },
