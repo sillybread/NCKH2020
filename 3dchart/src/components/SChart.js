@@ -21,13 +21,12 @@ export default class SChart3D extends Component {
     size = this.X * this.Y * this.Z;
 
     componentDidMount() {
-        let container = this.container;
         var scene = new THREE.Scene();
         this.scene = scene;
         scene.background = new THREE.Color(this.state.bg_color);
         var camera = new THREE.PerspectiveCamera(
             60,
-            container.offsetWidth / container.offsetHeight,
+            window.innerWidth / window.innerHeight,
             1,
             1000
         );
@@ -35,8 +34,8 @@ export default class SChart3D extends Component {
         camera.position.set(30, 30, 30);
 
         var renderer = new THREE.WebGLRenderer();
-        renderer.setSize(container.offsetWidth, container.offsetHeight);
-        container.appendChild(renderer.domElement);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        this.container.appendChild(renderer.domElement);
 
         var controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
@@ -69,9 +68,9 @@ export default class SChart3D extends Component {
         }
 
         //for (let ii = 0; ii < this.size; ii++) {
-        //let pos = this.i2p(ii);
-        //console.log(pos.x + " " + pos.y + " " + pos.z + " " + ii);
-        //this.updateCube(ii, ii * (180 / this.size) - 55);
+            //let pos = this.i2p(ii);
+            //console.log(pos.x + " " + pos.y + " " + pos.z + " " + ii);
+            //this.updateCube(ii, ii * (180 / this.size) - 55);
         //}
 
         var obj = this;
@@ -125,7 +124,7 @@ export default class SChart3D extends Component {
         this.scene.background.setHex(this.state.bg_color);
         if (this.state.aMap.length !== this.size) return;
         for (let ii = 0; ii < this.size; ii++) {
-            if (this.state.iSliceLevel > 0 && this.i2p(ii)[this.state.sSliceAxis.toLowerCase()] >= this[this.state.sSliceAxis.toUpperCase()] - this.state.iSliceLevel) {
+            if (this.state.iSliceLevel>0 && this.i2p(ii)[this.state.sSliceAxis.toLowerCase()] >= this[this.state.sSliceAxis.toUpperCase()] - this.state.iSliceLevel){
                 this.aMesh[ii].visible = false;
                 continue;
             }
@@ -135,11 +134,15 @@ export default class SChart3D extends Component {
 
     render() {
         return ( <
-            div 
-            className = "chartContainer"
+            div style = {
+                {
+                    width: 0,
+                    height: 0
+                }
+            }
             ref = {
                 thisDiv => {
-                    this.container = thisDiv;
+                    this.container = thisDiv
                 }
             }
             />
