@@ -23,7 +23,6 @@ class TabsChart extends Component {
         }
     };
     changeView = (active) => {
-<<<<<<< HEAD
         if (active === 1) return <StatusChart />;
         if (active === 3)
             return (
@@ -32,26 +31,12 @@ class TabsChart extends Component {
                         X="10"
                         Y="10"
                         Z="10"
-=======
-        if (active == 1) return <StatusChart />;
-        if (active == 3)
-            return (
-                <div>
-                    <SChart3D
-                        X="5"
-                        Y="5"
-                        Z="5"
->>>>>>> 1be80c17c98d15de9fdd485e15056335df29721e
                         src="http://localhost:8080/api/sensor/demoTemperature"
                         ref={(me) => {
                             me &&
                                 me.setState({
                                     sSliceAxis: 'z',
-<<<<<<< HEAD
                                     iSliceLevel: 0,
-=======
-                                    iSliceLevel: 3,
->>>>>>> 1be80c17c98d15de9fdd485e15056335df29721e
                                     bg_color: 0xffffff,
                                 });
                         }}
