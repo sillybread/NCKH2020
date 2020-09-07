@@ -28,9 +28,9 @@ class TabsChart extends Component {
             return (
                 <div>
                     <SChart3D
-                        X="5"
-                        Y="5"
-                        Z="5"
+                        X="10"
+                        Y="10"
+                        Z="10"
                         src="http://localhost:8080/api/sensor/demoTemperature"
                         ref={(me) => {
                             me &&
