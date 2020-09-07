@@ -11,11 +11,7 @@ exports.createSensor = (req, res) => {
     });
 };
 exports.getTemperature = (req, res) => {
-<<<<<<< HEAD
   let mapSize = 10;
-=======
-  let mapSize = 5;
->>>>>>> 1be80c17c98d15de9fdd485e15056335df29721e
   let rd = function () {
     return Math.trunc(Math.random() * 180 - 55);
   };
