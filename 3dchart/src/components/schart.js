@@ -80,7 +80,7 @@ export default class SChart3D extends Component {
                     aMap: response.data.data
                 })
             });
-            setTimeout(fetch, 2000);
+            setTimeout(fetch, 1000);
         }
         fetch();
 
@@ -121,7 +121,7 @@ export default class SChart3D extends Component {
     };
 
     componentDidUpdate() {
-        this.scene.background.setHex= this.state.bg_color;
+        this.scene.background.setHex(this.state.bg_color);
         if (this.state.aMap.length !== this.size) return;
         for (let ii = 0; ii < this.size; ii++) {
             if (this.state.iSliceLevel>0 && this.i2p(ii)[this.state.sSliceAxis.toLowerCase()] >= this[this.state.sSliceAxis.toUpperCase()] - this.state.iSliceLevel){
