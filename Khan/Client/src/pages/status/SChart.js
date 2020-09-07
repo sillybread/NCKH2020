@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
 import OrbitControls from 'orbit-controls-es6';
+<<<<<<< HEAD
 import './SChart.css';
 import Axios from 'axios';
 import Slider from 'rc-slider';
@@ -9,6 +10,9 @@ import { Form, FormGroup, Input } from 'reactstrap';
 
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const MySlider = createSliderWithTooltip(Slider);
+=======
+import Axios from 'axios';
+>>>>>>> 1be80c17c98d15de9fdd485e15056335df29721e
 
 export default class SChart3D extends Component {
     state = {
@@ -24,6 +28,7 @@ export default class SChart3D extends Component {
     Z = parseInt(this.props.Z);
     size = this.X * this.Y * this.Z;
 
+<<<<<<< HEAD
     getMaxSliceLever() {
         switch (this.state.sSliceAxis) {
             case 'x':
@@ -48,13 +53,31 @@ export default class SChart3D extends Component {
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(container.offsetWidth, container.offsetHeight);
         container.appendChild(renderer.domElement);
+=======
+    componentDidMount() {
+        var scene = new THREE.Scene();
+        this.scene = scene;
+        scene.background = new THREE.Color(this.state.bg_color);
+        var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+        camera.up.set(0, 0, 1);
+        camera.position.set(30, 30, 30);
+
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        this.container.appendChild(renderer.domElement);
+>>>>>>> 1be80c17c98d15de9fdd485e15056335df29721e
 
         var controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
         controls.screenSpacePanning = false;
+<<<<<<< HEAD
         controls.minDistance = 5;
         controls.maxDistance = 50;
+=======
+        controls.minDistance = 10;
+        controls.maxDistance = 30;
+>>>>>>> 1be80c17c98d15de9fdd485e15056335df29721e
         controls.maxPolarAngle = Math.PI;
 
         var axesHelper = new THREE.AxesHelper(30);
@@ -63,9 +86,15 @@ export default class SChart3D extends Component {
         window.addEventListener(
             'resize',
             function () {
+<<<<<<< HEAD
                 camera.aspect = container.offsetWidth / container.offsetHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(container.offsetWidth, container.offsetHeight);
+=======
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(200, 200);
+>>>>>>> 1be80c17c98d15de9fdd485e15056335df29721e
             },
             false
         );
@@ -153,6 +182,7 @@ export default class SChart3D extends Component {
 
     render() {
         return (
+<<<<<<< HEAD
             <div>
                 <div
                     className="chartContainer"
@@ -187,6 +217,17 @@ export default class SChart3D extends Component {
                         }}></MySlider>
                 </div>
             </div>
+=======
+            <div
+                style={{
+                    width: 0,
+                    height: 0,
+                }}
+                ref={(thisDiv) => {
+                    this.container = thisDiv;
+                }}
+            />
+>>>>>>> 1be80c17c98d15de9fdd485e15056335df29721e
         );
     }
 }
