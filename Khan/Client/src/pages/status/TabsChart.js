@@ -23,8 +23,8 @@ class TabsChart extends Component {
         }
     };
     changeView = (active) => {
-        if (active == 1) return <StatusChart />;
-        if (active == 3)
+        if (active === 1) return <StatusChart />;
+        if (active === 3)
             return (
                 <div>
                     <SChart3D

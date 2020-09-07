@@ -94,7 +94,7 @@ const SetTemperatureNoti = () => {
                     Save
                 </Button>
                 <h6 className="header-title mb-4">Set Warning Temperature</h6>
-                <Range value={[20, 50]} />
+                <Range defaultValue={[20, 50]} />
             </CardBody>
         </Card>
     );
