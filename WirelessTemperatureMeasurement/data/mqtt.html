@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="./favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ware House Device</title>
+    <link rel="stylesheet" href="./bootstrap.min.css" />
+    <script src="./all.min.js"></script>
+    <script  src="./Chart.min.js"></script>
+  </head>
+  <body class="bg-dark">
+    <div class="container">
+      <nav
+      class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm p-3 mb-5 rounded"
+    >
+      <a class="navbar-brand font-weight-bold" href="./index.html">WAREHOUSE</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item mr-2">
+            <a class="nav-link" href="./index.html"
+              ><i class="fas fa-thermometer-three-quarters mr-2"></i>Status <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item mr-2">
+            <a class="nav-link" href="./wifi.html"><i class="fas fa-wifi mr-2"></i>Wifi</a>
+          </li>
+          <li class="nav-item mr-2 active">
+            <a class="nav-link" href="./mqtt.html"><i class="fas fa-plug mr-2"></i>Mqtt</a>
+          </li>
+          <li class="nav-item mr-2 ">
+            <a class="nav-link" href="./device.html"><i class="fas fa-microchip mr-2"></i>Device</a>
+          </li>
+          <li class="nav-item mr-2 ">
+            <a class="nav-link" href="./about.html"><i class="fas fa-address-card mr-2"></i>About</a>
+          </li>
+        </ul>
+        <a class="nav-link text-light" href="./login.html"
+            ><i class="fas fa-power-off mr-2"></i>logout</a
+          >
+      </div>
+    </nav>
+      <!-- content -->
+      <div class="row text-light">
+        <div class="col-xl-6">
+          <div class="shadow p-3 mb-5 rounded p-5">
+            <h6 class="font-weight-bold text-center mb-5">MQTT CONFIG</h6>
+            <form>
+              <table class="table table-borderless table-hover table-dark">
+                <tbody>
+                  <tr>
+                    <th><i class="fa fa-server mr-3"></i>Server</th>
+                    <td><input class="form-control form-control-sm bg-dark border-0 text-light" type="text" value="tcp://127.0.0.1"></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th><i class="fa fa-map-signs mr-3"></i>Port</th>
+                    <td><input class="form-control form-control-sm bg-dark border-0 text-light" type="text" value="1883"></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th><i class="fa fa-reply mr-3"></i>Subscribe</th>
+                    <td><input class="form-control form-control-sm bg-dark border-0 text-light" type="text" value="tranvikhan@gmail.com/demo"></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th><i class="fa fa-paper-plane mr-3"></i>Publish</th>
+                    <td><input class="form-control form-control-sm bg-dark border-0 text-light" type="text" value="tranvikhan@gmail.com/demo"></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th><i class="fa fa-user-circle mr-3"></i>Username</th>
+                    <td><input class="form-control form-control-sm bg-dark border-0 text-light" type="text" value="tranvikhan@gmail.com"></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th><i class="fa fa-lock mr-3"></i>Password</th>
+                    <td><input class="form-control form-control-sm bg-dark border-0 text-light" type="text" value="123456"></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+              <button type="submit" class="btn btn-primary"><i class="fa fa-save mr-2"></i>Save</button>
+            </form>
+          </div>
+        </div>
+        <div class="col-xl-6">
+          <div class="shadow p-3 mb-5 rounded p-5">
+            <h6 class="font-weight-bold text-center mb-5">LOG</h6>
+            <textarea class="form-control form-control-sm bg-dark border-secondary text-secondary" rows="18">connect to.......</textarea>
+        </div>
+      </div>
+    </div>
+  </body>
+  
+  <footer class="footer fixed-bottom text-center">
+    <div class="container">
+      <span class="text-muted">Project by Vi Khan - Quoc Toan - Y Nguyen</span>
+    </div>
+  </footer>
+  <script src="./jquery-3.5.1.slim.min.js"></script>
+  <script src="./popper.min.js"></script>
+  <script src="./bootstrap.min.js"></script>
+  <script src="./scripts.js"></script>
+</html>

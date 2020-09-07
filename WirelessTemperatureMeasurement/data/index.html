@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ware House Device</title>
+    <link rel="stylesheet" href="./bootstrap.min.css" />
+    <script src="./all.min.js"></script>
+    <script src="./Chart.min.js"></script>
+  </head>
+  <body class="bg-dark">
+    <div class="container">
+      <nav
+        class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm p-3 mb-5 rounded"
+      >
+        <a class="navbar-brand font-weight-bold" href="./index.html"
+          >WAREHOUSE</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item mr-2 active">
+              <a class="nav-link" href="./index.html"
+                ><i class="fas fa-thermometer-three-quarters mr-2"></i>Status
+                <span class="sr-only">(current)</span></a
+              >
+            </li>
+            <li class="nav-item mr-2">
+              <a class="nav-link" href="./wifi.html"
+                ><i class="fas fa-wifi mr-2"></i>Wifi</a
+              >
+            </li>
+            <li class="nav-item mr-2">
+              <a class="nav-link" href="./mqtt.html"
+                ><i class="fas fa-plug mr-2"></i>Mqtt</a
+              >
+            </li>
+            <li class="nav-item mr-2">
+              <a class="nav-link" href="./device.html"
+                ><i class="fas fa-microchip mr-2"></i>Device</a
+              >
+            </li>
+            <li class="nav-item mr-2">
+              <a class="nav-link" href="./about.html"
+                ><i class="fas fa-address-card mr-2"></i>About</a
+              >
+            </li>
+          </ul>
+          <a class="nav-link text-light" href="./login.html"
+            ><i class="fas fa-power-off mr-2"></i>logout</a
+          >
+        </div>
+      </nav>
+      <!-- content -->
+      <div class="row text-light">
+        <div class="col-xl-6">
+          <div class="shadow p-3 mb-5 rounded">
+            <h6 class="font-weight-bold text-center my-3">TEMPERATURE</h6>
+            <table class="table table-borderless table-dark">
+              <tbody>
+                <tr>
+                  <td><i class="fa fa-temperature-low text-warning"></i></td>
+                  <th scope="row">Celsius</th>
+                  <td>30</td>
+                  <td>°C</td>
+                </tr>
+                <tr>
+                  <td><i class="fa fa-temperature-high text-info"></i></td>
+                  <th scope="row">Fahrenheit</th>
+                  <td>86</td>
+                  <td>°F</td>
+                </tr>
+              </tbody>
+            </table>
+            <canvas id="myChart" height="149"></canvas>
+          </div>
+        </div>
+
+        <div class="col-xl-6">
+          <div class="shadow p-3 mb-5 rounded">
+            <h6 class="font-weight-bold text-center my-3">CONECTION</h6>
+            <table class="table table-borderless table-dark">
+              <tbody>
+                <tr>
+                  <td><i class="fa fa-circle text-success"></i></td>
+                  <th scope="row">WIFI</th>
+                  <td>NVUICAFE</td>
+                  <td>192.168.0.16</td>
+                </tr>
+                <tr>
+                  <td><i class="fa fa-circle text-danger"></i></td>
+                  <th scope="row">MQTT</th>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td><i class="fa fa-circle text-success"></i></td>
+                  <th scope="row">SENSOR</th>
+                  <td>ds18b20</td>
+                  <td>D7</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="shadow p-3 mb-5 rounded">
+            <h6 class="font-weight-bold text-center mt-3 mb-4">POWER</h6>
+            <table class="table table-borderless table-dark">
+              <tbody>
+                <tr>
+                  <td><i class="fa fa-battery-full text-success"></i></td>
+                  <th scope="row">Battery</th>
+                  <td>100</td>
+                  <td>%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <footer class="footer fixed-bottom text-center">
+    <div class="container">
+      <span class="text-muted">Project by Vi Khan - Quoc Toan - Y Nguyen</span>
+    </div>
+  </footer>
+  <script src="./jquery-3.5.1.slim.min.js"></script>
+  <script src="./popper.min.js"></script>
+  <script src="./bootstrap.min.js"></script>
+  <script src="./scripts.js"></script>
+</html>
