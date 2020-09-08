@@ -17,7 +17,7 @@ function Sample(){
      return Math.trunc(Math.random()*180-55);
    }
    let ret = [];
-   for (let ii=0;ii<5*5*5;ii++){
+   for (let ii=0;ii<Math.pow(10,3);ii++){
       ret.push(rd());
    }
    return JSON.stringify({data: ret});

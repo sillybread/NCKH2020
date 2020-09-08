@@ -32,7 +32,7 @@ export default class SChart3D extends Component {
             1000
         );
         camera.up.set(0, 0, 1);
-        camera.position.set(30, 30, 30);
+        camera.position.set(10, 10, 10);
 
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(container.offsetWidth, container.offsetHeight);
@@ -42,8 +42,8 @@ export default class SChart3D extends Component {
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
         controls.screenSpacePanning = false;
-        controls.minDistance = 10;
-        controls.maxDistance = 30;
+        controls.minDistance = 30;
+        controls.maxDistance = 50;
         controls.maxPolarAngle = Math.PI;
 
         var axesHelper = new THREE.AxesHelper(30);
@@ -67,12 +67,6 @@ export default class SChart3D extends Component {
             mesh.visible = false;
             this.aMesh.push(mesh);
         }
-
-        //for (let ii = 0; ii < this.size; ii++) {
-        //let pos = this.i2p(ii);
-        //console.log(pos.x + " " + pos.y + " " + pos.z + " " + ii);
-        //this.updateCube(ii, ii * (180 / this.size) - 55);
-        //}
 
         var obj = this;
         let fetch = function () {
@@ -116,25 +110,38 @@ export default class SChart3D extends Component {
     updateCube(index, tempC) {
         //temperature -55 ~ 125
         //hue 0 ~ 255
+        if (this.handleHide(index)) return;
         let hue = 256 - (tempC + 55) * 256 / (125 + 55);
         this.aMesh[index].material.color.set("hsl(" + hue + ",100%,50%)");
         this.aMesh[index].visible = true;
     };
 
+    handleHide(index){
+        let iSliceLevel = this.state.iSliceLevel;
+        let iCrood = this.i2p(index)[this.state.sSliceAxis.toLowerCase()];
+        let iLimit = this[this.state.sSliceAxis.toUpperCase()] - iSliceLevel;
+        
+        let innerBlock = function(oPos){
+            if (oPos.x>0&&oPos.y>0&&oPos.z>0) return true
+            return false;
+        }
+        if ((iSliceLevel > 0 && iCrood >= iLimit)||innerBlock(this.i2p(index))) {
+            this.aMesh[index].visible = false;
+            return true;
+        }
+        return false;
+    }
+
     componentDidUpdate() {
         this.scene.background.setHex(this.state.bg_color);
         if (this.state.aMap.length !== this.size) return;
         for (let ii = 0; ii < this.size; ii++) {
-            if (this.state.iSliceLevel > 0 && this.i2p(ii)[this.state.sSliceAxis.toLowerCase()] >= this[this.state.sSliceAxis.toUpperCase()] - this.state.iSliceLevel) {
-                this.aMesh[ii].visible = false;
-                continue;
-            }
             this.updateCube(ii, this.state.aMap[ii]);
         }
     }
 
     render() {
-        return ( <
+        return ( <div><
             div 
             className = "chartContainer"
             ref = {
@@ -143,6 +150,14 @@ export default class SChart3D extends Component {
                 }
             }
             />
+            {/* {<input type="number" min="0" max="255" onChange={(e) => {
+                    this.setState({
+                        sSliceAxis: "x",
+                        iSliceLevel: parseInt(e.target.value)
+                    });
+                }
+            }/>} */}
+            </div>
         );
     }
 }

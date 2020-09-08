@@ -116,19 +116,29 @@ export default class SChart3D extends Component {
     updateCube(index, tempC) {
         //temperature -55 ~ 125
         //hue 0 ~ 255
+        if (this.handleHide(index)) return;
         let hue = 256 - (tempC + 55) * 256 / (125 + 55);
         this.aMesh[index].material.color.set("hsl(" + hue + ",100%,50%)");
         this.aMesh[index].visible = true;
     };
 
+    handleHide(index){
+        let iCrood = this.i2p(index)[this.state.sSliceAxis.toLowerCase()];
+        let iLimit = this[this.state.sSliceAxis.toLowerCase()] - iSliceLevel;
+        let iSliceLevel = this.state.iSliceLevel;
+        //x     1 ~ this.X - 1
+        //y     1 ~ this.Y - 1
+        //z     1 ~ this.Z - 1
+        if (this.state.iSliceLevel > 0 && iCrood >= iLimit) {
+            this.aMesh[index].visible = false;
+            return true;
+        }
+        return false;
+    }
     componentDidUpdate() {
         this.scene.background.setHex(this.state.bg_color);
         if (this.state.aMap.length !== this.size) return;
         for (let ii = 0; ii < this.size; ii++) {
-            if (this.state.iSliceLevel > 0 && this.i2p(ii)[this.state.sSliceAxis.toLowerCase()] >= this[this.state.sSliceAxis.toUpperCase()] - this.state.iSliceLevel) {
-                this.aMesh[ii].visible = false;
-                continue;
-            }
             this.updateCube(ii, this.state.aMap[ii]);
         }
     }
