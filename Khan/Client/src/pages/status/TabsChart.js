@@ -23,14 +23,14 @@ class TabsChart extends Component {
         }
     };
     changeView = (active) => {
-        if (active == 1) return <StatusChart />;
-        if (active == 3)
+        if (active === 1) return <StatusChart />;
+        if (active === 3)
             return (
                 <div>
                     <SChart3D
-                        X="5"
-                        Y="5"
-                        Z="5"
+                        X="10"
+                        Y="10"
+                        Z="10"
                         src="http://localhost:8080/api/sensor/demoTemperature"
                         ref={(me) => {
                             me &&

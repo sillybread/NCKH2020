@@ -11,7 +11,9 @@ const db = require("./app/models");
 db.mongoose
   .connect(process.env.DB_CONECTION, {
     useNewUrlParser: true,
+    useFindAndModify: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   })
   .then(() => {
     console.log("Successfully connect to MongoDB.");
@@ -40,7 +42,6 @@ app.get("/", (req, res) => {
 });
 // routes
 require("./app/routes/auth.routes")(app);
-require("./app/routes/testAccess.routes")(app);
 require("./app/routes/room.routes")(app);
 require("./app/routes/sensor.routes")(app);
 require("./app/routes/user.routes")(app);
