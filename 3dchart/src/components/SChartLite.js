@@ -66,9 +66,9 @@ export default class SChart3DLite extends Component {
 
     doStuff(oScene){
         let size = {
-            x: 4, 
-            y: 4, 
-            z: 5,
+            x: 40, 
+            y: 40, 
+            z: 40,
             get X(){
                 return this.x*this.tileSize;
             },
@@ -89,13 +89,21 @@ export default class SChart3DLite extends Component {
         }
         
         function setColor(face){
-            let v = 0;
-            for (let ii=0;ii<face.geometry.faces.length/2;ii++){
-                v = (ii+1)*0x100fff;
-                face.geometry.faces[ii*2].color.setHex(v);
-                face.geometry.faces[ii*2+1].color.setHex(v);
+            console.log(tempToHSL(0,10,20));
+            let color = 0;
+            let n = face.geometry.faces.length/2;
+            for (let ii=0;ii<n;ii++){
+                color = tempToHSL(0, n, ii);
+                face.geometry.faces[ii*2].color.set(color);
+                face.geometry.faces[ii*2+1].color.set(color);
             }
             face.geometry.elementsNeedUpdate = true;
+        }
+
+        function tempToHSL(min, max, temp){
+            let ret = 256 - (temp + min) * 256 / (max - min);
+            ret = Math.floor(ret);
+            return "hsl("+ ret + ",100%,50%)";
         }
 
         function createAFace(faceSize, order, viewWireFrame = false){
@@ -135,7 +143,7 @@ export default class SChart3DLite extends Component {
                 case 3:
                     iWidth = faceSize.y;
                     iHeigh = faceSize.z;
-                    vAngle = new THREE.Vector3(Math.PI/2,Math.PI/2,0);
+                    vAngle = new THREE.Vector3(3*Math.PI/2,Math.PI/2,0);
                     vPosition = new THREE.Vector3(
                         faceSize.x * faceSize.tileSize,
                         iWidth* faceSize.tileSize/2,
