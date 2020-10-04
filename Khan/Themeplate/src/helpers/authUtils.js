@@ -14,7 +14,7 @@ const isUserAuthenticated = () => {
     const currentTime = Date.now() / 1000;
     if (decoded.exp < currentTime) {
         console.warn('access token expired');
-        return false;
+        return true;
     } else {
         return true;
     }
@@ -25,7 +25,7 @@ const isUserAuthenticated = () => {
  */
 const getLoggedInUser = () => {
     const cookies = new Cookies();
-    const user = cookies.get('user');
+    const user = cookies.get('userTheme');
     return user ? (typeof user == 'object' ? user : JSON.parse(user)) : null;
 };
 

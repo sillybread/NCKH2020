@@ -10,25 +10,24 @@ import Projects from './Projects';
 import Tasks from './Tasks';
 import Files from './Files';
 
-
 class Profile extends Component {
     constructor(props) {
         super(props);
 
         this.toggleTab = this.toggleTab.bind(this);
         this.state = {
-            activeTab: '1'
+            activeTab: '1',
         };
     }
 
     /**
      * Toggles tab
-     * @param {*} tab 
+     * @param {*} tab
      */
     toggleTab(tab) {
         if (this.state.activeTab !== tab) {
             this.setState({
-                activeTab: tab
+                activeTab: tab,
             });
         }
     }
@@ -62,36 +61,51 @@ class Profile extends Component {
                                         <NavLink
                                             href="#"
                                             className={classNames({ active: this.state.activeTab === '1' })}
-                                            onClick={() => { this.toggleTab('1'); }}
-                                        >Activity</NavLink>
+                                            onClick={() => {
+                                                this.toggleTab('1');
+                                            }}>
+                                            Activity
+                                        </NavLink>
                                     </NavItem>
                                     <NavItem>
                                         <NavLink
                                             href="#"
                                             className={classNames({ active: this.state.activeTab === '2' })}
-                                            onClick={() => { this.toggleTab('2'); }}
-                                        >Messages</NavLink>
+                                            onClick={() => {
+                                                this.toggleTab('2');
+                                            }}>
+                                            Messages
+                                        </NavLink>
                                     </NavItem>
                                     <NavItem>
                                         <NavLink
                                             href="#"
                                             className={classNames({ active: this.state.activeTab === '3' })}
-                                            onClick={() => { this.toggleTab('3'); }}
-                                        >Projects</NavLink>
+                                            onClick={() => {
+                                                this.toggleTab('3');
+                                            }}>
+                                            Projects
+                                        </NavLink>
                                     </NavItem>
                                     <NavItem>
                                         <NavLink
                                             href="#"
                                             className={classNames({ active: this.state.activeTab === '4' })}
-                                            onClick={() => { this.toggleTab('4'); }}
-                                        >Tasks</NavLink>
+                                            onClick={() => {
+                                                this.toggleTab('4');
+                                            }}>
+                                            Tasks
+                                        </NavLink>
                                     </NavItem>
                                     <NavItem>
                                         <NavLink
                                             href="#"
                                             className={classNames({ active: this.state.activeTab === '5' })}
-                                            onClick={() => { this.toggleTab('5'); }}
-                                        >Files</NavLink>
+                                            onClick={() => {
+                                                this.toggleTab('5');
+                                            }}>
+                                            Files
+                                        </NavLink>
                                     </NavItem>
                                 </Nav>
                                 <TabContent activeTab={this.state.activeTab}>

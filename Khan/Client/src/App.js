@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Routes from './routes/Routes';
 
 // setup fake backend
-import { configureFakeBackend } from './helpers';
+//import { configureFakeBackend } from './helpers';
 
 // Themes
 
@@ -10,10 +10,10 @@ import { configureFakeBackend } from './helpers';
 import './assets/scss/theme.scss';
 
 // dark
-// import './assets/scss/theme-dark.scss';
+//import './assets/scss/theme-dark.scss';
 
 // rtl
-// import './assets/scss/theme-rtl.scss';
+//import './assets/scss/theme-rtl.scss';
 
 // configure fake backend
 //configureFakeBackend();

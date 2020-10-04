@@ -1,0 +1,74 @@
+[
+  {
+    "sensorID": "SR001",
+    "temperature": 21.2,
+    "location": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    }
+  },
+  {
+    "sensorID": "SR002",
+    "temperature": 23,
+    "location": {
+      "x": 0,
+      "y": 3,
+      "z": 0
+    }
+  },
+  {
+    "sensorID": "SR003",
+    "temperature": 24,
+    "location": {
+      "x": 0,
+      "y": 0,
+      "z": 3
+    }
+  },
+  {
+    "sensorID": "SR004",
+    "temperature": 22,
+    "location": {
+      "x": 0,
+      "y": 3,
+      "z": 3
+    }
+  },
+  {
+    "sensorID": "SR005",
+    "temperature": 22,
+    "location": {
+      "x": 3,
+      "y": 0,
+      "z": 3
+    }
+  },
+  {
+    "sensorID": "SR006",
+    "temperature": 22,
+    "location": {
+      "x": 3,
+      "y": 3,
+      "z": 0
+    }
+  },
+  {
+    "sensorID": "SR007",
+    "temperature": 22,
+    "location": {
+      "x": 3,
+      "y": 0,
+      "z": 0
+    }
+  },
+  {
+    "sensorID": "SR008",
+    "temperature": 9,
+    "location": {
+      "x": 3,
+      "y": 3,
+      "z": 3
+    }
+  }
+]

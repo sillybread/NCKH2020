@@ -10,7 +10,7 @@ class Footer extends Component {
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-12">
-                            2020 &copy; Ware House. All Rights Reserved. Crafted with{' '}
+                            2020 &copy; WareHouse. All Rights Reserved. Crafted with{' '}
                             <i className="uil uil-heart text-danger font-size-12"></i> by
                             <a href="http://google.com" target="_blank" rel="noopener noreferrer" className="ml-1">
                                 vikhan

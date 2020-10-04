@@ -19,10 +19,10 @@ import {
  * Sets the session
  * @param {*} user
  */
-const setSession = user => {
+const setSession = (user) => {
     let cookies = new Cookies();
-    if (user) cookies.set('user', JSON.stringify(user), { path: '/' });
-    else cookies.remove('user', { path: '/' });
+    if (user) cookies.set('userTheme', JSON.stringify(user), { path: '/' });
+    else cookies.remove('userTheme', { path: '/' });
 };
 /**
  * Login the user

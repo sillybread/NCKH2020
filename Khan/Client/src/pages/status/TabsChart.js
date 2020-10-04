@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { Row, Col, Nav, NavItem, NavLink } from 'reactstrap';
+import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import classnames from 'classnames';
 import StatusChart from './StatusChart';
 import SChart3D from './SChart';
-import { ToneMapping } from 'three';
+import Matrix from './matrix';
 
 class TabsChart extends Component {
     constructor(props) {
         super(props);
-        this.state = { activeTab: 1 };
+        this.state = { activeTab: '3' };
         this.toggle = this.toggle.bind(this);
     }
 
@@ -22,42 +22,20 @@ class TabsChart extends Component {
             });
         }
     };
-    changeView = (active) => {
-        if (active === 1) return <StatusChart />;
-        if (active === 3)
-            return (
-                <div>
-                    <SChart3D
-                        X="10"
-                        Y="10"
-                        Z="10"
-                        src="http://localhost:8080/api/sensor/demoTemperature"
-                        ref={(me) => {
-                            me &&
-                                me.setState({
-                                    sSliceAxis: 'z',
-                                    iSliceLevel: 0,
-                                    bg_color: 0xffffff,
-                                });
-                        }}
-                    />
-                </div>
-            );
-    };
     render() {
         const tabContents = [
             {
-                id: 1,
+                id: '1',
                 title: 'Line',
                 disabled: false,
             },
             {
-                id: 2,
+                id: '2',
                 title: '2D',
-                disabled: true,
+                disabled: false,
             },
             {
-                id: 3,
+                id: '3',
                 title: '3D',
                 disabled: false,
             },
@@ -77,16 +55,36 @@ class TabsChart extends Component {
                                         this.toggle(tab.id);
                                     }}>
                                     <i className={classnames(tab.icon, 'd-sm-none', 'd-block', 'mr-1')}></i>
-                                    <span className="d-none d-sm-block">{tab.title}</span>
+                                    {tab.title}
                                 </NavLink>
                             </NavItem>
                         );
                     })}
                 </Nav>
-
-                <Row>
-                    <Col className="mr-3 mt-4">{this.changeView(this.state.activeTab)}</Col>
-                </Row>
+                <TabContent activeTab={this.state.activeTab} className="mr-3 mt-4">
+                    <TabPane tabId="1">
+                        <StatusChart />
+                    </TabPane>
+                    <TabPane tabId="2">
+                        <Matrix />
+                    </TabPane>
+                    <TabPane tabId="3">
+                        <SChart3D
+                            X="54"
+                            Y="23"
+                            Z="24"
+                            src="http://localhost:8080/api/sensor/demoTemperature"
+                            ref={(me) => {
+                                me &&
+                                    me.setState({
+                                        sSliceAxis: 'z',
+                                        iSliceLevel: 0,
+                                        bg_color: 0xffffff,
+                                    });
+                            }}
+                        />
+                    </TabPane>
+                </TabContent>
             </>
         );
     }
