@@ -5,9 +5,9 @@ import SChart3DLite from './components/SChartLite.js'
 let Config =
 {
   "size": {
-    "x": 3,
-    "y": 3,
-    "z": 3,
+    "x": 50,
+    "y": 50,
+    "z": 50,
 	"tilesize": 1
   },
   "door": {
@@ -34,21 +34,20 @@ let Data =
 [ 
   [
     [0, 1, 2],
-    [0, 1, 2],
-    [0, 1, 2]
+    [3, 4, 5],
+    [6, 7, 8]
   ],
   [
-    [0, 1, 2],
-    [0, 1, 2],
-    [0, 1, 2]
+    [9, 10, 11],
+    [12, 13, 14],
+    [15, 16, 17]
   ],
   [
-    [0, 1, 2],
-    [0, 1, 2],
-    [0, 1, 2]
+    [18, 19, 20],
+    [21, 22, 23],
+    [24, 25, 26]
   ]
 ]
-
 
 let Slice =
 {
@@ -64,11 +63,23 @@ function injectState(obj){
   })
 
   setInterval(()=>{
-    let a = new Array(3).fill(0).map(x => new Array(new Array(3).fill(0).map(x => Math.trunc(Math.random()*100))));
-    obj.setState({
-      oData: a
-    })
+    let a = new Array(50).fill(0).map(
+      x => new Array(50).fill(0).map(
+        x => new Array(50).fill(0).map(
+          x => Math.trunc(Math.random()*1024))));
+    obj.setState({oData: a})  
   },1000);
+
+  window.addEventListener('keypress', (e) => {
+    if (e.key === 'z'){
+      obj.setState({
+        oSlice: {
+          axis: Slice.axis, 
+          level: prompt("")
+        }
+      });
+    }
+  })
 }
 
 export default function App() {

@@ -29,7 +29,7 @@ export default class SChart3DLite extends Component {
             1000
         );
         camera.up.set(0, 0, 1);
-        camera.position.set(10, 10, 10);
+        camera.position.set(150, 150, 150);
 
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -96,7 +96,7 @@ export default class SChart3DLite extends Component {
 
         return cube;
 
-        function createAFace(faceSize, order, viewWireFrame = false) {
+        function createAFace(faceSize, order) {
             let oCurrFI;
             let fPi = Math.PI;
             let oFaceInfo = {
@@ -170,14 +170,14 @@ export default class SChart3DLite extends Component {
             tileMesh.rotation.setFromVector3(oCurrFI.angle);
             tileMesh.position.copy(oCurrFI.position);
 
-            if (viewWireFrame) {
-                let wireFrameGeometry = new THREE.WireframeGeometry(tileGeometry);
-                let wireFrameMaterial = new THREE.LineBasicMaterial({
-                    color: 0x0
-                });
-                let wireFrame = new THREE.LineSegments(wireFrameGeometry, wireFrameMaterial);
-                tileMesh.add(wireFrame);
-            }
+            // if (viewWireFrame) {
+            //     let wireFrameGeometry = new THREE.WireframeGeometry(tileGeometry);
+            //     let wireFrameMaterial = new THREE.LineBasicMaterial({
+            //         color: 0x0
+            //     });
+            //     let wireFrame = new THREE.LineSegments(wireFrameGeometry, wireFrameMaterial);
+            //     tileMesh.add(wireFrame);
+            // }
             return tileMesh;
         }
     }
@@ -215,58 +215,24 @@ export default class SChart3DLite extends Component {
             }
         }
 
-
         for (let ii = 0; ii < 6; ii++) {
             currFace = oMesh.children[ii].geometry.faces;
             let n = currFace.length / 2;
             for (let ia = 0; ia < n; ia++) {
                 color = tempToHSL(iMin, iMax, aFace[ii][ia]);
                 currFace[ia * 2].color.set(color);
+                currFace[ia * 2].visible = true;
                 currFace[ia * 2 + 1].color.set(color);
+                currFace[ia * 2 + 1].visible = true;
             }
             oMesh.children[ii].geometry.elementsNeedUpdate = true;
         }
 
         function tempToHSL(min, max, temp) {
-            let ret = 230 - (temp + min) * 230 / (max - min);
+            let ret = 240 - (temp - min) * 240 / (max - min);
             ret = Math.floor(ret);
             return "hsl(" + ret + ",100%,50%)";
         }
-    }
-
-    i2p(iIndex) {
-        let rX = iIndex % this.X;
-        let iX = Math.trunc(iIndex / this.X);
-
-        let rY = iX % this.Y;
-        let iY = Math.trunc(iX / this.Y);
-
-        let rZ = iY % this.Z;
-        return {
-            x: rX,
-            y: rY,
-            z: rZ
-        }
-    }
-
-    p2i(x, y, z) {
-        return x + y * this.X + z * this.Y * this.X;
-    }
-
-    handleHide(index) {
-        let iSliceLevel = this.state.iSliceLevel;
-        let iCrood = this.i2p(index)[this.state.sSliceAxis.toLowerCase()];
-        let iLimit = this[this.state.sSliceAxis.toUpperCase()] - iSliceLevel;
-
-        let innerBlock = function (oPos) {
-            if (oPos.x > 0 && oPos.y > 0 && oPos.z > 0) return true
-            return false;
-        }
-        if ((iSliceLevel > 0 && iCrood >= iLimit) || innerBlock(this.i2p(index))) {
-            this.aMesh[index].visible = false;
-            return true;
-        }
-        return false;
     }
 
     componentDidUpdate() {
