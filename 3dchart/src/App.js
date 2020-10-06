@@ -6,8 +6,8 @@ let Config =
 {
   "size": {
     "x": 50,
-    "y": 50,
-    "z": 50,
+    "y": 24,
+    "z": 23,
 	"tilesize": 1
   },
   "door": {
@@ -59,16 +59,25 @@ function injectState(obj){
   obj.setState({
     oConfig: Config,
     oData: Data,
-    oSlice: Slice
+    oSlice: Slice,
+    bg_color: 0xccccff
   })
-
-  setInterval(()=>{
-    let a = new Array(50).fill(0).map(
-      x => new Array(50).fill(0).map(
+  //setTimeout(()=> {clearInterval(
+    let tt = setInterval(()=>{
+      let a = new Array(50).fill(0).map(
         x => new Array(50).fill(0).map(
-          x => Math.trunc(Math.random()*1024))));
-    obj.setState({oData: a})  
-  },1000);
+          x => new Array(50).fill(0).map(
+            x => Math.trunc(Math.random()*1024))));
+      // Config.size.x = Math.trunc(Math.random()*10+1);
+      // Config.size.y = Math.trunc(Math.random()*10+1);
+      // Config.size.z = Math.trunc(Math.random()*10+1);
+      obj.setState({
+        oData: a, 
+        //oConfig: Config
+      })  
+      //console.log(Config.size.x);
+    },1000);
+  //)}, 5000);
 
   window.addEventListener('keypress', (e) => {
     if (e.key === 'z'){
@@ -85,7 +94,7 @@ function injectState(obj){
 export default function App() {
   return (
     <div>
-      <SChart3DLite size={Config.size} ref={me => injectState(me)}/>
+      <SChart3DLite ref={me => injectState(me)}/>
     </div>
   );
 }

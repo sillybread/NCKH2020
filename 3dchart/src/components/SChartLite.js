@@ -10,17 +10,23 @@ import {
 //import Axios from 'axios';
 
 export default class SChart3DLite extends Component {
-    state = {
-        oChart: null,
-        oConfig: null,
-        oData: null,
-        oSlice: null,
-        bg_color: 0xaaffaa,
+    constructor(props){
+        super(props);
+        this.state = {
+            oWorld: null,
+            oFrame: null,
+            oConfig: null,
+            oData: null,
+            oSlice: null,
+            bg_color: 0xaaffaa,
+            i_lx: 0,
+            i_ly: 0,
+            i_lz: 0
+        }
     }
 
-    componentDidMount() {
+    init(){
         var scene = new THREE.Scene();
-        this.scene = scene;
         scene.background = new THREE.Color(this.state.bg_color);
         var camera = new THREE.PerspectiveCamera(
             60,
@@ -52,23 +58,29 @@ export default class SChart3DLite extends Component {
             renderer.setSize(window.innerWidth, window.innerHeight);
         }, false);
 
-        let oChart = this.buildChart(scene, controls, this.state, this.props);        
-
-        this.setState({oChart: oChart});
-
         var animate = function () {
             requestAnimationFrame(animate);
             controls.update();
             renderer.render(scene, camera);
         };
         animate();
+
+        let world = {
+            scene: scene,
+            camera: camera,
+            controls: controls,
+            renderer: renderer
+        };
+        this.setState({oWorld: world});
+        return world;
     }
 
-    buildChart(oScene, oControls, oState, oProps) {
+    makeFrame() {
+        let threeWorld = this.state.oWorld;
         let size = {
-            x: oProps.size.x,
-            y: oProps.size.y,
-            z: oProps.size.z,
+            x: this.state.oConfig.size.x-((this.state.oSlice.axis==='x')?this.state.oSlice.level:0),
+            y: this.state.oConfig.size.y-((this.state.oSlice.axis==='y')?this.state.oSlice.level:0),
+            z: this.state.oConfig.size.z-((this.state.oSlice.axis==='z')?this.state.oSlice.level:0),
             get X() {
                 return this.x * this.tileSize;
             },
@@ -83,21 +95,21 @@ export default class SChart3DLite extends Component {
                 return size[axis.toUpperCase()]/2;
             }
         };
+        console.log(size);
 
         //Centering oribit controls
-        oControls.target.set(size.mid('x'),size.mid('y'),size.mid('z'));
+        threeWorld.controls.target.set(size.mid('x'),size.mid('y'),size.mid('z'));
 
         let cube = new Object3D();
         for (let ii = 0; ii < 6; ii++) {
             cube.add(createAFace(size, ii));
         }
-        oScene.add(cube);
+        threeWorld.scene.add(cube);
         cube.size = size;
 
         return cube;
 
         function createAFace(faceSize, order) {
-            let oCurrFI;
             let fPi = Math.PI;
             let oFaceInfo = {
                 0: {
@@ -155,7 +167,7 @@ export default class SChart3DLite extends Component {
                     side: THREE.BackSide
                 }
             }
-            oCurrFI = oFaceInfo[order];
+            let oCurrFI = oFaceInfo[order];
             let tileGeometry = new THREE.PlaneGeometry(
                 faceSize[oCurrFI.width] * faceSize.tileSize,
                 faceSize[oCurrFI.height] * faceSize.tileSize,
@@ -166,36 +178,34 @@ export default class SChart3DLite extends Component {
                 vertexColors: THREE.FaceColors,
                 side: oCurrFI.side
             });
-            let tileMesh = new THREE.Mesh(tileGeometry, tileMaterial);
-            tileMesh.rotation.setFromVector3(oCurrFI.angle);
-            tileMesh.position.copy(oCurrFI.position);
-
-            // if (viewWireFrame) {
-            //     let wireFrameGeometry = new THREE.WireframeGeometry(tileGeometry);
-            //     let wireFrameMaterial = new THREE.LineBasicMaterial({
-            //         color: 0x0
-            //     });
-            //     let wireFrame = new THREE.LineSegments(wireFrameGeometry, wireFrameMaterial);
-            //     tileMesh.add(wireFrame);
-            // }
-            return tileMesh;
+            let boxMesh = new THREE.Mesh(tileGeometry, tileMaterial);
+            boxMesh.rotation.setFromVector3(oCurrFI.angle);
+            boxMesh.position.copy(oCurrFI.position);
+            tileGeometry.dispose();
+            tileMaterial.dispose();
+            return boxMesh;
         }
     }
 
-    updateChart(oState) {
+    updateChart() {
         let currFace = null;
         let color = null;
-        let aData = oState.oData;
-        let oMesh = oState.oChart;
+        let aData = this.state.oData;
+        let oMesh = this.state.oFrame;
+        let iX = this.state.i_lx;
+        let iY = this.state.i_ly;
+        let iZ = this.state.i_lz;
 
-        let iX = aData[0][0].length;
-        let iY = aData[0].length;
-        let iZ = aData.length;
+        if (!oMesh || 
+            !aData ||
+            iX>aData[0][0].length ||
+            iY>aData[0].length ||
+            iZ>aData.length
+            ) {return};
         let dX, dY, dZ, sStatement; // eslint-disable-next-line
         let aFace = new Array(6).fill(0).map(x => new Array());
         let divide = (a, b) => ({
             r: a % b,
-     
             d: Math.trunc(a / b)
         });
 
@@ -208,10 +218,10 @@ export default class SChart3DLite extends Component {
             dX = divide(ii, iX);
             dY = divide(dX.d, iY);
             dZ = divide(dY.d, iZ);
-
+            //console.log(ii, dX.r, dY.r, dZ.r);
             sStatement = (dY.r === 0) * 1 + "" + (dY.r === iY - 1) * 1 + "" + (dX.r === 0) * 1 + "" + (dX.r === iX - 1) * 1 + "" + (dZ.r === 0) * 1 + "" + (dZ.r === iZ - 1) * 1;
             for (let si = 0; si < sStatement.length; si++) {
-                if (sStatement[si] === "1")(aFace[si]).push(aData[dZ.r][dY.r][dX.r]);
+                if (sStatement[si] === '1') (aFace[si]).push(aData[dZ.r][dY.r][dX.r]);
             }
         }
 
@@ -220,10 +230,9 @@ export default class SChart3DLite extends Component {
             let n = currFace.length / 2;
             for (let ia = 0; ia < n; ia++) {
                 color = tempToHSL(iMin, iMax, aFace[ii][ia]);
+                //console.log(iMin, iMax, aFace[ii][ia]);
                 currFace[ia * 2].color.set(color);
-                currFace[ia * 2].visible = true;
                 currFace[ia * 2 + 1].color.set(color);
-                currFace[ia * 2 + 1].visible = true;
             }
             oMesh.children[ii].geometry.elementsNeedUpdate = true;
         }
@@ -235,21 +244,43 @@ export default class SChart3DLite extends Component {
         }
     }
 
+    componentDidMount() {
+        this.init();
+    }
+
     componentDidUpdate() {
-        this.scene.background.setHex(this.state.bg_color);
-        this.updateChart(this.state);
+        this.state.oWorld.scene.background.setHex(this.state.bg_color);
+        if (this.state.i_lx !== this.state.oConfig.size.x-((this.state.oSlice.axis==='x')?this.state.oSlice.level:0) || 
+            this.state.i_ly !== this.state.oConfig.size.y-((this.state.oSlice.axis==='y')?this.state.oSlice.level:0) || 
+            this.state.i_lz !== this.state.oConfig.size.z-((this.state.oSlice.axis==='z')?this.state.oSlice.level:0)){
+                this.state.oFrame && this.state.oFrame.children.forEach((child) =>{
+                    console.log(child);
+                    child.geometry.dispose();
+                    child.material.dispose();
+                    this.state.oWorld.scene.remove(child);
+                });
+                this.state.oWorld.scene.remove(this.state.oFrame);
+
+                let frame = this.makeFrame(this.state);
+                this.setState({
+                    oFrame: frame,
+                    i_lx: this.state.oConfig.size.x-((this.state.oSlice.axis==='x')?this.state.oSlice.level:0),
+                    i_ly: this.state.oConfig.size.y-((this.state.oSlice.axis==='y')?this.state.oSlice.level:0),
+                    i_lz: this.state.oConfig.size.z-((this.state.oSlice.axis==='z')?this.state.oSlice.level:0),
+                })
+        }
+        this.updateChart();
     }
 
     render() {
-        return ( < div > <
+        return ( <div> <
             div className = "chartContainer"
             ref = {
                 thisDiv => {
                     this.container = thisDiv
                 }
             }
-            /> <
-            /div>
+            /> </div>
         );
     }
 }
