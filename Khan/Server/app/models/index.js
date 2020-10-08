@@ -11,4 +11,7 @@ db.sensor = require("./sensor.model");
 db.area = require("./area.model");
 db.nontification = require("./nontification.model");
 db.access = require("./access.model");
+db.structure = require("./structure.model");
+db.data = require("./data.model");
+
 module.exports = db;

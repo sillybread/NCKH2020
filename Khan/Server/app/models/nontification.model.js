@@ -4,9 +4,9 @@ const Nontification = mongoose.model(
   "Nontification",
   new mongoose.Schema(
     {
-      area: { type: mongoose.Schema.Types.ObjectId, ref: "Area" },
+      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       content: { type: String },
-      type: { type: String, default: "temperature" },
+      type: { type: String, default: "Area_Temperature" },
     },
     { timestamps: true }
   )

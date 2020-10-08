@@ -6,19 +6,10 @@ const Sensor = mongoose.model(
     {
       deviceId: { type: String, require: true },
       name: { type: String },
-
+      activeKey: { type: String, require: true },
       owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-      },
-      room: { type: mongoose.Schema.Types.ObjectId, ref: "Room" },
-
-      status: { type: String, default: "running" },
-
-      location: {
-        x: { type: Number },
-        y: { type: Number },
-        z: { type: Number },
       },
     },
     { timestamps: true }
