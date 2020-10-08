@@ -1,4 +1,4 @@
-const { authJwt } = require("../middlewares");
+const { authJwt, verifyRoom } = require("../middlewares");
 const controller = require("../controllers/room.controller");
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -8,6 +8,15 @@ module.exports = function (app) {
     );
     next();
   });
-  app.post("/api/room/create", [authJwt.verifyToken], controller.createRoom);
-  app.get("/api/room/myroom", [authJwt.verifyToken], controller.getMyRoom);
+  app.post(
+    "/api/room/create",
+    [authJwt.verifyToken, verifyRoom.checkCreate],
+    controller.createRoom
+  );
+  app.get("/api/room/", [authJwt.verifyToken], controller.getMyAccessRoom);
+  app.delete(
+    "/api/room/",
+    [authJwt.verifyToken, verifyRoom.checkDelete],
+    controller.deleteRoom
+  );
 };

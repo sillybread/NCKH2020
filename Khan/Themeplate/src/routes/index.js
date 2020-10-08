@@ -53,12 +53,14 @@ const Editor = React.lazy(() => import('../pages/forms/Editor'));
 const BasicTables = React.lazy(() => import('../pages/tables/Basic'));
 const AdvancedTables = React.lazy(() => import('../pages/tables/Advanced'));
 
+//Demo
+const Demo = React.lazy(() => import('../pages/Demo'));
 
 // handle auth and authorization
 const PrivateRoute = ({ component: Component, roles, ...rest }) => (
     <Route
         {...rest}
-        render={props => {
+        render={(props) => {
             if (!isUserAuthenticated()) {
                 // not logged in so redirect to login page with the return url
                 return <Redirect to={{ pathname: '/account/login', state: { from: props.location } }} />;
@@ -76,7 +78,15 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => (
         }}
     />
 );
-
+//demo routes
+const demoRoutes = {
+    path: '/demo',
+    name: 'Demo',
+    icon: FeatherIcon.Home,
+    component: Demo,
+    roles: ['Admin'],
+    route: PrivateRoute,
+};
 // root routes
 const rootRoute = {
     path: '/',
@@ -97,7 +107,7 @@ const dashboardRoutes = {
     },
     component: Dashboard,
     roles: ['Admin'],
-    route: PrivateRoute
+    route: PrivateRoute,
 };
 
 // apps
@@ -138,7 +148,7 @@ const emailAppRoutes = {
             route: PrivateRoute,
             roles: ['Admin'],
         },
-    ]
+    ],
 };
 
 const projectAppRoutes = {
@@ -160,7 +170,7 @@ const projectAppRoutes = {
             route: PrivateRoute,
             roles: ['Admin'],
         },
-    ]
+    ],
 };
 
 const taskAppRoutes = {
@@ -186,8 +196,6 @@ const taskAppRoutes = {
 };
 
 const appRoutes = [calendarAppRoutes, emailAppRoutes, projectAppRoutes, taskAppRoutes];
-
-
 
 // pages
 const pagesRoutes = {
@@ -235,17 +243,16 @@ const pagesRoutes = {
             path: '/pages/error-404',
             name: 'Error 404',
             component: Error404,
-            route: Route
+            route: Route,
         },
         {
             path: '/pages/error-500',
             name: 'Error 500',
             component: Error500,
-            route: Route
+            route: Route,
         },
-    ]
+    ],
 };
-
 
 // components
 const componentsRoutes = {
@@ -279,7 +286,7 @@ const componentsRoutes = {
                     route: PrivateRoute,
                     roles: ['Admin'],
                 },
-            ]
+            ],
         },
         {
             path: '/ui/widgets',
@@ -288,8 +295,7 @@ const componentsRoutes = {
             route: PrivateRoute,
             roles: ['Admin'],
         },
-
-    ]
+    ],
 };
 
 // charts
@@ -299,9 +305,8 @@ const chartRoutes = {
     component: Charts,
     icon: FeatherIcon.PieChart,
     roles: ['Admin'],
-    route: PrivateRoute
-}
-
+    route: PrivateRoute,
+};
 
 // forms
 const formsRoutes = {
@@ -344,10 +349,9 @@ const formsRoutes = {
             name: 'File Upload',
             component: FileUpload,
             route: PrivateRoute,
-        }
-    ]
+        },
+    ],
 };
-
 
 const tableRoutes = {
     path: '/tables',
@@ -365,9 +369,9 @@ const tableRoutes = {
             name: 'Advanced',
             component: AdvancedTables,
             route: PrivateRoute,
-        }]
+        },
+    ],
 };
-
 
 // auth
 const authRoutes = {
@@ -408,11 +412,11 @@ const authRoutes = {
 };
 
 // flatten the list of all nested routes
-const flattenRoutes = routes => {
+const flattenRoutes = (routes) => {
     let flatRoutes = [];
 
     routes = routes || [];
-    routes.forEach(item => {
+    routes.forEach((item) => {
         flatRoutes.push(item);
 
         if (typeof item.children !== 'undefined') {
@@ -426,6 +430,7 @@ const flattenRoutes = routes => {
 const allRoutes = [
     rootRoute,
     dashboardRoutes,
+    demoRoutes,
     ...appRoutes,
     pagesRoutes,
     componentsRoutes,
@@ -435,6 +440,15 @@ const allRoutes = [
     authRoutes,
 ];
 
-const authProtectedRoutes = [dashboardRoutes, ...appRoutes, pagesRoutes, componentsRoutes, chartRoutes, formsRoutes, tableRoutes];
+const authProtectedRoutes = [
+    dashboardRoutes,
+    demoRoutes,
+    ...appRoutes,
+    pagesRoutes,
+    componentsRoutes,
+    chartRoutes,
+    formsRoutes,
+    tableRoutes,
+];
 const allFlattenRoutes = flattenRoutes(allRoutes);
 export { allRoutes, authProtectedRoutes, allFlattenRoutes };

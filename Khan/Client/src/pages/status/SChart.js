@@ -4,7 +4,6 @@ import OrbitControls from 'orbit-controls-es6';
 import './SChart.css';
 import Axios from 'axios';
 import MySlice from '../../components/MySlice';
-import HueBar from './hueBar';
 
 export default class SChart3D extends Component {
     state = {
@@ -166,7 +165,6 @@ export default class SChart3D extends Component {
                         this.setState({ sSliceAxis: axis });
                     }}
                 />
-                <HueBar min={-25} max={50}></HueBar>
             </div>
         );
     }

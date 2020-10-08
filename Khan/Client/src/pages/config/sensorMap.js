@@ -1,6 +1,6 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
-import { DropdownMenu, DropdownToggle, UncontrolledButtonDropdown, DropdownItem, Row, Col, Button } from 'reactstrap';
+import { DropdownMenu, DropdownToggle, UncontrolledButtonDropdown, DropdownItem, Row, Col } from 'reactstrap';
 import MySlice from '../../components/MySlice';
 import SensorItem from './sensorItem';
 

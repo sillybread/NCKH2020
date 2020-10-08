@@ -1,24 +1,68 @@
 const db = require("../models");
-const User = db.user;
 const Room = db.room;
+const Access = db.access;
+
+//Create Room
 exports.createRoom = (req, res) => {
   const newRoom = new Room({
-    userRoot: req.userId,
     name: req.body.name,
     description: req.body.description,
+    size: {
+      x: req.body.size.x,
+      y: req.body.size.y,
+      z: req.body.size.z,
+    },
+    sensorDensity: req.body.sensorDensity,
+    door: {
+      direction: req.body.door.direction,
+    },
   });
-  newRoom.save((err, user) => {
+  newRoom.save((err, newRoom) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
     }
-    res.status(200).send({ message: "Create Success" });
+
+    const newAcces = new Access({
+      room: newRoom._id,
+      role: "Owner",
+      user: req.userId,
+    });
+
+    newAcces.save((err, access) => {
+      if (err) {
+        res.status(500).send({ message: err });
+        return;
+      }
+      if (access) {
+        res.status(200).send({ message: "Create Success" });
+      }
+    });
   });
 };
-exports.getMyRoom = (req, res) => {
-  Room.find({ userRoot: req.userId })
-    .then((room) => {
-      res.status(200).json(room);
-    })
-    .catch((err) => res.status(500).send({ messageError: err }));
+
+//Get Assess Room
+exports.getMyAccessRoom = (req, res) => {
+  Access.find({ user: req.userId })
+    .populate("room")
+    .exec((err1, result) => {
+      res.status(200).send(result);
+    });
+};
+
+//Delete Room
+exports.deleteRoom = (req, res) => {
+  Room.remove({ _id: req.body._id }).exec((err) => {
+    if (err) {
+      res.status(400).send({ messageErro: err });
+    } else {
+      Access.remove({ room: req.body._id, user: req.userId }).exec((err) => {
+        if (err) {
+          res.status(400).send({ messageErro: err });
+        } else {
+          res.status(200).send({ message: "Delete success" });
+        }
+      });
+    }
+  });
 };

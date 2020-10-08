@@ -7,37 +7,35 @@ import { Loader } from 'react-feather';
 import avatar1 from '../../../assets/images/users/avatar-6.jpg';
 import avatar3 from '../../../assets/images/users/avatar-8.jpg';
 
-
 // single project
-const Project = props => {
+const Project = (props) => {
     const project = props.project || {};
 
     return (
         <Card>
             <CardBody>
-                <div className={classNames(
-                    'badge', 'float-right',
-                    {
+                <div
+                    className={classNames('badge', 'float-right', {
                         'badge-success': project.state === 'Finished',
                         'badge-warning': project.state === 'Ongoing',
                         'badge-info': project.state === 'Planned',
-                    }
-                )}>
+                    })}>
                     {project.state}
                 </div>
-                <p className={classNames("text-uppercase", "font-size-12", "mb-2",
-                    {
+                <p
+                    className={classNames('text-uppercase', 'font-size-12', 'mb-2', {
                         'text-success': project.state === 'Finished',
                         'text-warning': project.state === 'Ongoing',
                         'text-info': project.state === 'Planned',
-                    })}>{project.category}</p>
+                    })}>
+                    {project.category}
+                </p>
 
                 <h5>
                     <a href="/" className="text-dark">
                         {project.title}
                     </a>
                 </h5>
-
 
                 <p className="text-muted mb-4">
                     {project.shortDesc}...
@@ -57,7 +55,9 @@ const Project = props => {
                     {project.totalMembers - 2 > 0 && (
                         <a href="/" className="">
                             <div className="avatar-sm font-weight-bold d-inline-block m-1">
-                                <span className="avatar-title rounded-circle bg-soft-warning text-warning">+{project.totalMembers - 2}</span>
+                                <span className="avatar-title rounded-circle bg-soft-warning text-warning">
+                                    +{project.totalMembers - 2}
+                                </span>
                             </div>
                         </a>
                     )}
@@ -72,18 +72,25 @@ const Project = props => {
                                 <a href="/" className="text-muted d-inline-block" id={`dueDate-${project.id}`}>
                                     <i className="uil uil-calender mr-1"></i> {project.dueDate}
                                 </a>
-                                <UncontrolledTooltip placement="top" target={`dueDate-${project.id}`}>Due date</UncontrolledTooltip>
+                                <UncontrolledTooltip placement="top" target={`dueDate-${project.id}`}>
+                                    Due date
+                                </UncontrolledTooltip>
                             </li>
                             <li className="list-inline-item pr-2">
                                 <a href="/" className="text-muted d-inline-block" id={`noTasks-${project.id}`}>
-                                    <i className="uil uil-bars mr-1"></i> {project.totalTasks}</a>
-                                <UncontrolledTooltip placement="top" target={`noTasks-${project.id}`}>Tasks</UncontrolledTooltip>
+                                    <i className="uil uil-bars mr-1"></i> {project.totalTasks}
+                                </a>
+                                <UncontrolledTooltip placement="top" target={`noTasks-${project.id}`}>
+                                    Tasks
+                                </UncontrolledTooltip>
                             </li>
                             <li className="list-inline-item">
                                 <a href="/" className="text-muted d-inline-block" id={`noComments-${project.id}`}>
                                     <i className="uil uil-comments-alt mr-1"></i> {project.totalComments}
                                 </a>
-                                <UncontrolledTooltip placement="top" target={`noComments-${project.id}`}>Comments</UncontrolledTooltip>
+                                <UncontrolledTooltip placement="top" target={`noComments-${project.id}`}>
+                                    Comments
+                                </UncontrolledTooltip>
                             </li>
                         </ul>
                     </Col>
@@ -116,7 +123,7 @@ const Projects = () => {
             totalMembers: 10,
             progress: 100,
             category: 'Web Design',
-            dueDate: '15 Dec'
+            dueDate: '15 Dec',
         },
         {
             id: 2,
@@ -129,7 +136,7 @@ const Projects = () => {
             totalMembers: 6,
             progress: 21,
             category: 'Web Design',
-            dueDate: '15 Dec'
+            dueDate: '15 Dec',
         },
         {
             id: 3,
@@ -141,7 +148,7 @@ const Projects = () => {
             totalMembers: 2,
             progress: 66,
             category: 'Web Design',
-            dueDate: '20 Dec'
+            dueDate: '20 Dec',
         },
         {
             id: 4,
@@ -153,7 +160,7 @@ const Projects = () => {
             totalMembers: 5,
             progress: 100,
             category: 'Web Design',
-            dueDate: '22 Dec'
+            dueDate: '22 Dec',
         },
         {
             id: 5,
@@ -166,7 +173,7 @@ const Projects = () => {
             totalMembers: 3,
             progress: 45,
             category: 'Android',
-            dueDate: '17 Dec'
+            dueDate: '17 Dec',
         },
         {
             id: 6,
@@ -179,7 +186,7 @@ const Projects = () => {
             totalMembers: 5,
             progress: 55,
             category: 'Web Design',
-            dueDate: '20 Dec'
+            dueDate: '20 Dec',
         },
         {
             id: 7,
@@ -192,7 +199,7 @@ const Projects = () => {
             totalMembers: 3,
             progress: 45,
             category: 'Android',
-            dueDate: '25 Dec'
+            dueDate: '25 Dec',
         },
         {
             id: 8,
@@ -205,7 +212,7 @@ const Projects = () => {
             totalMembers: 3,
             progress: 100,
             category: 'Web Design',
-            dueDate: '30 Dec'
+            dueDate: '30 Dec',
         },
     ];
 
@@ -217,21 +224,31 @@ const Projects = () => {
                 </Col>
                 <Col md={9} xl={6} className="text-md-right">
                     <div className="mt-4 mt-md-0">
-                        <button type="button" className="btn btn-danger mr-4 mb-3  mb-sm-0"><i className="uil-plus mr-1"></i> Create Project</button>
+                        <button type="button" className="btn btn-primary mr-4 mb-3  mb-sm-0">
+                            <i className="uil-expand-arrows-alt mr-1"></i> Create Project
+                        </button>
                         <div className="btn-group mb-3 mb-sm-0">
-                            <button type="button" className="btn btn-primary">All</button>
+                            <button type="button" className="btn btn-primary">
+                                All
+                            </button>
                         </div>
                         <div className="btn-group ml-1">
-                            <button type="button" className="btn btn-white">Ongoing</button>
-                            <button type="button" className="btn btn-white">Finished</button>
+                            <button type="button" className="btn btn-white">
+                                Ongoing
+                            </button>
+                            <button type="button" className="btn btn-white">
+                                Finished
+                            </button>
                         </div>
                         <div className="btn-group ml-2 d-none d-sm-inline-block">
-                            <button type="button" className="btn btn-primary btn-sm"><i
-                                className="uil uil-apps"></i></button>
+                            <button type="button" className="btn btn-primary btn-sm">
+                                <i className="uil uil-apps"></i>
+                            </button>
                         </div>
                         <div className="btn-group d-none d-sm-inline-block ml-1">
-                            <button type="button" className="btn btn-white btn-sm"><i
-                                className="uil uil-align-left-justify"></i></button>
+                            <button type="button" className="btn btn-white btn-sm">
+                                <i className="uil uil-align-left-justify"></i>
+                            </button>
                         </div>
                     </div>
                 </Col>

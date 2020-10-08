@@ -1,22 +1,7 @@
 import React, { useState } from 'react';
 
 import Select from 'react-select';
-import {
-    Button,
-    Card,
-    CardBody,
-    Col,
-    Nav,
-    NavItem,
-    Row,
-    NavLink,
-    TabContent,
-    TabPane,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-} from 'reactstrap';
+import { Card, CardBody, Col, Nav, NavItem, Row, NavLink, TabContent, TabPane, Modal, ModalHeader } from 'reactstrap';
 import Management from './Management';
 import classnames from 'classnames';
 import SensorMap from './sensorMap';
