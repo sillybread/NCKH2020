@@ -1,4 +1,5 @@
 import React, {
+    // eslint-disable-next-line
     useState, useEffect, useRef
 } from 'react';
 import * as THREE from 'three';
@@ -7,10 +8,9 @@ import {
     Object3D
 } from 'three';
 import "./3DChart.css";
-//import Axios from 'axios';
 
 const TChart = (props) => {
-    const container = [];
+    const container = useRef();
     const initWorld = () =>{
         console.log("makeWorld");
         let scene = new THREE.Scene();
@@ -43,6 +43,7 @@ const TChart = (props) => {
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         }, false);
+
         let animate = function () {
             requestAnimationFrame(animate);
             controls.update();
@@ -56,7 +57,7 @@ const TChart = (props) => {
             renderer: renderer
         };    
     }
-    let world = useRef();
+    const world = useRef();
 
     const makeDoor = () => {
         console.log("makeDoor");
@@ -260,7 +261,7 @@ const TChart = (props) => {
             return boxMesh;
         }
     }
-    let mainFrame = useRef();
+    const mainFrame = useRef();
 
     const writeNumber = () => {
         const tilesize = props.config.size.tilesize;
@@ -315,62 +316,54 @@ const TChart = (props) => {
     }
 
     const updateChart = (oFrame) => {
-        let currFace = null;
-        let color = null;
-        let aData = props.data;
+        let aData = props.data.values;
         let size = calcSize();
         
-        // eslint-disable-next-line
-        let aFace = new Array(6).fill(0).map(x => new Array());
+        let aFace = new Array(6).fill(0);
 
         //Find lowest and greatest temperature
-        let iMin = 999;
-        let iMax = -999;
+        let iMin = props.data.min;
+        let iMax = props.data.max;
         for(let iit=0;iit<size.z;iit++){
             for(let iis=0;iis<size.y;iis++){
                 for(let iif=0;iif<size.x;iif++){
-                    if (aData[iit][iis][iif]<iMin) iMin = aData[iit][iis][iif];
-                    if (aData[iit][iis][iif]>iMax) iMax = aData[iit][iis][iif];
-
                     if (iis === 0)
-                        (aFace[0]).push(aData[iit][iis][iif]);
+                        push2Face(0, aData[iit][iis][iif])
                     if (iis === size.y - 1)
-                        (aFace[1]).push(aData[iit][iis][iif]);
+                        push2Face(1, aData[iit][iis][iif])
                     if (iif === 0)
-                        (aFace[2]).push(aData[iit][iis][iif]);        
+                        push2Face(2, aData[iit][iis][iif])
                     if (iif === size.x - 1)
-                        (aFace[3]).push(aData[iit][iis][iif]);
+                        push2Face(3, aData[iit][iis][iif])
                     if (iit === 0)
-                        (aFace[4]).push(aData[iit][iis][iif]);
+                        push2Face(4, aData[iit][iis][iif])
                     if (iit === size.z - 1)
-                        (aFace[5]).push(aData[iit][iis][iif]);
+                        push2Face(5, aData[iit][iis][iif])
                 }
             }
         }
 
-        for (let ii = 0; ii < 6; ii++) {
-            currFace = oFrame.children[ii].geometry.faces;
-            let n = currFace.length / 2;
-            for (let ia = 0; ia < n; ia++) {
-                color = tempToHSL(iMin, iMax, aFace[ii][ia]);
-                currFace[ia * 2].color.set(color);
-                currFace[ia * 2 + 1].color.set(color);
-            }
-            oFrame.children[ii].geometry.elementsNeedUpdate = true;
+        for (let ii=0;ii<6;ii++)
+            oFrame.children[ ii ].geometry.elementsNeedUpdate = true;
+
+        function push2Face(order, value){
+            let hue = tempToHSL(iMin, iMax, value);
+            let currFace = oFrame.children[order].geometry.faces;
+            let idx = aFace[order];
+            currFace[idx * 2].color.setHSL( hue, 1, 0.5);
+            currFace[idx * 2 + 1].color.setHSL( hue, 1, 0.5);
+            aFace[order]++;
         }
 
         function tempToHSL(min, max, temp) {
-            let ret = Math.floor(
-                240 - (temp - min) * 240 / (max - min)
-            );
-            return "hsl(" + ret + ",100%,50%)";
+            return (240 - (temp - min) * 240 / (max - min))/360; //hue
         }
     }
 
     useEffect(() => {
         world.current = initWorld();
         mainFrame.current = makeFrame();
-        container[0].appendChild(world.current.renderer.domElement);
+        container.current.appendChild(world.current.renderer.domElement);
         makeDoor();
         makeWireFrame();
         writeNumber();
@@ -383,7 +376,7 @@ const TChart = (props) => {
     },[props.data]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return (
-        <div className="chartContainer" ref={(self)=>{container.push(self)}}/>
+        <div className="chartContainer" ref={(self)=>{container.current = self}}/>
     );
 };
 
