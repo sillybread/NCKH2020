@@ -1,5 +1,5 @@
 import React, {
-    useState, useEffect
+    useState, useEffect, useRef
 } from 'react';
 import * as THREE from 'three';
 import OrbitControls from 'orbit-controls-es6';
@@ -12,6 +12,7 @@ import "./3DChart.css";
 const TChart = (props) => {
     const container = [];
     const initWorld = () =>{
+        console.log("makeWorld");
         let scene = new THREE.Scene();
         scene.background = new THREE.Color(0xaaffaa);
         let camera = new THREE.PerspectiveCamera(
@@ -55,11 +56,12 @@ const TChart = (props) => {
             renderer: renderer
         };    
     }
-    let [world] = useState(initWorld());
+    let world = useRef();
 
     const makeDoor = () => {
+        console.log("makeDoor");
         let oSettings = props.config.door;
-        if (!oSettings.show || !world.scene) return;
+        if (!oSettings.show || !world.current.scene) return;
         let oCSize = props.config.size;
         let oSize = {
             x: oCSize.x * oCSize.tilesize,
@@ -111,10 +113,11 @@ const TChart = (props) => {
         let oDoor = new THREE.ArrowHelper(vDirection.normalize(), vOrigin, iLength, iColor, iHeadLength, iHeadWidth);
         oDoor.up.set(0,0,1);
 
-        world.scene.add(oDoor);
+        world.current.scene.add(oDoor);
     }
 
     const makeWireFrame = () => {
+        console.log("makeWireFrame");
         let oMaterial = new THREE.LineBasicMaterial({
             color: 0x000000,
             linewidth: 2
@@ -146,9 +149,9 @@ const TChart = (props) => {
         let oGeometry2 = new THREE.BufferGeometry().setFromPoints( aPoints );
 
         let oLine1 = new THREE.Line( oGeometry1, oMaterial );
-        world.scene.add(oLine1);
+        world.current.scene.add(oLine1);
         let oLine2 = new THREE.Line( oGeometry2, oMaterial );
-        world.scene.add(oLine2);
+        world.current.scene.add(oLine2);
     }
 
     const calcSize = () => {
@@ -163,17 +166,17 @@ const TChart = (props) => {
     }
 
     const makeFrame = () => {
+        console.log("makeFrame");
         let size = calcSize();
         let tileSize = props.config.size.tilesize;        
         //Centering oribit controls
-        world.controls.target.set(size.x*tileSize/2, size.y*tileSize/2, size.z*tileSize/2);
-        console.log(size.x*tileSize/2);
+        world.current.controls.target.set(size.x*tileSize/2, size.y*tileSize/2, size.z*tileSize/2);
         let cube = new Object3D();
         for (let ii = 0; ii < 6; ii++) {
             cube.add(createAFace(ii));
         }
         
-        world.scene.add(cube);
+        world.current.scene.add(cube);
         cube.size = size;//?
 
         return cube;
@@ -257,7 +260,7 @@ const TChart = (props) => {
             return boxMesh;
         }
     }
-    let [cube] = useState(makeFrame());
+    let mainFrame = useRef();
 
     const writeNumber = () => {
         const tilesize = props.config.size.tilesize;
@@ -290,7 +293,7 @@ const TChart = (props) => {
             const mul = (n) => {return (n-0.5)*tilesize};
             let sp = makeTextSprite(String(n));
             sp.position.set( mul(x), mul(y), mul(z) );
-            world.scene.add(sp);
+            world.current.scene.add(sp);
         }
 
         
@@ -365,7 +368,9 @@ const TChart = (props) => {
     }
 
     useEffect(() => {
-        container[0].appendChild(world.renderer.domElement);
+        world.current = initWorld();
+        mainFrame.current = makeFrame();
+        container[0].appendChild(world.current.renderer.domElement);
         makeDoor();
         makeWireFrame();
         writeNumber();
@@ -373,7 +378,7 @@ const TChart = (props) => {
     },[]);
 
     useEffect(()=>{
-        updateChart(cube);
+        updateChart(mainFrame.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[props.data]);
     // eslint-disable-next-line react-hooks/exhaustive-deps

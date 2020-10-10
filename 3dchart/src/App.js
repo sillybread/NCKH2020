@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import TChart from './components/3DChart.js'
@@ -47,7 +48,7 @@ export default function App() {
   const [dat,setData] = useState(Data());
   
   useEffect(()=>{
-    setTimeout(()=>{
+    setInterval(()=>{
       setData(Data());
     },1000);
   },[])
