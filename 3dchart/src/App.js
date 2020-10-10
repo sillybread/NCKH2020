@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import TChart from './components/3DChart.js'
 
@@ -44,13 +44,17 @@ let Slice =
 }
 
 export default function App() {
-  const [sendData, setData] = useState(Data());
-  setTimeout(()=>{
-    setData(Data());
-  },1000);
+  const [dat,setData] = useState(Data());
+  
+  useEffect(()=>{
+    setTimeout(()=>{
+      setData(Data());
+    },1000);
+  },[])
+
   return (
     <div>
-      <TChart config={Config} data={sendData} slice={Slice}/>
+      <TChart config={Config} data={dat} slice={Slice}/>
     </div>
   );
 }
