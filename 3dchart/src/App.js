@@ -4,7 +4,7 @@ import './App.css';
 import TChart from './components/3DChart.js'
 import HueBar from './components/HueBar.js'
 
-/*
+
 let Config =
 {
   "size": {
@@ -37,9 +37,9 @@ let _3rd = () => {
   let iMin = 999;
   let iMax = -999;
   let rd;
-  return { values: new Array(24).fill(0).map(
+  return { values: new Array(50).fill(0).map(
   x => new Array(23).fill(0).map(
-    x => new Array(50).fill(0).map(
+    x => new Array(24).fill(0).map(
       x => {
         rd = Math.random()*1024;
         if (rd < iMin) iMin = rd;
@@ -80,10 +80,9 @@ let Slice =
     axis: "x",
     level: 0
 } 
-*/
+
 
 export default function App() {
-  /*
   const [dat,setData] = useState(_3rd());
   
   useEffect(()=>{
@@ -91,11 +90,10 @@ export default function App() {
       setData(_3rd());
     },1000);
   },[])
-  */
 
   return (
     <div className="chartContainer">
-      <HueBar width={window.innerWidth} height={10} min={0} max={21}/>
+      <TChart config={Config} data={dat} slice={Slice}/>
     </div>  
-  );//<TChart config={Config} data={dat} slice={Slice}/>
+  );//<HueBar width={window.innerWidth} height={10} min={0} max={21}/>
 }

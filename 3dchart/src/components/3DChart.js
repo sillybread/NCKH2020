@@ -328,17 +328,17 @@ const TChart = (props) => {
             for(let iis=0;iis<size.y;iis++){
                 for(let iif=0;iif<size.x;iif++){
                     if (iis === 0)
-                        push2Face(0, aData[iit][iis][iif])
+                        push2Face(0, aData[iif][iis][iit])
                     if (iis === size.y - 1)
-                        push2Face(1, aData[iit][iis][iif])
+                        push2Face(1, aData[iif][iis][iit])
                     if (iif === 0)
-                        push2Face(2, aData[iit][iis][iif])
+                        push2Face(2, aData[iif][iis][iit])
                     if (iif === size.x - 1)
-                        push2Face(3, aData[iit][iis][iif])
+                        push2Face(3, aData[iif][iis][iit])
                     if (iit === 0)
-                        push2Face(4, aData[iit][iis][iif])
+                        push2Face(4, aData[iif][iis][iit])
                     if (iit === size.z - 1)
-                        push2Face(5, aData[iit][iis][iif])
+                        push2Face(5, aData[iif][iis][iit])
                 }
             }
         }
