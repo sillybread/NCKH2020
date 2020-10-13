@@ -1,16 +1,7 @@
 const FakeData = [
   {
-    id: "01",
-    value: -12.88,
-    status: "RUNNING",
-
-    x: 17,
-    y: 7,
-    z: 7,
-  },
-  {
     id: "02",
-    value: -4.44,
+    value: -7.22,
     status: "RUNNING",
 
     x: 0,
@@ -19,7 +10,7 @@ const FakeData = [
   },
   {
     id: "03",
-    value: -5,
+    value: -9.66,
     status: "RUNNING",
 
     x: 0,
@@ -27,17 +18,8 @@ const FakeData = [
     z: 0,
   },
   {
-    id: "07",
-    value: -11.77,
-    status: "RUNNING",
-
-    x: 36,
-    y: 7,
-    z: 17,
-  },
-  {
     id: "08",
-    value: -14.66,
+    value: -19.99,
     status: "RUNNING",
 
     x: 53,
@@ -46,52 +28,43 @@ const FakeData = [
   },
   {
     id: "09",
-    value: -8.77,
+    value: -12.66,
     status: "RUNNING",
 
     x: 0,
     y: 0,
-    z: 23,
-  },
-  {
-    id: "10",
-    value: -9.44,
-    status: "RUNNING",
-
-    x: 36,
-    y: 14,
-    z: 17,
+    z: 25,
   },
   {
     id: "11",
-    value: -8.11,
+    value: -12.11,
     status: "RUNNING",
 
     x: 0,
     y: 22,
-    z: 23,
+    z: 25,
   },
   {
     id: "12",
-    value: -8,
+    value: -12.22,
     status: "RUNNING",
 
     x: 53,
     y: 22,
-    z: 23,
+    z: 25,
   },
   {
     id: "13",
-    value: -10.99,
+    value: -14.99,
     status: "RUNNING",
 
     x: 53,
     y: 0,
-    z: 23,
+    z: 25,
   },
   {
     id: "14",
-    value: -13.44,
+    value: -17.44,
     status: "RUNNING",
 
     x: 53,
@@ -99,32 +72,34 @@ const FakeData = [
     z: 0,
   },
   {
-    id: "16",
-    value: -10.22,
-    status: "RUNNING",
-
-    x: 19,
-    y: 14,
-    z: 16,
-  },
-  {
-    id: "17",
-    value: -12.33,
-    status: "RUNNING",
-
-    x: 53,
-    y: 14,
-    z: 12,
-  },
-  {
     id: "18",
-    value: -9.44,
+    value: -13.66,
     status: "RUNNING",
 
-    x: 26,
+    x: 27,
     y: 22,
-    z: 23,
+    z: 25,
   },
+  {
+    id: "01",
+    value: -16.66,
+    status: "RUNNING",
+
+    x: 18,
+    y: 8,
+    z: 8,
+  },
+  {
+    id: "07",
+    value: -15.44,
+    status: "RUNNING",
+
+    x: 37,
+    y: 15,
+    z: 18,
+  },
+
+  
 ];
 
 const WareHouseConfig = {
@@ -182,7 +157,7 @@ function MainFunc(data, config) {
       interpolationMe(xx0, yy1, zz0);
       interpolationMe(xx0, yy1, zz1);
       interpolationMe(xx1, yy0, zz0);
-      interpolationMe(xx0, yy0, zz1);
+      interpolationMe(xx1, yy0, zz1);
       interpolationMe(xx1, yy1, zz0);
       interpolationMe(xx1, yy1, zz1);
 
@@ -221,11 +196,11 @@ function MainFunc(data, config) {
       );
     });
 
-    /*console.log(
+   /*  console.log(
       x0 + "|" + y0 + "|" + z0 + "    |    " + x1 + "|" + y1 + "|" + z1
     );
-    console.log(data.length);
-      */
+    console.log(data.length); */
+    
 
     let check = true;
     let item = null;
@@ -255,7 +230,7 @@ function MainFunc(data, config) {
       ) {
         item = data[i];
 
-        DivCube(x0, y0, z0, y1, item.y, z1);
+        DivCube(x0, y0, z0, x1, item.y, z1);
         DivCube(x0, item.y, z0, x1, y1, z1);
 
         check = false;
@@ -270,7 +245,7 @@ function MainFunc(data, config) {
       ) {
         item = data[i];
 
-        DivCube(x0, y0, z0, y1, y1, item.z);
+        DivCube(x0, y0, z0, x1, y1, item.z);
         DivCube(x0, y0, item.z, x1, y1, z1);
 
         check = false;
@@ -339,7 +314,7 @@ function MainFunc(data, config) {
     }
 
     if (check) {
-      //console.log("tinh noi suy");
+     // console.log("tinh noi suy");
 
       for (let ix = x0; ix <= x1; ix++) {
         for (let iy = y0; iy <= y1; iy++) {
@@ -356,4 +331,3 @@ function MainFunc(data, config) {
 exports.Fake = () => {
   return MainFunc(FakeData, WareHouseConfig);
 };
-MainFunc(FakeData, WareHouseConfig);

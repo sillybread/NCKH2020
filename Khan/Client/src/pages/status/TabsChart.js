@@ -69,20 +69,7 @@ class TabsChart extends Component {
                         <Matrix />
                     </TabPane>
                     <TabPane tabId="3">
-                        <SChart3D
-                            X="54"
-                            Y="23"
-                            Z="24"
-                            src="http://localhost:8080/api/sensor/demoTemperature"
-                            ref={(me) => {
-                                me &&
-                                    me.setState({
-                                        sSliceAxis: 'z',
-                                        iSliceLevel: 0,
-                                        bg_color: 0xffffff,
-                                    });
-                            }}
-                        />
+                        <SChart3D />
                     </TabPane>
                 </TabContent>
             </>

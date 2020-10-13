@@ -21,7 +21,10 @@ module.exports = function (app) {
     controller.editRoom
   );
   //getMyAccessRoom
-  app.get("/api/room/", [authJwt.verifyToken], controller.getMyAccessRoom);
+  app.get("/api/room/all", [authJwt.verifyToken], controller.getMyAccessRoom);
+  //get Room by Id
+  app.get("/api/room/", [authJwt.verifyToken], controller.getRoomById);
+
   //delete
   app.delete(
     "/api/room/",

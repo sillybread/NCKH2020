@@ -18,7 +18,7 @@ export default function MySlice(props) {
         props.onChangeAxis && props.onChangeAxis(axis.value);
     };
     return (
-        <div className="mt-2 row pl-3">
+        <div className="mt-5 row">
             <Select
                 className="react-select bg-white col-6"
                 classNamePrefix="react-select"

@@ -13,5 +13,5 @@ db.nontification = require("./nontification.model");
 db.access = require("./access.model");
 db.structure = require("./structure.model");
 db.data = require("./data.model");
-
+db.activate = require("./activate.model");
 module.exports = db;

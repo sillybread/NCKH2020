@@ -8,6 +8,14 @@ module.exports = function (app) {
     );
     next();
   });
-  app.get("/api/sensor/create", [authJwt.verifyToken], controller.createSensor);
   app.get("/api/sensor/demoTemperature", controller.getTemperature);
+
+  //create Sensor
+  app.post("/api/sensor/create",controller.createSensor);
+  //active Sensor
+  app.post("/api/sensor/activate",[authJwt.verifyToken],controller.activateSensor);
+  //get all Sensor Not Activate
+  app.get("/api/sensor/noActivate",[authJwt.verifyToken],controller.getNoActivateSensor);
+  //get Activate Sensor
+  app.get("/api/sensor/activate",[authJwt.verifyToken],controller.getActivateSensor);
 };

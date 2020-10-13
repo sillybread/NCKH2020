@@ -10,26 +10,28 @@ module.exports = function (app) {
   });
   //get
   app.get(
-    "/api/access/",
+    "/api/room/access/",
     [authJwt.verifyToken, verifyAccess.checkManager],
     controller.getAccess
   );
   //add
   app.post(
-    "/api/access/add",
+    "/api/room/access/add",
     [authJwt.verifyToken, verifyAccess.checkManager],
     controller.addAccess
   );
   //edit
   app.post(
-    "/api/access/edit",
+    "/api/room/access/edit",
     [authJwt.verifyToken, verifyAccess.checkManager],
     controller.editAccess
   );
   //delete
   app.delete(
-    "/api/access/",
+    "/api/room/access/",
     [authJwt.verifyToken, verifyAccess.checkManager],
     controller.deleteAccess
   );
+  //reply
+  app.post("/api/room/access/reply",[authJwt.verifyToken], controller.replyAccess);
 };
