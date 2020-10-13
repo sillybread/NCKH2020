@@ -1,11 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Row, Col, Card, CardBody } from 'reactstrap';
 import Select from 'react-select';
 import TabsChart from './TabsChart';
-import Management from './Management';
 
-function status(props) {
+function Status(props) {
     return (
         <React.Fragment>
             <Row className="page-title align-items-center">
@@ -16,9 +14,9 @@ function status(props) {
                     <Select
                         className="react-select bg-white"
                         classNamePrefix="react-select"
-                        defaultValue={{ value: 'WH0001', label: 'Room 1' }}
+                        defaultValue={{ value: 'WH0001', label: 'Ware House 1' }}
                         options={[
-                            { value: 'WH0001', label: 'Room 1' },
+                            { value: 'WH0001', label: 'Ware House 1' },
                             { value: 'WH0002', label: 'Ware House 2' },
                             { value: 'WH0003', label: 'Ware House 3' },
                         ]}></Select>
@@ -28,16 +26,13 @@ function status(props) {
                 <Col xs={12}>
                     <Card>
                         <CardBody>
-                            <TabsChart></TabsChart>
+                            <TabsChart />
                         </CardBody>
                     </Card>
                 </Col>
             </Row>
-            <Management />
         </React.Fragment>
     );
 }
 
-status.propTypes = {};
-
-export default status;
+export default Status;

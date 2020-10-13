@@ -19,10 +19,7 @@ const StatusChart = () => {
         dataLabels: {
             enabled: false,
         },
-        tooltip: {
-            theme: 'dark',
-            x: { show: false },
-        },
+
         stroke: {
             width: 2,
             curve: 'smooth',
@@ -35,11 +32,24 @@ const StatusChart = () => {
             },
         },
         legend: {
-            position: 'top',
-            horizontalAlign: 'left',
+            position: 'bottom',
+            horizontalAlign: 'center',
+            itemMargin: {
+                horizontal: 12,
+                vertical: 5,
+            },
         },
         xaxis: {
             type: 'datetime',
+        },
+
+        yaxis: {
+            labels: {
+                show: true,
+                formatter: (value) => {
+                    return '-' + value + '°';
+                },
+            },
         },
         grid: {
             row: {
@@ -78,25 +88,25 @@ const StatusChart = () => {
 
     const apexAreaChart2Data = [
         {
-            name: 'Room 1',
-            data: generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 20, {
-                min: 10,
-                max: 60,
+            name: 'KV Cá Ngừ',
+            data: generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 50, {
+                min: 0,
+                max: 40,
             }),
         },
         {
-            name: 'Room 2',
-            data: generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 20, {
-                min: 10,
+            name: 'KV Cá Tra',
+            data: generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 50, {
+                min: 0,
                 max: 20,
             }),
         },
 
         {
-            name: 'Room 3',
-            data: generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 20, {
-                min: 10,
-                max: 15,
+            name: 'KV Tôm',
+            data: generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 50, {
+                min: 0,
+                max: 35,
             }),
         },
     ];
@@ -107,7 +117,7 @@ const StatusChart = () => {
             series={apexAreaChart2Data}
             type="area"
             className="apex-charts"
-            height={400}
+            height={450}
         />
     );
 };

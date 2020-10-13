@@ -10,7 +10,6 @@ import { UncontrolledDropdown, DropdownMenu, DropdownToggle, DropdownItem } from
 import * as FeatherIcon from 'react-feather';
 
 import AppMenu from './AppMenu';
-import profilePic from '../assets/images/users/avatar-11.jpg';
 
 /**
  * User Widget
@@ -19,8 +18,16 @@ const UserProfile = (props) => {
     return (
         <React.Fragment>
             <div className="media user-profile mt-2 mb-2">
-                <img src={props.user.user.avatar} className="avatar-sm rounded-circle mr-2" alt={props.user.user.username} />
-                <img src={props.user.user.avatar} className="avatar-xs rounded-circle mr-2" alt={props.user.user.username} />
+                <img
+                    src={props.user.user.avatar}
+                    className="avatar-sm rounded-circle mr-2"
+                    alt={props.user.user.username}
+                />
+                <img
+                    src={props.user.user.avatar}
+                    className="avatar-xs rounded-circle mr-2"
+                    alt={props.user.user.username}
+                />
 
                 <div className="media-body">
                     <h6 className="pro-user-name mt-0 mb-0">{props.user.user.fullname}</h6>
@@ -38,14 +45,6 @@ const UserProfile = (props) => {
                         <Link to="/account/info" className="dropdown-item notify-item">
                             <FeatherIcon.User className="icon-dual icon-xs mr-2" />
                             <span>My Account</span>
-                        </Link>
-                        <Link to="/account/setting" className="dropdown-item notify-item">
-                            <FeatherIcon.Settings className="icon-dual icon-xs mr-2" />
-                            <span>Settings</span>
-                        </Link>
-                        <Link to="/account/support" className="dropdown-item notify-item">
-                            <FeatherIcon.HelpCircle className="icon-dual icon-xs mr-2" />
-                            <span>Support</span>
                         </Link>
                         <Link to="/account/lock" className="dropdown-item notify-item">
                             <FeatherIcon.Lock className="icon-dual icon-xs mr-2" />

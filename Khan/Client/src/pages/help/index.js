@@ -1,5 +1,9 @@
 import React from 'react';
 
 export default function Help() {
-    return <div>help</div>;
+    return (
+        <>
+            <h3>Help Me</h3>
+        </>
+    );
 }

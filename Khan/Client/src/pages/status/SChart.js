@@ -3,12 +3,7 @@ import * as THREE from 'three';
 import OrbitControls from 'orbit-controls-es6';
 import './SChart.css';
 import Axios from 'axios';
-import Slider from 'rc-slider';
-import Select from 'react-select';
-import { Form, FormGroup, Input } from 'reactstrap';
-
-const createSliderWithTooltip = Slider.createSliderWithTooltip;
-const MySlider = createSliderWithTooltip(Slider);
+import MySlice from '../../components/MySlice';
 
 export default class SChart3D extends Component {
     state = {
@@ -182,32 +177,16 @@ export default class SChart3D extends Component {
                         this.container = thisDiv;
                     }}
                 />
-                <div className="mt-5 row pr-0">
-                    <Select
-                        className="react-select bg-white col-2"
-                        classNamePrefix="react-select"
-                        defaultValue={{ value: 'z', label: 'Axis Z' }}
-                        options={[
-                            { value: 'x', label: 'Axis X' },
-                            { value: 'y', label: 'Axis Y' },
-                            { value: 'z', label: 'Axis Z' },
-                        ]}
-                        onChange={(data) => {
-                            this.setState({ sSliceAxis: data.value });
-                        }}></Select>
-                    <Form className="col-1 pl-0">
-                        <FormGroup>
-                            <Input type="text" name="sliceValue" id="sliceValue" value={this.state.iSliceLevel} />
-                        </FormGroup>
-                    </Form>
-                    <MySlider
-                        className="col-9 mt-3"
-                        min={0}
-                        max={this.getMaxSliceLever()}
-                        onChange={(value) => {
-                            this.setState({ iSliceLevel: value });
-                        }}></MySlider>
-                </div>
+                <MySlice
+                    max={this.getMaxSliceLever()}
+                    min={0}
+                    onChangeValue={(value) => {
+                        this.setState({ iSliceLevel: value });
+                    }}
+                    onChangeAxis={(axis) => {
+                        this.setState({ sSliceAxis: axis });
+                    }}
+                />
             </div>
         );
     }

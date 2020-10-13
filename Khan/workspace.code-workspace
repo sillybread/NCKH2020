@@ -1,0 +1,16 @@
+{
+  "folders": [
+	{
+		"path": "Client"
+	},
+	{
+		"path": "Server"
+	},
+	{
+		"path": "Themeplate"
+	},
+	{
+		"path": "..\\..\\ReactNative\\WareHouse"
+	}
+]
+}
