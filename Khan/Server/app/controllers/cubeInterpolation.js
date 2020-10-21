@@ -1,81 +1,64 @@
 const FakeData = [
   {
     id: "02",
-    value: -7.22,
-    status: "RUNNING",
-
+    value: -7.44,
     x: 0,
     y: 0,
     z: 0,
   },
   {
     id: "03",
-    value: -9.66,
-    status: "RUNNING",
-
+    value: -7.65,
     x: 0,
     y: 22,
     z: 0,
   },
   {
     id: "08",
-    value: -19.99,
-    status: "RUNNING",
-
+    value: -6.11,
     x: 53,
     y: 0,
     z: 0,
   },
   {
     id: "09",
-    value: -12.66,
-    status: "RUNNING",
-
+    value: -4.55,
     x: 0,
     y: 0,
     z: 25,
   },
   {
     id: "11",
-    value: -12.11,
-    status: "RUNNING",
-
+    value: -6.98,
     x: 0,
     y: 22,
     z: 25,
   },
   {
     id: "12",
-    value: -12.22,
-    status: "RUNNING",
-
+    value: -3.99,
     x: 53,
     y: 22,
     z: 25,
   },
   {
     id: "13",
-    value: -14.99,
-    status: "RUNNING",
-
+    value: -3.44,
     x: 53,
     y: 0,
     z: 25,
   },
   {
     id: "14",
-    value: -17.44,
-    status: "RUNNING",
-
+    value: -6.11,
     x: 53,
     y: 22,
     z: 0,
   },
+/* ,
   {
     id: "18",
     value: -13.66,
-    status: "RUNNING",
-
     x: 27,
     y: 22,
     z: 25,
@@ -83,8 +66,6 @@ const FakeData = [
   {
     id: "01",
     value: -16.66,
-    status: "RUNNING",
-
     x: 18,
     y: 8,
     z: 8,
@@ -92,12 +73,10 @@ const FakeData = [
   {
     id: "07",
     value: -15.44,
-    status: "RUNNING",
-
     x: 37,
     y: 15,
     z: 18,
-  },
+  }, */
 
   
 ];
@@ -111,20 +90,7 @@ const WareHouseConfig = {
     y: 230,
     z: 260,
   },
-  accessList: [
-    {
-      userId: "user00002",
-      role: "admin",
-    },
-    {
-      userId: "user00003",
-      role: "viewer",
-    },
-  ],
   sensorDensity: 10,
-  sensorMap: [],
-  createdAt: "2020-08-11T12:47:23.920Z",
-  updatedAt: "2020-08-11T12:57:39.773Z",
 };
 const interpolation = require("./interpolation").Interpolation;
 function MainFunc(data, config) {

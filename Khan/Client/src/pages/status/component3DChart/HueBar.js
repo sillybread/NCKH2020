@@ -9,36 +9,38 @@ const HueBar = (props) => {
     const eMin = useRef();
     const eMax = useRef();
     const ePointer = useRef();
+    const prePtr = useRef(240);
 
-    const hue2temp = (hue) => {
-        return (props.max-hue/240*(props.max-props.min)).toFixed(2);
-    }
-
-    const makeTable = (element) => {
-        let tableBar = document.createElement('table')
-        tableBar.setAttribute("width","100%");
-        tableBar.setAttribute("height","10px");
-        tableBar.setAttribute("style","border-spacing: 0;");
-        element.appendChild(tableBar);
-
-        let row = document.createElement('tr');
-        tableBar.appendChild(row);
-
-        for (let ii = 240; ii>0; ii--){
-            let cell = document.createElement('td');
-            cell.setAttribute("width", "auto");
-            cell.setAttribute("height", "100%");
-            cell.setAttribute("style","padding: 0; background-color: hsl("+ii+",100%,50%);");
-            cell.onclick = () => setPointer(ii);
-            row.appendChild(cell);
-        }
-    }
     useEffect(()=>{
+        const makeTable = (element) => {
+            let tableBar = document.createElement('table')
+            tableBar.setAttribute("width",props.width);
+            tableBar.setAttribute("height",props.height);
+            tableBar.setAttribute("style","border-spacing: 0;");
+            element.appendChild(tableBar);
+    
+            let row = document.createElement('tr');
+            tableBar.appendChild(row);
+    
+            for (let ii = 240; ii>=0; ii--){
+                let cell = document.createElement('td');
+                cell.setAttribute("id", "td_"+ii);
+                cell.setAttribute("width", "auto");
+                cell.setAttribute("height", "100%");
+                cell.setAttribute("style","padding: 0; background-color: hsl("+ii+",100%,50%);");
+                cell.onclick = () => {
+                    document.getElementById("td_"+prePtr.current)
+                        .setAttribute("style","padding: 0; background-color: hsl("+prePtr.current+",100%,50%);");
+                    setPointer(ii);
+                    cell.setAttribute("style","padding: 0; background-color: #000");
+                    prePtr.current = ii;
+                };
+                row.appendChild(cell);
+            }
+        }
+
         eBar.current = document.getElementById("hueBar");
         
-        ePointer.current = document.createElement('div');
-        ePointer.current.setAttribute("style", "text-align: center; position: absolute; top: 10px;");
-        eBar.current.appendChild(ePointer.current);
         makeTable(eBar.current)
 
         eMin.current = document.createElement('div');
@@ -50,11 +52,19 @@ const HueBar = (props) => {
         eMax.current.innerText = props.max;
         eMax.current.setAttribute("style","float: right;")
         eBar.current.appendChild(eMax.current);
+
+        ePointer.current = document.createElement('div');
+        ePointer.current.setAttribute("style", "margin: auto; width: 5em; ");
+        eBar.current.appendChild(ePointer.current);
+        // eslint-disable-next-line
     },[]);
 
     useEffect(()=>{
-        ePointer.current.innerHTML = "^<br/>"+hue2temp(pointer);
-        ePointer.current.style.left = props.width - pointer* props.width/240+"px";
+        const hue2temp = (hue) => {
+            return (props.max-hue/240*(props.max-props.min)).toFixed(2);
+        }
+        ePointer.current.innerHTML = hue2temp(pointer);
+        // eslint-disable-next-line
     }, [pointer])
 
     return(

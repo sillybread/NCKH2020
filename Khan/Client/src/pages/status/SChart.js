@@ -22,7 +22,7 @@ let Config =
   "axis-labels": {
     "axis-x": {
       "show": true,
-      "list": [0, 53]
+      "list": [0, 27,53]
     },
     "axis-y": {
       "show": true,
@@ -120,7 +120,7 @@ export default function SChart() {
   return (<>
   <TChart config={Config} data={data} slice={slice}/>
   <div className="p-x-4">
-    <HueBar min={-19.99} max={-7.22}></HueBar>
+    <HueBar min={-7.65} max={-3.44} width={"100%"} height={10}></HueBar>
   </div>
   <MySlice max={0} max={getMaxSlice(slice)} 
       onChangeValue={(value)=> {setSlice({axis:slice.axis,level:value});console.log(slice)}}

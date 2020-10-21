@@ -11,6 +11,7 @@ import "./3DChart.css";
 
 const TChart = (props) => {
     const container = useRef();
+
     const initWorld = () =>{
         console.log("makeWorld");
         let scene = new THREE.Scene();
@@ -38,11 +39,11 @@ const TChart = (props) => {
         
         let axesHelper = new THREE.AxesHelper(7749);
         scene.add(axesHelper);
-         window.addEventListener('resize', function () {
-            camera.aspect = container.current.clientWidth / container.current.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.current.clientWidth, container.current.clientHeight);
-        }, false);
+        // window.addEventListener('resize', function () {
+        //     camera.aspect = window.clientWidth / container.current.clientHeight;
+        //     camera.updateProjectionMatrix();
+        //     renderer.setSize(container.current.clientWidth, container.current.clientHeight);
+        // }, false);
 
         let animate = function () {
             requestAnimationFrame(animate);
@@ -171,7 +172,7 @@ const TChart = (props) => {
         let size = calcSize();
         let tileSize = props.config.size.tilesize;        
         //Centering oribit controls
-        world.current.controls.target.set(size.x*tileSize/2, size.y*tileSize/2, size.z*tileSize/2);
+        world.current.controls.target.set(props.config.size.x*tileSize/2, props.config.size.y*tileSize/2, props.config.size.z*tileSize/2);
         let cube = new Object3D();
         for (let ii = 0; ii < 6; ii++) {
             cube.add(createAFace(ii));
@@ -360,24 +361,32 @@ const TChart = (props) => {
         }
     }
 
-    useEffect(() => {
+    useEffect(()=>{
         world.current = initWorld();
-        mainFrame.current = makeFrame();
         container.current.appendChild(world.current.renderer.domElement);
         makeDoor();
         makeWireFrame();
         writeNumber();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        return () => {
+
+        }
     },[]);
 
-    useEffect(()=>{
-        if(props.data !=null){
+    useEffect(() => {
+        mainFrame.current = makeFrame();
+        if(props.data != null)
             updateChart(mainFrame.current);
+        return () => {
+            world.current.scene.remove(mainFrame.current);
         }
-        
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
+    },[props.slice]);
+
+    useEffect(()=>{
+        if(props.data != null)
+            updateChart(mainFrame.current);
+    // eslint-disable-next-line
     },[props.data]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     return (
         <div className="chartContainer" ref={(self)=>{container.current = self}}/>
     );
