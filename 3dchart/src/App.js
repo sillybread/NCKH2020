@@ -2,7 +2,6 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import TChart from './components/3DChart.js'
-import HueBar from './components/HueBar.js'
 
 
 let Config =
@@ -77,23 +76,28 @@ let _3rd = () => {
 
 let Slice =
 {
-    axis: "x",
-    level: 0
-} 
+    origin: null,
+    destination: null
+}
 
 
 export default function App() {
   const [dat,setData] = useState(_3rd());
-  
+  const [slice, setSlice] = useState(Slice);
   useEffect(()=>{
     setInterval(()=>{
       setData(_3rd());
     },1000);
+    window.test = {
+      slice: ()=>slice,
+      setSlice: (a,b,c,d,e,f)=>setSlice({origin:{x:a,y:b,z:c},destination:{x:d,y:e,z:f}})
+    }
+  // eslint-disable-next-line
   },[])
 
   return (
     <div className="chartContainer">
-      <TChart config={Config} data={dat} slice={Slice}/>
-    </div>  
+      <TChart config={Config} data={dat} slice={slice}/>
+    </div>
   );//<HueBar width={window.innerWidth} height={10} min={0} max={21}/>
 }
