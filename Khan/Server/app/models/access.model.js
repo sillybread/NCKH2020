@@ -10,6 +10,7 @@ const Access = mongoose.model(
         ref: "User",
       },
       role: { type: String, default: "Manager" },
+      accepted: {type:Boolean, default: false}
     },
 
     { timestamps: true }

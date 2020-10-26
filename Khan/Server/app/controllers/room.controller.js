@@ -1,6 +1,7 @@
 const db = require("../models");
 const Room = db.room;
 const Access = db.access;
+const Structure = db.structure;
 
 //Create Room
 exports.createRoom = (req, res) => {
@@ -27,6 +28,7 @@ exports.createRoom = (req, res) => {
       room: newRoom._id,
       role: "Owner",
       user: req.userId,
+      accepted: true
     });
 
     newAcces.save((err, access) => {
@@ -34,7 +36,6 @@ exports.createRoom = (req, res) => {
         res.status(500).send({ messageError: err });
         return;
       }
-
       res.status(200).send({ message: "Create Success" });
     });
   });
@@ -42,7 +43,7 @@ exports.createRoom = (req, res) => {
 
 //Get Assess Room
 exports.getMyAccessRoom = (req, res) => {
-  Access.find({ user: req.userId })
+  Access.find({ user: req.userId,accepted: true })
     .populate("room")
     .exec((err, result) => {
       if (err) {
@@ -52,20 +53,37 @@ exports.getMyAccessRoom = (req, res) => {
       res.status(200).send(result);
     });
 };
+//Get Room By Id
 
+exports.getRoomById = (req, res) => {
+  Room.findById(req.body.room_id)
+    .exec((err, room) => {
+      if (err) {
+        res.status(500).send({ messageError: err });
+        return;
+      }
+      res.status(200).send(room);
+    });
+};
 //Delete Room
 exports.deleteRoom = (req, res) => {
-  Room.remove({ _id: req.body.room_id }).exec((err) => {
+  Room.deleteOne({ _id: req.body.room_id }).exec((err) => {
     if (err) {
       res.status(400).send({ messageError: err });
       return;
     }
-    Access.remove({ room: req.body.room_id, user: req.userId }).exec((err) => {
+    Access.deleteMany({ room: req.body.room_id}).exec((err) => {
       if (err) {
         res.status(400).send({ messageError: err });
         return;
       }
-      res.status(200).send({ message: "Delete success" });
+      Structure.deleteMany({ room: req.body.room_id}).exec((err) => {
+        if (err) {
+          res.status(400).send({ messageError: err });
+          return;
+        }
+        res.status(200).send({ message: "Delete success" });
+      });
     });
   });
 };

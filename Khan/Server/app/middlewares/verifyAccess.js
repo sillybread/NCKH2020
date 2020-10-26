@@ -6,6 +6,7 @@ checkOwner = (req, res, next) => {
     room: req.body.room_id,
     role: "Owner",
     user: req.userId,
+    accepted: true
   }).exec((err, result) => {
     if (err) {
       res.status(400).send({ messageError: "Failed! Id not found!" });
@@ -22,7 +23,7 @@ checkOwner = (req, res, next) => {
 };
 
 checkManager = (req, res, next) => {
-  Access.findOne({ room: req.body.room_id, user: req.userId }).exec(
+  Access.findOne({ room: req.body.room_id, user: req.userId ,accepted: true}).exec(
     (err, result) => {
       if (err) {
         res.status(400).send({ messageError: "Failed! Id not found!" });
@@ -49,7 +50,7 @@ checkManager = (req, res, next) => {
   );
 };
 checkViewer = (req, res, next) => {
-  Access.findOne({ room: req.body.room_id, user: req.userId }).exec(
+  Access.findOne({ room: req.body.room_id, user: req.userId,accepted: true }).exec(
     (err, result) => {
       if (err) {
         res.status(400).send({ messageError: "Failed! Id not found!" });

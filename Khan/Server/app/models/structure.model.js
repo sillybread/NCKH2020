@@ -5,12 +5,13 @@ const Structure = mongoose.model(
   new mongoose.Schema(
     {
       room: { type: mongoose.Schema.Types.ObjectId, ref: "Room" },
+      map:[{
       sensor: { type: mongoose.Schema.Types.ObjectId, ref: "Sensor" },
       location: {
         x: { type: Number },
         y: { type: Number },
         z: { type: Number },
-      },
+      }}],
     },
     { timestamps: true }
   )
