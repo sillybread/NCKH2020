@@ -1,40 +1,99 @@
-import React from 'react';
+// eslint-disable-next-line
+import React, {useEffect, useState} from 'react';
 import './App.css';
-import SChart3D from './components/SChart.js'
-//import Axios from 'axios';
+import TChart from './components/3DChart.js'
+import HueBar from './components/HueBar.js'
 
-<<<<<<< HEAD
-function sillyStuff(obj) {
-=======
-function sillyStuff(obj){
->>>>>>> 1be80c17c98d15de9fdd485e15056335df29721e
-  obj.setState({
-    sSliceAxis: "z",
-    iSliceLevel: 3,
-    bg_color: 0xffffff
-  })
+
+let Config =
+{
+  "size": {
+    "x": 50,
+    "y": 23,
+    "z": 24,
+    "tilesize": 5
+  },
+  "door": {
+    "show": true,
+    "direction": "A"//"4 hướng là 4 cạnh của hình chữ nhật có thể đánh dấu A B C D"
+  },
+  "axis-labels": {
+    "axis-x": {
+      "show": true,
+      "list": [0, 5, 12, 19]
+    },
+    "axis-y": {
+      "show": true,
+      "list": [2, 6]
+    },
+    "axis-z": {
+      "show": true,
+      "list": [5, 9]
+    }
+  }
 }
+
+let _3rd = () => {
+  let iMin = 999;
+  let iMax = -999;
+  let rd;
+  return { values: new Array(50).fill(0).map(
+  x => new Array(23).fill(0).map(
+    x => new Array(24).fill(0).map(
+      x => {
+        rd = Math.random()*1024;
+        if (rd < iMin) iMin = rd;
+        if (rd > iMax) iMax = rd;
+        return rd;
+      }
+      )
+    )
+  ),
+  min: iMin,
+  max: iMax
+  }
+};
+//let Data =
+// {
+// 	"values": 
+// 	[[
+// 		[0, 1, 2],
+// 		[0, 1, 2],
+// 		[0, 1, 2]
+// 	],
+// 	[
+// 		[0, 1, 2],
+// 		[0, 1, 2],
+// 		[0, 1, 2]
+// 	],
+// 	[
+// 		[0, 1, 2],
+// 		[0, 1, 2],
+// 		[0, 1, 2]
+// 	]],
+// 	"min": 0,
+// 	"max": 2
+// }
+
+let Slice =
+{
+    axis: "x",
+    level: 0
+} 
+
 
 export default function App() {
-<<<<<<< HEAD
-  return ( <div>
-    <SChart3D X = "5"
-    Y = "5"
-    Z = "5"
-    src = "http://localhost:5000/"
-    ref = {
-      me => {
-        sillyStuff(me);
-      }
-    }
-    /> </div>
-  );
-}
-=======
+  const [dat,setData] = useState(_3rd());
+  
+  useEffect(()=>{
+    setInterval(()=>{
+      setData(_3rd());
+    },1000);
+  },[])
+
   return (
-    <div>
-      <SChart3D  X="5" Y="5" Z="5"  src="http://localhost:5000/" ref={me => {sillyStuff(me);}}/>
-    </div>
-  );
+    <div className="chartContainer">
+      <TChart config={Config} data={dat} slice={Slice}/>
+    </div>  
+  );//<HueBar width={window.innerWidth} height={10} min={0} max={21}/>
 }
->>>>>>> 1be80c17c98d15de9fdd485e15056335df29721e
