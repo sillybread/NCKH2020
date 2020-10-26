@@ -111,7 +111,7 @@ class perfectChart {
         currFace[2 * i + 1].color.setHSL(hue, 1, .5);
     }
     initWorld(){
-        console.info("makeWorld");
+        //console.info("makeWorld");
         let e = new THREE.Scene();
         e.background = new THREE.Color(15663086);
         let t = new THREE.PerspectiveCamera(60,this.container.clientWidth / this.container.clientHeight,1,3e3);
@@ -147,7 +147,7 @@ class perfectChart {
         this.container.appendChild( renderer.domElement);
     }
     makeDoor() {
-        console.info("makeDoor");
+        //console.info("makeDoor");
         let e = this.config.door;
         if (e.show && this.scene) {
             let t = this.config.size
@@ -202,7 +202,7 @@ class perfectChart {
         }
     }
     makeWireFrame() {
-        console.info("makeWireFrame");
+        //console.info("makeWireFrame");
         let e = new THREE.LineBasicMaterial({
             color: 0,
             linewidth: 2
@@ -276,7 +276,7 @@ class perfectChart {
                         hsy: t.sy / 2,
                         hsz: t.sz / 2
                     };
-                    console.info("make frame with size: ", t.idx, "x", t.idy, "x", t.idz);
+                    //console.info("make frame with size: ", t.idx, "x", t.idy, "x", t.idz);
                     this.controls.target.set(t.hsx, t.hsy, t.hsz);
                     let i = [new THREE.Vector3(3 * Math.PI / 2,0,0), new THREE.Vector3(3 * Math.PI / 2,3 * Math.PI / 2,0), new THREE.Vector3(Math.PI,0,0)]
                       , n = this.limit.ix0 * t.tilesize
