@@ -149,7 +149,7 @@ class perfectChart {
         this.container.appendChild( renderer.domElement);
     }
     makeDoor() {
-        //console.info("makeDoor");
+        console.info("makeDoor");
         let e = this.config.door;
         if (e.show && this.scene) {
             let t = this.config.size
@@ -279,7 +279,7 @@ class perfectChart {
                         hsz: t.sz / 2
                     };
                     //console.info("make frame with size: ", t.idx, "x", t.idy, "x", t.idz);
-                    this.controls.target.set(t.hsx, t.hsy, t.hsz);
+                    //this.controls.target.set(t.hsx, t.hsy, t.hsz);
                     let i = [new THREE.Vector3(3 * Math.PI / 2,0,0), new THREE.Vector3(3 * Math.PI / 2,3 * Math.PI / 2,0), new THREE.Vector3(Math.PI,0,0)]
                       , n = this.limit.ix0 * t.tilesize
                       , s = this.limit.iy0 * t.tilesize
