@@ -97,6 +97,20 @@ export default function App(){
 class nativeChart extends perfectChart{
     initWorld(gl){
         console.log("=> initWorld");
+		
+		let centering = setInterval(()=>{
+            let ctrl = null;
+            try{ctrl = orbitControls.current.getControls()} catch{}
+            if (ctrl){
+                let sz = props.config.size;
+                ctrl.target.set(
+                    sz.x/2*sz.tilesize,
+                    sz.y/2*sz.tilesize,
+                    sz.z/2*sz.tilesize);
+                clearInterval(centering);
+            }
+        },100)
+		
         const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
 
         const scene = new THREE.Scene();
@@ -163,25 +177,13 @@ function Chart(props) {
             }),
             console.log("initChartView =>")
         )
+        
     }
 
     useEffect(() => {
         console.log("\n".repeat(3)+"===== START =====");
         initChartView();
-        let centering = setInterval(()=>{
-            let ctrl = null;
-            try{ctrl = orbitControls.current.getControls()} catch{}
-            if (ctrl){
-                let sz = props.config.size;
-                ctrl.target.set(
-                    sz.x/2*sz.tilesize,
-                    sz.y/2*sz.tilesize,
-                    sz.z/2*sz.tilesize);
-                clearInterval(centering);
-            }
-        },100)
         return () => {
-            clearInterval(centering);
             console.log("===== END =====");
             //Clear the animation loop when the component unmounts
             //clearTimeout(timeout);
