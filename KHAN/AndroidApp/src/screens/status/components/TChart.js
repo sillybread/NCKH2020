@@ -100,7 +100,7 @@ class nativeChart extends perfectChart{
         const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
 
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xaaffaa);
+        scene.background = new THREE.Color(0x151A30);
 
         const renderer = new Renderer({ gl });
         renderer.setSize(width, height);

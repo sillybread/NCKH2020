@@ -198,7 +198,7 @@ class perfectChart {
               , r = 8 * t.tilesize
               , o = 2 * t.tilesize
               , c = 1 * t.tilesize
-              , l = new THREE.ArrowHelper(s.normalize(),a,r,0,o,c);
+              , l = new THREE.ArrowHelper(s.normalize(),a,r,0xFFFFFF,o,c);
             l.up.set(0, 0, 1);
             this.scene.add(l);
         }
