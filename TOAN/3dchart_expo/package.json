@@ -3,10 +3,11 @@
     "expo": "~39.0.0",
     "expo-gl": "~9.1.1",
     "expo-three": "^5.4.0",
+    "expo-three-orbit-controls": "^2.0.0",
     "react": "~16.13.0",
+    "react-dom": "~16.13.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.2.tar.gz",
     "react-native-web": "0.13.13",
-    "react-dom": "~16.13.0",
     "three": "^0.108.0"
   },
   "devDependencies": {

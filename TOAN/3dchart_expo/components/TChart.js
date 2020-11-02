@@ -97,7 +97,7 @@ export default function App(){
 class nativeChart extends perfectChart{
     initWorld(gl){
         console.log("=> initWorld");
-		
+
 		let centering = setInterval(()=>{
             let ctrl = null;
             try{ctrl = orbitControls.current.getControls()} catch{}
@@ -110,7 +110,7 @@ class nativeChart extends perfectChart{
                 clearInterval(centering);
             }
         },100)
-		
+
         const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
 
         const scene = new THREE.Scene();
