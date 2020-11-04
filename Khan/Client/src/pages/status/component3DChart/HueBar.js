@@ -40,7 +40,7 @@ const HueBar = (props) => {
         }
 
         eBar.current = document.getElementById("hueBar");
-        
+
         makeTable(eBar.current)
 
         eMin.current = document.createElement('div');
@@ -58,6 +58,11 @@ const HueBar = (props) => {
         eBar.current.appendChild(ePointer.current);
         // eslint-disable-next-line
     },[]);
+
+    useEffect(()=>{
+        eMin.current.innerText = props.min;
+        eMax.current.innerText = props.max;
+    },[props.min, props.max])
 
     useEffect(()=>{
         const hue2temp = (hue) => {

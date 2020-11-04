@@ -1,5 +1,5 @@
 import Slider from 'rc-slider';
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import Select from 'react-select';
 import { InputGroup, Input, InputGroupAddon, InputGroupText } from 'reactstrap';
 import 'rc-slider/assets/index.css';
@@ -9,14 +9,20 @@ export default function MySlice(props) {
     const min = props.min ? props.min : 0;
     const max = props.max ? props.max : 10;
     const [value, setValue] = useState(min);
-    const [axis, setAxis] = useState({ value: 'z', label: 'Axis Z' });
+    const [axis, setAxis] = useState({ value: 'x', label: 'Axis X' });
 
-    const changeValue = () => {
+    const changeValue = (value) => {
         props.onChangeValue && props.onChangeValue(value);
+        setValue(value);
     };
     const changeAxis = () => {
         props.onChangeAxis && props.onChangeAxis(axis.value);
     };
+
+    useEffect(()=>{
+        changeAxis();
+    }, [axis]);
+
     return (
         <div className="mt-5 row">
             <Select
@@ -30,7 +36,6 @@ export default function MySlice(props) {
                 ]}
                 onChange={(data) => {
                     setAxis(data);
-                    changeAxis();
                 }}></Select>
             <InputGroup className="col-6 mb-3">
                 <InputGroupAddon addonType="prepend">
@@ -41,8 +46,8 @@ export default function MySlice(props) {
                     value={value}
                     onChange={(event) => {
                         let num = event.target.value;
-                        setValue(num >= min && num <= max ? num : num < min ? max : min);
-                        changeValue();
+                        let val = num >= min && num <= max ? num : num < min ? max : min;
+                        changeValue(val);
                     }}
                 />
             </InputGroup>
@@ -52,8 +57,7 @@ export default function MySlice(props) {
                     max={max}
                     value={value}
                     onChange={(value) => {
-                        setValue(value);
-                        changeValue();
+                        changeValue(value);
                     }}></MySlider>
             </div>
         </div>
