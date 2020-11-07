@@ -1,7 +1,8 @@
-// eslint-disable-next-line
+ /* eslint-disable */
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import TChart from './components/3DChart.js'
+import TChart from './components/3DChart.js';
+import Matrix from './components/matrix.js';
 
 
 let Config =
@@ -52,27 +53,27 @@ let _3rd = () => {
   max: iMax
   }
 };
-//let Data =
-// {
-// 	"values": 
-// 	[[
-// 		[0, 1, 2],
-// 		[0, 1, 2],
-// 		[0, 1, 2]
-// 	],
-// 	[
-// 		[0, 1, 2],
-// 		[0, 1, 2],
-// 		[0, 1, 2]
-// 	],
-// 	[
-// 		[0, 1, 2],
-// 		[0, 1, 2],
-// 		[0, 1, 2]
-// 	]],
-// 	"min": 0,
-// 	"max": 2
-// }
+let Data =
+{
+	"values":
+	[[
+		[0, 1, 2],
+		[3, 4, 5],
+		[6, 7, 8],
+	],
+	[
+		[6, 7, 8],
+    [0, 1, 2],
+		[3, 4, 5],
+	],
+	[
+		[0, 1, 2],
+		[6, 7, 8],
+		[3, 4, 5],
+	]],
+	"min": 0,
+	"max": 8
+}
 
 let Slice =
 {
@@ -82,22 +83,24 @@ let Slice =
 
 
 export default function App() {
-  const [dat,setData] = useState(_3rd());
-  const [slice, setSlice] = useState(Slice);
-  useEffect(()=>{
-    setInterval(()=>{
-      setData(_3rd());
-    },1000);
-    window.test = {
-      slice: ()=>slice,
-      setSlice: (a,b,c,d,e,f)=>setSlice({origin:{x:a,y:b,z:c},destination:{x:d,y:e,z:f}})
-    }
-  // eslint-disable-next-line
-  },[])
+   const [dat,setData] = useState(_3rd());
+  // const [slice, setSlice] = useState(Slice);
+  // useEffect(()=>{
+  //   setInterval(()=>{
+  //     setData(_3rd());
+  //   },1000);
+  //   window.test = {
+  //     slice: ()=>slice,
+  //     setSlice: (a,b,c,d,e,f)=>setSlice({origin:{x:a,y:b,z:c},destination:{x:d,y:e,z:f}})
+  //   }
+  // // eslint-disable-next-line
+  // },[])
 
   return (
     <div className="chartContainer">
-      <TChart config={Config} data={dat} slice={slice}/>
+      <Matrix w={10} h={3} config={Config} data={dat}/>
     </div>
-  );//<HueBar width={window.innerWidth} height={10} min={0} max={21}/>
+  );
+  //<HueBar width={window.innerWidth} height={10} min={0} max={21}/>
+  //<TChart config={Config} data={dat} slice={slice}/>
 }
