@@ -3,27 +3,53 @@ import React, {useEffect, useRef, useState} from 'react';
 import MySlice from './MySlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const TwoDimensionalChart = props => {
+const TwoDimensionalChart = (props) => {
     const [container, setContainer] = useState(null);
-
     useEffect(()=>{
         if (!container) return;
-        let table = document.createElement('table');
-        table.className = 'table table-bordered text-center';
-        for (let ii=0;ii<3;ii++){
+
+        const DATA = props.data;
+        const MIN = props.min;
+        const MAX = props.max;
+        const WIDTH = DATA[0].length;
+        const HEIGHT = DATA.length;
+
+        const table = document.createElement('table');
+        table.className = 'text-center';//'table-bordered';
+        table.style = "word-break:break-all; width: 100%; height: 100%; font-size:0.67em; cursor: default;";
+
+        for(let iy=HEIGHT-1;iy>=0;iy--){
             let row = document.createElement('tr');
-            for(let jj=0;jj<3;jj++){
-                let cell = document.createElement('td');
-                cell.innerText = `(${ii},${jj})`;
-                cell.onclick = () => {
-                    alert(cell.innerText);
-                }
+
+            let cell = document.createElement('td')
+            cell.style = "width: 1.34em";
+            cell.innerHTML = iy;
+            row.appendChild(cell);
+
+            for(let ix=0;ix<WIDTH;ix++){
+                let cell = document.createElement('td')
+                cell.innerHTML = '&nbsp;';
+                cell.onclick = () => props.onClick(ix,iy);
+                cell.style.background = `hsl(${(240 - 240 * (DATA[iy][ix] - MIN) / (MAX - MIN))},100%,50%`;
                 row.appendChild(cell);
             }
             table.appendChild(row);
         }
+
+        let row = document.createElement('tr');
+        row.style = "height: 1.34em;"
+        let cell = document.createElement('td')
+        cell.innerHTML = "#";
+        row.appendChild(cell);
+        for(let ix=0;ix<WIDTH;ix++){
+            let cell = document.createElement('td')
+            cell.innerHTML = ix;
+            row.appendChild(cell);
+        }
+        table.appendChild(row);
+        container.innerHTML = "";
         container.appendChild(table);
-    },[container])
+    },[container, props])
 
     return(
         <div
@@ -31,18 +57,42 @@ const TwoDimensionalChart = props => {
             ref={
                 e=>setContainer(e)
             }
+            style={{
+                width: 400,
+                height: 600,
+            }}
         />
     )
 }
+TwoDimensionalChart.defaultProps = {
+    onClick: (x, y)=>{console.warn(`x: ${x}\ty:${y}`)},
+}
+
+const rd = () => new Array(15).fill(0).map(
+    x => new Array(10).fill(0).map(
+        x => {
+            return Math.random()*1024;
+        }
+    )
+)
 
 const Matrix = (props) =>{
-    const {w: iWidth, h: iHeight} = props;
+    const [dat, setData] = useState(rd());
+
     useEffect(()=>{
+        setInterval(()=>{
+            setData(rd());
+        },1000);
     },[])
+
+    // useEffect(()=>{
+    //     console.log(dat);
+    // },[dat])
+
     return(
         <>
-            <TwoDimensionalChart w={iWidth} h={iHeight} />
-            <div className='p-3'>
+            <TwoDimensionalChart data={dat} min={0} max={1024}/>
+            <div className="m-3">
                 <MySlice min={0} max={10} />
             </div>
         </>

@@ -98,7 +98,7 @@ export default function App() {
 
   return (
     <div className="chartContainer">
-      <Matrix w={10} h={3} config={Config} data={dat}/>
+      <Matrix config={Config} data={dat}/>
     </div>
   );
   //<HueBar width={window.innerWidth} height={10} min={0} max={21}/>
