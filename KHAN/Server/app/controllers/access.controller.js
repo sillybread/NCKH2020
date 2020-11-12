@@ -31,8 +31,9 @@ exports.addAccess = (req, res) => {
         ref:"Access",
         obj_id: access._id
       });
-      newNontification.save().then(()=>{
+      newNontification.save().then((nontification)=>{
         res.status(200).send({ message: "Add Success" });
+        console.log(req.io);
       }).catch(err=>{
         res.status(400).send({ messageError: err });
       })

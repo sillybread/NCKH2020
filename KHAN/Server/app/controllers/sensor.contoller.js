@@ -6,7 +6,7 @@ const Activate = db.activate;
 
 function Sample2() {
   data = fake();
-  return JSON.stringify({values: data,min: -7.66,max: -3.44});
+  return JSON.stringify({values: data,min: -12.00,max: -6.07});
 }
 
 exports.getTemperature = (req, res) => {

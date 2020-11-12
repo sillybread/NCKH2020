@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import {Pressable, StyleSheet, View,Alert} from 'react-native'
+import React from 'react'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {Icon, Text, useTheme} from '@ui-kitten/components'
 
 export default function AreaRoom(props) {

@@ -1,14 +1,55 @@
 import React from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { Button, CheckBox, Icon, Input, Layout, Spinner, TopNavigation, TopNavigationAction } from '@ui-kitten/components';
+import {useSelector, useDispatch} from 'react-redux';
+import {registerUser} from '../../redux/auth/actions'
+import MyAlert from '../../components/alert.component';
+import { ScrollView } from 'react-native-gesture-handler';
 
-export const SignUp = ({ navigation }) => {
-  const [usename,setUsername] = React.useState();
-  const [email,setEmail] = React.useState();
-  const [password,setPassword] = React.useState();
+const SignUp = ({ navigation }) => {
+  const [username,setUsername] = React.useState("");
+  const [email,setEmail] = React.useState("");
+  const [password,setPassword] = React.useState("");
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
   const [accept, setAccept] = React.useState(false); 
+  const state = useSelector(state => state.Auth);
+  const dispatch = useDispatch();
+  const [check,setCheck] = React.useState({
+    usernameColor:"basic",
+    passwordColor:"basic",
+    emailColor:"basic",
+    checkboxColor:"basic"
+  });
+  const [visibles,setVisibles] = React.useState(false);
+  const [visible2,setVisible2] = React.useState(false);
+  const [firstRender, setFirstRender] = React.useState(false);
 
+  const submitSignUp = ()=>{
+    setCheck({
+      usernameColor: username ==="" ?"danger":"basic",
+      passwordColor: password ==="" ?"danger":"basic",
+      emailColor: email ==="" ?"danger":"basic",
+      checkboxColor: !accept?"danger":"basic"
+    }
+  );
+  if(username !="" && password !="" && email !="" && accept ){
+    setFirstRender(true);
+    dispatch(registerUser(username,email,password));
+    }
+  }
+
+  React.useEffect(()=>{
+    if(state.register_success && !state.loading && firstRender ) {
+      setFirstRender(true);
+      setVisible2(true);
+    }
+    if(firstRender && state.error && !state.loading){
+      setFirstRender(true);
+      setVisibles(true);
+    }
+    
+  
+  },[state.loading])
 
   const LoadingIndicator = (props) => {
     if(props.isLoading)
@@ -41,23 +82,28 @@ export const SignUp = ({ navigation }) => {
   };
 
   return ( 
-    <Layout style={{flex:1}}>
+    <Layout style={styles.container}>
+      <MyAlert status="danger" title="Lỗi" text={state.error} visible={visibles} setVisible={(value)=>setVisibles(value) } ></MyAlert>
+      <MyAlert status="success" title="Thành công" text="Đăng kí thành công" visible={visible2} setVisible={(value)=>{navigateBack();setVisible2(value);}} ></MyAlert>
       <TopNavigation
         accessoryLeft={BackAction}
         title='Đăng nhập'
       />
-      <Layout style={styles.container}>
+      <ScrollView showsHorizontalScrollIndicator={false}  contentContainerStyle={styles.scrollView}>
         <View style={styles.inputView}>
           <Input
+            status={check.usernameColor}
             size='large'
             selectionColor="#3C4ED5"
             placeholder='Nhập tên đăng nhập'
-            value={usename}
+            value={username}
             onChangeText={nextValue => setUsername(nextValue)}
           />
         </View>
         <View style={styles.inputView}>
           <Input
+            type="email"
+            status={check.emailColor}
             size='large'
             selectionColor="#3C4ED5"
             placeholder='Nhập email'
@@ -68,6 +114,7 @@ export const SignUp = ({ navigation }) => {
         <View style={styles.inputView}>
         <Input
           size='large'
+          status={check.passwordColor}
           value={password}
           selectionColor="#3C4ED5"
           placeholder='Nhập mật khẩu'
@@ -78,28 +125,36 @@ export const SignUp = ({ navigation }) => {
         </View>
         <View style={styles.inputView} >
           <CheckBox
+            status={check.checkboxColor}
             checked={accept}
             onChange={nextChecked => setAccept(nextChecked)}>
             Tôi đồng ý với thỏa thuận sử dụng
           </CheckBox>
         </View>
         <View style={{...styles.inputView,marginBottom:10}}>
-          <Button size='large' status='primary' accessoryLeft={()=><LoadingIndicator isLoading/>}>
+          <Button onPress={submitSignUp} size='large' status='primary' accessoryLeft={()=><LoadingIndicator isLoading = {state.loading}/>}>
             ĐĂNG KÍ
           </Button>
           
         </View>
-      </Layout>
+      </ScrollView>
     </Layout>
       
   );
 };
+
+export default SignUp;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center', 
+    
+  },
+  scrollView:{
+    marginTop:30,
+    width:'100%',
     alignItems: 'center',
-
+    
   },
   inputView:{
     marginBottom:30,

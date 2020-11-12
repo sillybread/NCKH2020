@@ -120,7 +120,7 @@ export default function SChart() {
   return (<>
   <TChart config={Config} data={data} slice={slice}/>
   <div className="p-x-4">
-    <HueBar min={-18.65} max={-14.44} width={"100%"} height={10}></HueBar>
+    <HueBar min={-12.00} max={-6.07} width={"100%"} height={10}></HueBar>
   </div>
   <MySlice max={0} max={getMaxSlice(slice)} 
       onChangeValue={(value)=> {setSlice({axis:slice.axis,level:value});console.log(slice)}}

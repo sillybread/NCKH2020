@@ -3,50 +3,60 @@ const db = require("../models");
 const axios = require('axios');
 const config = require('./GetSensorData/config.json')
 const visualData = require('./GetSensorData/visualData');
+const { Fake } = require("./cubeInterpolation");
+var current = 'data-current';
 
+
+const Data = db.data;
 exports.getCurrent = (req, res) => {
+    res.status(200).send(current);
+};
+
+exports.setRealtimeData =(tokenApi,io)=>{
     if(config.mode !="fake"){
-        //REAL DATA
-        if(req.session.tokenApi){
-            axios({
-                url:config.baseURL+config.api.getValue,
-                method:"get",
-                headers:{
-                    "Authorization":"JWT "+req.session.tokenApi
-                },
-            
-            }).then(result =>{
-                res.send(result.data);
-            }).catch(err=>{
-                res.send(err);
-            });
-    
-        } else {
-            axios.post(config.baseURL+config.api.login,config.loginInfo).then(rep =>{
-            req.session.tokenApi = rep.data.accessToken;
-            this.getCurrent(req,res);
-        }).catch(err=>{
-            res.send(err);
-        }); 
-        }
+        RealData(tokenApi,'xxxxxxxx',io)
     }else{
-        if(!req.session.CountRow){
-            req.session.CountRow =1;
+        FakeData(tokenApi,io,1)
+    } 
+}
+const RealData = (tokenApi,oldDate,io)=>{
+    axios({
+        url:config.baseURL+config.api.getValue,
+        method:"get",
+        headers:{
+            "Authorization":"JWT "+tokenApi
+        },
+    }).then(result =>{
+        let data = result.data; 
+        if(data.data[0].data_createdDate != oldDate){
+            /* console.log(result.data); */
+            current = result.data
+            //io.to('khan').emit('event',result.data);
+            oldDate = data.data[0].data_createdDate
+        
         }
-        else if(req.session.CountRow < (config.rowsFake-1)*18)
+        RealData(tokenApi,oldDate,io);
+    }).catch(err=>{
+        console.log(err);
+    });
+}
+const FakeData = (tokenApi,io,index)=>{
+    var newIndex;
+         if(index < (config.rowsFake-1)*18)
         {
-            req.session.CountRow = req.session.CountRow+18;
+            newIndex = index+18;
         }else{
-            req.session.CountRow =1;
+            newIndex =1;
         }
         //VISUAL DATA
-        visualData.Get(req.session.CountRow).then(data=>{
-            res.status(200).send(data);
+        visualData.Get(index).then(data=>{
+            /* console.log(data); */
+            current = data;
+            //io.to('khan').emit('event',data);
+            FakeData(tokenApi,io,newIndex);
+            
         })
         .catch(err=>{
-            res.status(400).send(err);
+            console.log(err);
         })
-    }
-    
-
-};
+}

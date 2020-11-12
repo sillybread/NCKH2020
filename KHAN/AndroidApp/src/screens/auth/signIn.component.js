@@ -1,6 +1,10 @@
 import React from 'react';
-import { Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
-import { Button, Icon, Input, Layout, Spinner, Text } from '@ui-kitten/components';
+import {Image, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { Button,  Icon, Input, Layout, Spinner, Text } from '@ui-kitten/components';
+import { loginUser } from '../../redux/actions';
+import {useSelector,useDispatch}  from 'react-redux';
+import MyAlert from '../../components/alert.component';
+
 
 const LoadingIndicator = (props) => {
   if(props.isLoading)
@@ -13,26 +17,52 @@ const LoadingIndicator = (props) => {
 
 
 
-export const SignIn = ({ navigation }) => {
-  const [usename,setUsername] = React.useState();
-  const [password,setPassword] = React.useState();
+const SignIn = ({ navigation}) => {
+  const [username,setUsername] = React.useState("vikhan");
+  const [check,setCheck] = React.useState({
+    usernameColor:"basic",
+    passwordColor:"basic",
+  });
+
+  const [password,setPassword] = React.useState("123456");
+  const [visible,setVisible] = React.useState(false);
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
+  const state = useSelector(state => state.Auth);
+  const dispatch = useDispatch();
+  
+
+  const submitLogin = ()=>{
+    setCheck({
+        usernameColor: username ==="" ?"danger":"basic",
+        passwordColor: password ==="" ?"danger":"basic",
+      }
+    );
+    if(username !="" && password !="") dispatch(loginUser(username,password));
+  }
 
   const toggleSecureEntry = () => {
     setSecureTextEntry(!secureTextEntry);
   };
 
+  React.useEffect(()=>{
+    setVisible(state.error && !state.loading)
+  },[state.loading])
+ 
   const renderIcon = (props) => (
     <TouchableWithoutFeedback onPress={toggleSecureEntry}>
       <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'}/>
     </TouchableWithoutFeedback>
   );
 
+  
+
 
   return (
-      <Layout style={styles.container}>
+      <Layout style={styles.container} level='1'>
+        <MyAlert status="danger" title="Lỗi" text={state.error} visible={visible} setVisible={(value)=>setVisible(value) } ></MyAlert>
+        <ScrollView showsHorizontalScrollIndicator={false}  contentContainerStyle={styles.scrollView}>
         <Image style={styles.logo} source={require('../../assets/images/logo.png') }/>
-        <Text style={styles.text} category='h2'>
+        <Text style={styles.text} category='h5'>
          QUẢN LÝ NHIỆT ĐỘ KHO LẠNH
         </Text>
         <View style={styles.inputView}>
@@ -40,7 +70,8 @@ export const SignIn = ({ navigation }) => {
             size='large'
             selectionColor="#3C4ED5"
             placeholder='Nhập tên đăng nhập'
-            value={usename}
+            value={username}
+            status={check.usernameColor}
             onChangeText={nextValue => setUsername(nextValue)}
           />
         </View>
@@ -52,6 +83,7 @@ export const SignIn = ({ navigation }) => {
           placeholder='Nhập mật khẩu'
           accessoryRight={renderIcon}
           secureTextEntry={secureTextEntry}
+          status={check.passwordColor}
           onChangeText={nextValue => setPassword(nextValue)}
         />
         </View>
@@ -59,7 +91,7 @@ export const SignIn = ({ navigation }) => {
           Quên mật khẩu ?
         </Button>
         <View style={styles.inputView}>
-          <Button size='large' status='primary' accessoryLeft={()=><LoadingIndicator isLoading/>}>
+          <Button size='large' status='primary' onPress={submitLogin} accessoryLeft={()=><LoadingIndicator isLoading ={state.loading}/>}>
             ĐĂNG NHẬP
           </Button>
           
@@ -70,15 +102,24 @@ export const SignIn = ({ navigation }) => {
           </Button>
           
         </View>
+        </ScrollView>
       </Layout>
   );
 };
+
+
+export default SignIn;
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollView:{
+    width:'100%',
     justifyContent: 'center', 
     alignItems: 'center',
-
   },
   logo:{
     marginTop:40,
@@ -101,5 +142,5 @@ const styles = StyleSheet.create({
   },
   forgot:{
     marginBottom:25
-  }
+  },
 })

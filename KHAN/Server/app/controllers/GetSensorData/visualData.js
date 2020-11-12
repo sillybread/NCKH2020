@@ -2,7 +2,7 @@ const xlsxFile = require('read-excel-file/node');
 exports.Get = async function (index){
    return await xlsxFile('./app/controllers/GetSensorData/Data7ngay.xlsx').then(rows=>{
         let DataArray = new Array();
-        for(let i=index;i<=index+18;i++){
+        for(let i=index;i<index+18;i++){
             DataArray.push({
                 data_id: 3078057,
                 station_id: 8,

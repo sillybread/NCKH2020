@@ -95,6 +95,7 @@ export default function App(){
 }
 
 class nativeChart extends perfectChart{
+
     initWorld(gl){
         console.log("=> initWorld");
         const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
