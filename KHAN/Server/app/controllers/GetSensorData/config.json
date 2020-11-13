@@ -1,6 +1,7 @@
 {
     "mode":"fake",
     "rowsFake":400,
+    "fileName":"Data11.xlsx",
     "baseURL":"http://iotlab.net.vn:3000/api/",
     "api":{
         "login":"auth/token",

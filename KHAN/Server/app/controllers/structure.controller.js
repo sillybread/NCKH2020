@@ -26,6 +26,7 @@ exports.addStructure = (req,res)=>{
             }
         });
         newStructure.save().then(()=>{
+            req.io.to('room'+req.body.room_id).emit('structure',{message:'add',data:newStructure});
             res.status(200).send(newStructure);
         }).catch(err=>{
             res.status(400).send({ messageError: err });
@@ -35,7 +36,7 @@ exports.addStructure = (req,res)=>{
 }
 //get Structure
 exports.getStructure =(req,res)=>{
-    Structure.findOne({ room: req.body.room_id}).populate({
+    Structure.findOne({ room: req.body.room_id},'map').populate({
         path: 'map',
         populate: { path: 'sensor' }
       }).sort({"createdAt":-1}).exec((err,structure)=>{
@@ -72,6 +73,7 @@ exports.editStructure =(req,res)=>{
             }
         });
         newStructure.save().then(()=>{
+            req.io.to('room'+req.body.room_id).emit('structure',{message:'update',data:newStructure});
             res.status(200).send(newStructure);
         }).catch(err=>{
             res.status(400).send({ messageError: err });
@@ -96,6 +98,7 @@ exports.deleteStructure =(req,res)=>{
         
         newStructure.map = newStructure.map.filter(st => st.sensor != req.body.sensor_id);
         newStructure.save().then(()=>{
+            req.io.to('room'+req.body.room_id).emit('structure',{message:'update',data:newStructure});
             res.status(200).send(newStructure);
         }).catch(err=>{
             res.status(400).send({ messageError: err });

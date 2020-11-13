@@ -4,11 +4,6 @@ const fake = require("./cubeInterpolation").Fake;
 const Sensor = db.sensor;
 const Activate = db.activate;
 
-function Sample2() {
-  data = fake();
-  return JSON.stringify({values: data,min: -12.00,max: -6.07});
-}
-
 exports.getTemperature = (req, res) => {
   let mapSize = 10;
   let rd = function () {
@@ -20,7 +15,7 @@ exports.getTemperature = (req, res) => {
   }
   //res.send(JSON.stringify({ data: ret }));
   
-  res.send(Sample2());
+  res.send(fake());
 };
 // create system sensor
 exports.createSensor = (req, res) => {

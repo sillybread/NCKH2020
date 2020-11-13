@@ -288,7 +288,8 @@ function MainFunc(data, config) {
       }
     }
   }
-  return result;
+  let tempArray= FakeData.map(fd => fd.value);
+  return {values: result,max:Math.max(...tempArray),min: Math.min(...tempArray)};
 }
 
 exports.Fake = () => {

@@ -2,7 +2,7 @@ const db = require("../models");
 const fs = require("fs");
 const User = db.user;
 exports.getAllUser = (req, res) => {
-  User.find({}).exec((err, user) => {
+  User.find({},'fullname username _id avatar').exec((err, user) => {
     if (err) {
       res.status(400).send({ messageError: err });
       return;
@@ -30,7 +30,7 @@ exports.getAvatar = (req, res) => {
 exports.findUser = (req, res) => {
   User.find({
     username: new RegExp(req.body.username, "i"),
-  }).exec((err, user) => {
+  },'fullname username _id avatar').exec((err, user) => {
     if (err) {
       res.status(400).send({ messageError: err });
       return;

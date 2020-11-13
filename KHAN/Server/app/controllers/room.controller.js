@@ -43,8 +43,8 @@ exports.createRoom = (req, res) => {
 
 //Get Assess Room
 exports.getMyAccessRoom = (req, res) => {
-  Access.find({ user: req.userId,accepted: true })
-    .populate("room")
+  Access.find({ user: req.userId,accepted: true },'role _id room')
+    .populate("room",'name _id')
     .exec((err, result) => {
       if (err) {
         res.status(500).send({ messageError: err });
@@ -82,6 +82,7 @@ exports.deleteRoom = (req, res) => {
           res.status(400).send({ messageError: err });
           return;
         }
+        req.io.to('room'+req.body.room_id).emit('room',{message:'delete',data:{room:{_id:req.body.room_id}}});
         res.status(200).send({ message: "Delete success" });
       });
     });
@@ -113,6 +114,7 @@ exports.editRoom = (req, res) => {
     room
       .save()
       .then(() => {
+        req.io.to('room'+room._id).emit('room',{message:'edit',data:room});
         res.status(200).send({ message: "Edit Success" });
       })
       .catch((err) => {

@@ -7,5 +7,6 @@ const routes = function (app) {
   require("./nontification.routes")(app);
   require("./structure.routes")(app);
   require("./data.routes")(app);
+  require("./area.routes")(app);
 };
 module.exports = routes;

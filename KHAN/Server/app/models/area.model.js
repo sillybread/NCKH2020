@@ -15,13 +15,20 @@ const Area = mongoose.model(
         y1: { type: Number, require: true },
         z1: { type: Number, require: true },
       },
-
-      temperature: {
-        min: { type: Number, require: true },
-        max: { type: Number, require: true },
-      },
-
-      active: { type: Boolean, default: true },
+      monitors:[
+        {
+          times:{
+              from: { type: Date},
+              to:{type: Date},
+              
+          },
+          temperature: {
+            min: { type: Number, require: true },
+            max: { type: Number, require: true },
+          },
+          active: { type: Boolean, default: true }
+        },
+      ],
     },
     { timestamps: true }
   )

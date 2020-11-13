@@ -7,13 +7,15 @@ const app = express();
 // Socket
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
+const socketController = require("./app/controllers/socket.controller").socketController;
+
 app.use(function (req, res, next) {
   req.io = io;
-  next()
+  next();
 })
 
 io.on('connection', socket => {
-  socket.join('khan');
+  socketController(socket)
 }); 
 
 //Sesson
@@ -64,20 +66,21 @@ app.set('port', process.env.PORT || 8080);
 app.set('ip', process.env.IP || '127.0.0.1');
 server.listen(app.get('port'), app.get('ip'), function() {
   console.log('All right ! I am alive at Port: %s:%s!', app.get('ip'), app.get('port'));
-})
-/* app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-}); */
+});
 
+// Get realtime data
 
-// Data realtime
 var axios= require('axios');
 const setRealtimeData = require('./app/controllers/data.controller').setRealtimeData;
-const config = require('./app/controllers/GetSensorData/config.json')
+const config = require('./app/controllers/GetSensorData/config.json');
+
+
 axios.post(config.baseURL+config.api.login,config.loginInfo).then(rep =>{
-    //setRealtimeData(rep.data.accessToken,io);
+    setRealtimeData(rep.data.accessToken,io);
 }).catch(err=>{
   console.log('API Service error',err);
 }); 
+
+
 
 

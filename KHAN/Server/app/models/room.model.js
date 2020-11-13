@@ -19,7 +19,7 @@ const Room = mongoose.model(
         show: { type: Boolean, default: true },
         direction: { type: String, default: "A" },
       },
-    },
+      },
 
     { timestamps: true }
   )

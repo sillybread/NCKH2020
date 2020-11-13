@@ -1,10 +1,11 @@
 const db = require("../models");
+const Room = require("../models/room.model");
 const Access = db.access;
 const Nontification = db.nontification;
 //get Access
 exports.getAccess = (req, res) => {
-  Access.find({ room: req.body.room_id ,accepted: true})
-    .populate("user")
+  Access.find({ room: req.body.room_id ,accepted: true},'role _id user')
+    .populate("user",'fullname avatar _id  username')
     .exec((err, result) => {
       if (err) {
         res.status(400).send({ messageError: err });
@@ -32,15 +33,16 @@ exports.addAccess = (req, res) => {
         obj_id: access._id
       });
       newNontification.save().then((nontification)=>{
+        req.io.to('user'+newNontification.user).emit('notification', newNontification);
         res.status(200).send({ message: "Add Success" });
-        console.log(req.io);
+        
       }).catch(err=>{
-        res.status(400).send({ messageError: err });
+        res.status(400).send({ messageError1: err });
       })
       
     })
     .catch((err) => {
-      res.status(400).send({ messageError: err });
+      res.status(400).send({ messageError2: err });
     });
 };
 //edit Access
@@ -54,6 +56,7 @@ exports.editAccess = (req, res) => {
     access
       .save()
       .then(() => {
+        req.io.to('room'+access.room).emit('access',{message:'edit',data:{access}})
         res.status(200).send({ message: "Edit success" });
       })
       .catch((err) => {
@@ -63,12 +66,20 @@ exports.editAccess = (req, res) => {
 };
 //del Access
 exports.deleteAccess = (req, res) => {
-  Access.deleteOne({ _id: req.body.access_id }).exec((err) => {
+  Access.findById(req.body.access_id).exec((err,access) => {
     if (err) {
       res.status(400).send({ messageError: err });
       return;
     }
-    res.status(200).send({ message: "Delete success" });
+    Access.deleteOne({_id:access._id}).exec((err2)=>{
+      if (err2) {
+        res.status(400).send({ messageError: err });
+        return;
+      }
+      req.io.to('room'+access.room).emit('access',{message:'delete',data:{access}})
+      res.status(200).send({ message: "Delete success" });
+    })
+    
   });
 };
 //reply Access
@@ -84,6 +95,9 @@ exports.replyAccess = (req,res)=>{
       access
         .save()
         .then(() => {
+          
+          req.io.to('user'+access.user).emit('access',{message:'add',data:{access}})
+          req.io.to('room'+access.room).emit('access',{message:'accepted',data:{access}})
           res.status(200).send({ message: "Accepted" });
         })
         .catch((err) => {

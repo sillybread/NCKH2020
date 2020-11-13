@@ -117,5 +117,5 @@ exports.Interpolation = (p0, p1, p2, p3, p4, p5, p6, p7, pos) => {
     iA6 * pos.y * pos.z +
     iA7 * pos.x * pos.y * pos.z;
 
-  return iValue;
-};
+  return Math.round(iValue*100)/100;
+}
