@@ -11,25 +11,29 @@ exports.socketController = (socket)=>{
             if (err) {
               console.log(err);
             }
-            userToken = decoded.id;
+            if(decoded!=null){
+                userToken = decoded.id;
 
-            User.findById(userToken).then((user)=>{
-           
-            //join my room
-            socket.join('user'+user._id);
-            //join access warehouse rooms
-            Access.find({ user: user._id,accepted: true },'role _id room')
-            .populate("room",'name _id')
-            .exec((err, result) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            result.map(rs =>{
-                socket.join('room'+rs.room._id);
-            })
+                User.findById(userToken).then((user)=>{
+            
+                //join my room
+                socket.join('user'+user._id);
+                //join access warehouse rooms
+                Access.find({ user: user._id,accepted: true },'role _id room')
+                .populate("room",'name _id')
+                .exec((err, result) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                result.map(rs =>{
+                    socket.join('room'+rs.room._id);
+                    socket.emit('log','You are join: room'+rs.room._id);
+                })
+                });
             });
-        });
+            }
+            
         })      
     })
 

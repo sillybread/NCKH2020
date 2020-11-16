@@ -1,34 +1,51 @@
+/* Express --------------------------------------------*/
 const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require('cors')
-require("dotenv").config();
-const routes = require("./app/routes");
 const app = express();
-// Socket
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+const server = require('http').createServer(app);
+
+/* Socket.io server------------------------------------*/
+const io = require('socket.io')(server);
+
 const socketController = require("./app/controllers/socket.controller").socketController;
-
-app.use(function (req, res, next) {
-  req.io = io;
-  next();
-})
-
 io.on('connection', socket => {
-  socketController(socket)
-}); 
+  socketController(socket);
+});
 
-//Sesson
+/* Body Parser (content-type - application/json) -----*/
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+/* Cors --------------------------------------------*/
+const cors = require('cors')
+app.use(cors());
+
+/* dotEnv --------------------------------------------*/
+require("dotenv").config();
+
+/* Express Session------------------------------------*/
 const session = require('express-session');
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true
 }));
-// Cors
-app.use(cors());
 
-//Databasse Connect
+/* App Router------------------------------------*/
+const routes = require("./app/routes");
+
+app.use(function (req, res, next) {
+  req.io = io;
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept"
+  );
+  next();
+})
+
+routes(app);
+
+/* Databasse Connect------------------------------------*/
 const db = require("./app/models");
 db.mongoose
   .connect(process.env.DB_CONECTION, {
@@ -38,47 +55,33 @@ db.mongoose
     useCreateIndex: true,
   })
   .then(() => {
-    console.log("Successfully connect to MongoDB.");
+    console.log("MongoDB Connect Success");
   })
   .catch((err) => {
-    console.error("Connection error", err);
+    console.error("Connect to MongoDB failed", err);
     process.exit();
   });
 
-// parse requests of content-type - application/json
-app.use(bodyParser.json());
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-
-
-// simple route
-app.get("/demo", (req, res) => {
-  res.json({ message: "Welcome to application." });
-});
-// App routes
-routes(app);
-
-
-// set port, listen for requests
-
+/* Run Server------------------------------------*/
 app.set('port', process.env.PORT || 8080);
+
 app.set('ip', process.env.IP || '127.0.0.1');
+
 server.listen(app.get('port'), app.get('ip'), function() {
-  console.log('All right ! I am alive at Port: %s:%s!', app.get('ip'), app.get('port'));
+  console.log('I am nunning at: http://%s:%s', app.get('ip'), app.get('port'));
 });
 
-// Get realtime data
-
-var axios= require('axios');
+/* Connect IoT Lab API and Get real time data-----*/
+const axios= require('axios');
 const setRealtimeData = require('./app/controllers/data.controller').setRealtimeData;
-const config = require('./app/controllers/GetSensorData/config.json');
-
+const config = require('./app/config/data.config');
 
 axios.post(config.baseURL+config.api.login,config.loginInfo).then(rep =>{
-    setRealtimeData(rep.data.accessToken,io);
+  console.log('API IoT Lab Connect Success');
+  setRealtimeData(rep.data.accessToken,io);
 }).catch(err=>{
-  console.log('API Service error',err);
+  console.error('API IoT Lab Service error:',err);
 }); 
 
 

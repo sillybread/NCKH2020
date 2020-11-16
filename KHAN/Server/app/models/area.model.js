@@ -5,7 +5,7 @@ const Area = mongoose.model(
   new mongoose.Schema(
     {
       room: { type: mongoose.Schema.Types.ObjectId, ref: "Room" },
-      name: { type: String, require: true, default: "Khu vực cảnh báo" },
+      name: { type: String, require: true, default: "Khu vực giám sát" },
 
       size: {
         x0: { type: Number, require: true },

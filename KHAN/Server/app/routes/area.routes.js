@@ -2,29 +2,75 @@ const { authJwt, verifyAccess, verifyRoom } = require("../middlewares");
 const controller = require("../controllers/area.controller");
 
 module.exports = function (app) {
-  app.use(function (req, res, next) {
-    res.header(
-      "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept"
-    );
-    next();
-  });
-  //create
+  
+  /* Get Area of Room --------------------------------*/
+  app.get(
+    "/api/room/area/all",
+    [authJwt.verifyToken],
+    controller.getAreaRoom
+  );
+
+  /* Get Area by Id--------------------------------*/
+  app.get(
+    "/api/room/area",
+    [authJwt.verifyToken],
+    controller.getArea
+  );
+
+  /* Create Room --------------------------------*/
   app.post(
-    "/api/area/create",
-    [authJwt.verifyToken, verifyRoom.checkCreate],
+    "/api/room/area/create",
+    [authJwt.verifyToken,verifyAccess.checkManager],
     controller.createArea
   );
-  //edit
+  
+  /* Edit Room --------------------------------*/
   app.post(
-    "/api/area/edit",
+    "/api/room/area/edit",
     [authJwt.verifyToken, verifyAccess.checkManager, verifyRoom.checkEdit],
     controller.editArea
   );
-  //delete
+
+  /* Delete Room --------------------------------*/
   app.delete(
-    "/api/area/",
-    [authJwt.verifyToken, verifyAccess.checkOwner],
+    "/api/room/area/",
+    [authJwt.verifyToken, verifyAccess.checkManager],
     controller.deleteArea
+  );
+
+  /* ---------------------------MONITOR--------------------------------*/
+  /* Get Monitor--------------------------------*/
+  app.get(
+    "/api/room/area/monitor",
+    [authJwt.verifyToken, verifyAccess.checkManager],
+    controller.getMonitor
+  );
+
+  /* Add Monitor--------------------------------*/
+  app.post(
+    "/api/room/area/monitor/add",
+    [authJwt.verifyToken, verifyAccess.checkManager],
+    controller.addMonitor
+  );
+
+  /* Edit Monitor--------------------------------*/
+  app.post(
+    "/api/room/area/monitor/edit",
+    [authJwt.verifyToken, verifyAccess.checkManager],
+    controller.editMonitor
+  );
+
+  /* Switch Monitor--------------------------------*/
+  app.post(
+    "/api/room/area/monitor/switch",
+    [authJwt.verifyToken, verifyAccess.checkManager],
+    controller.switchMonitor
+  );
+
+  /* Delete Monitor--------------------------------*/
+  app.delete(
+    "/api/room/area/monitor",
+    [authJwt.verifyToken, verifyAccess.checkManager],
+    controller.deleteMonitor
   );
 };
