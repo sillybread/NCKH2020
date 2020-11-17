@@ -1,65 +1,113 @@
 import React, {
-    // eslint-d.isable-next-line
-    useState, useEffect, useRef
+    useState,
+    useEffect,
+    useRef
 } from 'react';
 
-const HueBar = (props) => {
-    const [pointer, setPointer] = useState(240);
-    const eBar = useRef();
-    const eMin = useRef();
-    const eMax = useRef();
-    const ePointer = useRef();
+class hueBarHelper{
+    constructor(props){
+        this.eBar = this.createElement('div');
+        this.eMin = this.createElement('div',{
+            innerText: props.min,
+            style: `float: left;`,
+        });
+        this.eBar.appendChild(this.eMin);
 
-    const hue2temp = (hue) => {
-        return (props.max-hue/240*(props.max-props.min)).toFixed(2);
+        this.eMax = this.createElement('div',{
+            innerText: props.max,
+            style: `float: right;`,
+        });
+        this.eBar.appendChild(this.eMax);
+
+        this.ePointer = this.createElement('div',{
+            style: `margin: auto; width: 5em;`,
+        });
+        this.eBar.appendChild(this.ePointer);
+
+        this.width = props.width + (isNaN(props.width)?'':'px');
+        this.height = props.height + (isNaN(props.height)?'':'px');
+        this.min = props.min;
+        this.max = props.max;
+        this.cell = [];
+        this.previousSelected = 0;
     }
+    updateExtreme(min, max){
+        this.eMin.innerText = this.min = min;
+        this.eMax.innerText = this.max = max;
+    }
+    createElement(tagName, attribute = {}){
+        let e = document.createElement(tagName);
+        Object.assign(e, attribute);
+        return e;
+    }
+    makeTable(parent){
+        const tableBar = this.createElement('table',{
+            style: `border-spacing: 0;
+                width:${this.width};
+                height:${this.height};`
+        });
+        parent.appendChild(tableBar);
+        parent.appendChild(this.eBar);
 
-    const makeTable = (element) => {
-        let tableBar = document.createElement('table')
-        tableBar.setAttribute("width",props.width);
-        tableBar.setAttribute("height",props.height);
-        tableBar.setAttribute("style","border-spacing: 0;");
-        element.appendChild(tableBar);
-
-        let row = document.createElement('tr');
+        const row = this.createElement('tr');
         tableBar.appendChild(row);
-
-        for (let ii = 240; ii>0; ii--){
-            let cell = document.createElement('td');
-            cell.setAttribute("width", "auto");
-            cell.setAttribute("height", "100%");
-            cell.setAttribute("style","padding: 0; background-color: hsl("+ii+",100%,50%);");
-            cell.onclick = () => setPointer(ii);
-            row.appendChild(cell);
+        this.cell = [];
+        for (let ii = 240; ii >= 0; ii--) {
+            let eCell = this.createElement('td',{
+                width: "auto",
+                height: "100%",
+                style: `padding: 0;
+                    background-color: ${this.hsl(ii)}`,
+                onclick: ()=> this.onCellClick(ii),
+            });
+            this.cell.unshift(eCell);
+            row.appendChild(eCell);
         }
     }
-    useEffect(()=>{
-        eBar.current = document.getElementById("hueBar");
-        
-        ePointer.current = document.createElement('div');
-        ePointer.current.setAttribute("style", "text-align: center; position: absolute; top: 10px;");
-        eBar.current.appendChild(ePointer.current);
-        makeTable(eBar.current)
+    onCellClick(index){
+        //restore previous selected cell's color
+        let pre = this.previousSelected;
+        this.cell[pre].style.background = this.hsl(pre);
 
-        eMin.current = document.createElement('div');
-        eMin.current.innerText = props.min;
-        eMin.current.setAttribute("style","float: left;")
-        eBar.current.appendChild(eMin.current);
+        //make selected turn into black
+        let e = this.cell[index];
+        e.style.background = "#000";
+        this.previousSelected = index;
 
-        eMax.current = document.createElement('div');
-        eMax.current.innerText = props.max;
-        eMax.current.setAttribute("style","float: right;")
-        eBar.current.appendChild(eMax.current);
-    },[]);
+        //update new temperature for middle label
+        this.ePointer.innerText = this.hue2temp(index);
+    }
+    hue2temp = (hue, min = this.min, max = this.max) => (max - hue / 240 * (max - min)).toFixed(2)
+    hsl = (hue, saturation = "100%", lightness = "50%") => `hsl(${hue},${saturation},${lightness})`
+}
 
-    useEffect(()=>{
-        ePointer.current.innerHTML = "^<br/>"+hue2temp(pointer);
-        ePointer.current.style.left = props.width - pointer* props.width/240+"px";
-    }, [pointer])
+const HueBar = (props) => {
+    const [e, setElement] = useState(document.createElement('p'));
+    const helper = useRef();
 
-    return(
-        <div id="hueBar">
-        </div>
+    useEffect(() => {
+        helper.current = new hueBarHelper(props);
+    },[props])
+
+    useEffect(() => {
+        helper.current.makeTable(e);
+        window.t = helper.current.onCellClick.bind(helper.current);
+    }, [e]);
+
+    useEffect(() => {
+        helper.current.updateExtreme(props.min, props.max);
+    }, [props.min, props.max])
+
+    return (
+        <div ref = {e => setElement(e)}/>
     );
 }
+
+HueBar.defaultProps = {
+    min: 0,
+    max: 7749,
+    width: "100%",
+    height: 10
+}
+
 export default HueBar;

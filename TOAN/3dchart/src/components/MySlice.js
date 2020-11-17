@@ -6,9 +6,9 @@ import { InputGroup, Input, InputGroupAddon, InputGroupText } from 'reactstrap';
 import 'rc-slider/assets/index.css';
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const MySlider = createSliderWithTooltip(Slider);
-export default function MySlice(props) {
-    const min = props.min ? props.min : 0;
-    const max = props.max ? props.max : 10;
+const MySlice = (props) => {
+    const min = props.min;
+    const max = props.max;
     const [value, setValue] = useState(min);
     const [axis, setAxis] = useState({ value: 'x', label: 'Axis X' });
 
@@ -24,7 +24,7 @@ export default function MySlice(props) {
     }, [axis]);
 
     return (
-        <div className="mt-5 row">
+        <div className="row">
             <Select
                 className="react-select bg-white col-6"
                 classNamePrefix="react-select"
@@ -63,3 +63,9 @@ export default function MySlice(props) {
         </div>
     );
 }
+
+MySlice.defaultProps = {
+    min: 0,
+    max: 10
+}
+export default MySlice;

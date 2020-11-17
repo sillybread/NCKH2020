@@ -1,0 +1,162 @@
+THIẾT KẾ, XÂY DỰNG GIAO DIỆN NGƯỜI DÙNG TRÊN NỀN TẢNG WEB
+I. Tổng quan
+1. Giới thiệu
+Giao diện người dùng là điểm tương tác và giao tiếp giữa người dùng và máy tính. Các trang, nút, văn bản và các yếu tố trực quan khác mà ta thấy khi sử dụng ứng dụng là giao diện của ứng dụng đó. Vì vậy thiết kế giao diện là một trong những bước đầu quan trọng trong việc xây dựng và phát triển ứng dụng. Một thiết kế được xem là phù hợp đạt được các yêu cầu như:
+- Dễ sử dụng, dễ hiểu.
+- Có đầy đủ tính năng mà người dùng cần.
+2. Mục tiêu
+Thiết kế giao diện cho sản phẩm mang lại trải nghiệm tốt cho người dùng về:
+- Cảm giác kiểm soát, người sử dụng biết họ đang ở đâu và cần làm gì.
+- Tạo sự thoải mái khi tương tác với sản phẩm.
+- Giảm các suy nghĩ, ghi nhớ không cần thiết.
+- Có tính nhất quán về giao diện và chức năng.
+3. Ràng buộc trong thiết kế
+Font chữ: Nunito Sans.
+Màu chủ đạo: màu trắng.
+II. Thiết kế lưu đồ trải nghiệm người dùng
+1. Sơ đồ
+2. Chú thích
+III. Cơ sở lý thuyết
+ReactJS là một thư viện JavaScript mã nguồn mở được thiết kế bởi Facebook để tạo ra những ứng dụng web hấp dẫn, nhanh và hiệu quả với mã hóa tối thiểu. Mục đích cốt lõi của ReactJS không chỉ khiến cho trang web phải thật mượt mà còn phải nhanh, khả năng mở rộng cao và đơn giản. Sức mạnh của nó xuất phát từ việc tập trung vào các thành phần riêng lẻ. Chính vì vậy, thay vì làm việc trên toàn bộ ứng dụng web, ReactJS cho phép một developer có thể phá vỡ giao diện người dùng phức tạp thành các thành phần đơn giản hơn.
+Ứng dụng xây dựng trên nền tảng ReactJS sử dụng cú pháp JavaScript ES6, được biên dịch thông qua BabelJS giúp cho mã nguồn dễ đọc và dễ dàng phát trển hơn. Với sự hỗ trợ của ES6 và V8 Engine có thể nói rằng JavaScript hiện tại không thua gì các ngôn ngữ lập trình hướng đối tượng khác.
+Các ứng dụng sử dụng ReactJS nổi tiếng có thể kể đến như: Facebook, Instagram, Zalo web, Netflix,...
+IV. Thiết kế giao diện
+1. Tài khoản và người dùng
+1.1. Trang đăng nhập
+Giao diện này hỗ trợ người dùng đăng nhập vào ứng dụng. Nếu chưa có tài khoản, người dùng có thể nhấn vào "Đăng ký" để đăng ký. Nếu quên mật khẩu đăng nhập, người dùng có thể nhấn vào "Quên mật khẩu" để tiến hành lấy lại mật khẩu.
+<Hình 1>
+Các thành phần chính:
+- Text: Hiển thị chỉ dẫn và tiêu đề trang.
+- Input: Ô nhập liệu cho phép người dùng nhập vào tài khoản và mật khẩu.
+- Button: Xác minh tài khoản và mật khẩu để truy cập vào hệ thống.
+- Hyper-link: cho phép chuyển sang các trang chức năng khác như: trang đăng ký, trang quên mật khẩu.
+1.2. Trang đăng ký
+Giao diện này giúp cho người dùng mới đăng ký cho bản thân một tài khoản để truy cập vào ứng dụng. Nếu muốn quay lại trang đăng nhập có thể nhấn vào "Đăng nhập" ở cuối trang.
+<Hình 2>
+Các thành phần chính:
+- Text: Hiển thị chỉ dẫn và tiêu đề trang.
+- Input: Ô nhập liệu cho phép người dùng nhập vào tài khoản, email và mật khẩu để đăng ký.
+- Check box: Xác nhận rằng người dùng đồng ý với điều khoản sử dụng.
+- Button: Xác nhận đăng ký tài khoản mới.
+- Hyper-link: cho phép quay về trang đăng nhập.
+1.3. Trang quên mật khẩu
+Trong trường hợp người dùng quên mất mật khẩu của mình, giao diện này sẽ giúp người dùng đặt lại một mật khẩu mới để có thể tiếp tục truy cập vào hệ thống. Để quay lại trang đăng nhập, nhấn vào "Đăng nhập" ở cuối trang.
+<Hình 3>
+Các thành phần chính:
+- Text: Hiển thị chỉ dẫn và tiêu đề trang.
+- Input: Ô nhập liệu cho phép người dùng nhập vào email đã đăng ký để nhận chỉ dẫn đặt lại mật khẩu.
+- Button: Xác nhận đặt lại mật khẩu.
+- Hyper-link: cho phép quay về trang đăng nhập.
+2. Trang giám nhiệt độ kho lạnh liên tục theo thời gian thực
+Trang này cho phép người dùng theo dõi nhiệt độ của một kho lạnh theo các kiểu khác nhau. Có ba thẻ (tab) để người dùng chuyển đổi cách theo dõi.
+2.1. Thẻ biểu đồ đường nhiệt độ theo khu vực giám sát
+Khi người dùng muốn theo dõi nhiệt độ trung bình của các khu vực trong kho, giao diện này sẽ hiển thị nhiệt độ trung bình theo dạng biểu đồ đường với trục nằm ngang biểu thị thời gian và trục đứng biểu thị nhiệt độ trung bình của khu vực tại thời điểm đó.
+<Hình 4>
+Các thành phần chính:
+- StatusChart: biểu thị nhiệt độ trung bình của các khu vực theo thời gian.
+2.2. Thẻ biều đồ mặt phẳng cắt lớp 2D
+Trong trường hợp người dùng muốn theo dõi nhiệt độ theo kiểu cắt lớp, giao diện này sẽ hiển thị một biểu đồ dạng lưới, với mỗi mắt lưới tương ứng với một đơn vị diện tích trong kho lạnh theo một chiều nhất định. Có thể thay đổi chiều cắt và độ sâu (lớp hiện tại) bằng cách sử dụng các công cụ bên dưới sơ đồ.
+<Hình 5>
+Các thành phần chính:
+- TwoDimentionalChart: biểu thị nhiệt độ kho lạnh tại lớp cắt hiện tại, với mỗi mắt lưới tương ứng với độ màu thích hợp so với nhiệt độ.
+- HueBar: Chỉ ra biên độ nhiệt trong kho, đánh dấu và hiển thị nhiệt độ theo dạng số nếu một mắt lưới được chọn.
+- MySlice: Cung cấp các công cụ cho việc chọn chiều cắt và độ sâu.
+2.3. Thẻ biểu đồ khối 3D phân bố nhiệt độ trong kho lạnh
+Trong trường hợp người dùng muốn theo dõi nhiệt độ trong không gian ba chiều, giao diện này sẽ hiển thị một biểu đồ khối, với mỗi đơn vị  tương ứng với một đơn vị không gian trong kho lạnh. Có thể thay đổi chiều cắt và độ sâu (lớp hiện tại) để xem thông tin bên trong khối bằng cách sử dụng các công cụ bên dưới sơ đồ.
+<Hình 6>
+Các thành phần chính:
+- SChart: biểu thị nhiệt độ kho lạnh theo dạng khối trong không gian ba chiều, có hỗ trợ xoay, thu phóng.
+- HueBar: Chỉ ra biên độ nhiệt trong kho, đánh dấu và hiển thị nhiệt độ theo dạng số nếu một mắt lưới được chọn.
+- MySlice: Cung cấp các công cụ cho việc chọn chiều cắt và độ sâu.
+3. Thêm kho lạnh mới
+Để thêm một kho lạnh mới tại bảng điều khiển bên trái chọn Config > Warehouse > Kho mới.
+<Hình 7>
+Một hộp thoại hiện lên, nhập tên và mô tả cho kho lạnh mới mà người dùng muốn tạo vào trong. Sau đó, nhấn "Tiếp" để chuyển sang bước tiếp theo. Để hủy, nhấn vào vùng bên ngoài hộp thoại.
+<Hình 8>
+Tiếp đó, nhập chiều dài, chiều rộng, chiều cao và khoảng cách nhỏ nhất giữa các cảm biến. Sau đó, nhấn "Tiếp" để chuyển sang bước tiếp theo. Nhấn trở về để quay lại bước trước đó.
+<Hình 9>
+Cuối cùng, chọn vị trí cửa của kho lạnh mới theo các hướng: A, B,C, D; đánh vào ô chấp nhận điều khoản và nhấn "Lưu" để hoàn tất việc tạo kho lạnh. Nhấn trở về để quay lại bước trước đó.
+<Hình 10>
+Các thành phần chính:
+- Text: trình bày các chỉ dẫn và nhãn cho các thành phần khác.
+- Input: nhập các thông tin cấu hình cho kho lạnh mới.
+- Button: Xác nhận chuyển sang bước tiếp theo hoặc quay về bước trước đó.
+4. Cấu hình kho lạnh
+4.1. Cấu hình bộ cảm biến
+4.1.1. Thêm bộ cảm biến
+Một bộ cảm biến sẽ tương ứng với một tài khoản truy cập vào API (iotlab.net.vn). Người dùng bấm nút thêm bộ cảm biến, một hộp thoại hiện ta yêu cầu nhập tên đăng nhập và mật khẩu của Api được cung cấp để kích hoạt sử dụng bộ cảm biến tương ứng trên hệ thống. Nếu tên đăng nhập và mật khẩu được (iotlab.net.vn) xác nhận chính xác thình người dùng kích hoạt thành công. Tùy vào kích thước kho lạnh mà người dùng có thể kích hoạt nhiều bộ cảm biến khác nhau để tăng số lượng cảm biến trong kho.
+<Chưa có giao diện>
+4.1.2. Xóa bộ cảm biến
+Để xóa một bộ cảm biến, người dùng nhất nút xóa trên bộ cảm biến tương ứng.
+<Chưa có giao diện>
+4.2. Cấu hình mạng cảm biến
+Cho phép người dùng quản lý các cảm biến trong một kho lạnh nếu người dùng đó được phép.
+4.2.1. Thêm cảm biến vào vị trí tọa độ
+Chức năng được khả dụng với ô chưa có cảm biến được thêm vào. Khi chọn chức năng này, người dụng được chọn một cảm biến trong danh sách cảm biến được kích hoạt và cảm biến này chưa được sử dụng bởi các vị trí khác. Sau khi chọn đúng cảm biến, người dùng nhấn nút “Thêm” để hoàn thành.
+<Chưa có giao diện>
+4.2.2. Đổi vị trí cảm biến
+Chức năng được sử dụng khi người dùng muốn đổi vị trí của một cảm biến. Người dùng thay đổi vị trí tọa độ (x,y,z) của cảm biến, nếu vị trí đó đã có cảm biến hiện hữu thì ứng dụng sẽ báo lỗi. Khi vị trí sửa đổi và hợp lệ, nút “Sửa” được bật lên để người dùng nhấn và hoàn thành thao tác.
+<Chưa có giao diện>
+4.2.3. Xóa cảm biến khỏi vị trí
+Người dùng chọn một ô chứa cảm biến, lúc này nút “Xóa” đã khả dụng. Người dùng bấm vào nút “Xóa” để xóa cảm biến khỏi vị trí ô đó.
+<Chưa có giao diện>
+4.3. Cấu hình khu vực giám sát
+4.3.1. Thêm khu vực giám sát mới
+Khi người dùng có nhu cầu giám sát nhiệt độ tại một khu vực nào đó trong kho lạnh, người dùng chọn chức năng thêm khu vực giám sát
+<Hình gì đó>
+Một hộp thoại yêu cầu người dùng điền các thông tin sau:
+-	Tên khu vực.
+-	Kích thước khu vực. Chúng được xác định bởi cặp tọa độ tọa độ:
+	- Điểm tọa độ gần với gốc tọa độ O(0,0,0) nhất của khu vực: xmin, ymin, zmin.
+	- Điểm tọa độ xa với gốc tọa độ nhất của khu vực: xmax, ymax, ymax
+<Rồi hình gì đó>
+<Chưa có giao diện>
+4.3.2. Sửa thông tin khu vực giám sát
+Khi muốn thay đổi thông tin của một khu vực giám sát, người dùng chọn khu vực cần sửa và đổi một số thông tin như: tên khu vực, kích thước khu vực. Khi thông tin thay đổi hợp lệ, người dùng nhất “Lưu” để hoàn tất.
+<Chưa có giao diện>
+4.3.3. Xóa khu vực giám sát
+Khi người dùng không còn nhu cầu giám sát ở một khu vực nào đó, người dùng chọn khu vực cần xóa và chọn chức năng xóa. Một hộp thoại xác nhận thao tác sẽ được hiển thị, người dùng chọn “Xóa” để hoàn thành thao tác.
+4.3.4. Cấu hình khung thời gian của khu vực giám sát
+Một khu vực được giám sát bởi nhiều khung thời gian khác nhau trong ngày, mỗi khung thời gian có một nhiệt độ giám sát tương ứng. Ứng dụng cần cho phép người dùng thêm, sửa, xóa các khung thời gian này.
+4.3.4.1. Thêm khung thời gian giám sát
+Người dùng nhấn nút “Thêm khung giờ”, ứng dụng yêu cầu người dùng thêm các thông tin cần thiết cho khung giờ giám sát như sau:
+	- Thời gian:
+		- Thời gian bắt đầu giám sát.
+		- Thời gian kết thúc giám sát.
+	- Nhiệt độ cho phép của khung giờ:
+		- Nhiệt độ thấp nhất cho phép.
+		- Nhiệt độ cao nhất cho phéo.
+	- Trạng thái kích hoạt thông báo: cho phép bật hay tắt thông báo của khung thời gian đó.
+<Chưa có giao diện>
+4.3.4.2. Sửa khung thời gian giám sát
+Người dùng muốn thay đổi thời gian hay nhiệt độ của khung thời gian giám sát, người dùng chọn khung giám sát đó và sửa các thông tin. Khi thông tin bị sửa đổi và thông tin hợp lệ, nút “Lưu” và nút “Hủy” được hiển thị để người dùng xác nhận thao tác. Người dùng có thể nhất “Lưu” để hoàn tất sửa đổi hoặc nhất “Hủy” để hoàn tác.
+<Chưa có giao diện>
+4.3.4.3. Bật/ tắt giám sát của một khung thời gian giám sát
+Trên giao diện của một khung thời gian giám sát, người dùng có thể thao tác bật hoặc tắt thông báo của khung thời gian đó nhanh bằng một nút.
+<Chưa có giao diện>
+4.3.4.4. Xóa khung thời gian giám sát
+Người dùng chọn khung thời gian giám sát cấn xóa, chọn chức năng xóa. Một hộp thoại xác nhận được hiển thị, người dùng nhấn “Xóa” để hoàn thành thao tác.
+<Chưa có giao diện>
+4.4. Quản lý quyền truy cập kho lạnh
+Quyền truy cập kho lạnh giúp chủ kho thêm các thành viên mới trong hệ thống trở thành người giám sát (quyền xem) hoặc người quản lý (quyền chỉnh sửa).
+4.4.1. Thêm người truy cập
+Người dùng nhất nút “thêm” ở mục quản lý quyền truy cập, một hộp thoại hiển thị cho phép người dùng tìm kiếm người dùng khác trong hệ thống bằng tên đăng nhập/email/họ tên của người đó. Sau khi tìm kiếm người truy cập mới, người dùng chọn quyền cho người này (quyền xem/ quyền chỉnh sửa) và nhấn nút “Mời”. Một thông báo mới chứa lời mời cộng tác sẽ được gửi đến tài khoản người dùng được mời truy cập.
+<Chưa có giao diện, mới có nút add thôi...>
+4.4.2. Phản hồi lời mời truy cập
+Khi có lời mời cộng tác mới, người nhận được lời mời có thể xem thông tin lời mời và phản hồi bằng 2 nút trên giao diện là:”Chấp nhận” và “Từ chối”. Khi chọn “Chấp nhận”, người dùng được truy cập vào kho lạnh theo đúng quyền được cấp. Ngược lại khi chọn “Từ chối” thì quyền truy cập đó sẽ bị hủy.
+<Chưa có giao diện>
+4.4.3. Sửa quyền truy cập
+Chọn một người truy cập trong danh sách quyền truy cập kho lạnh và chọn chức năng sửa. Một hộp thoại hiển thị cho phép sửa quyền của người đó. Người dùng nhấn nút “Lưu” để hoàn thành sửa đổi.
+<Chưa có giao diện, mới có nút edit thôi...>
+4.4.4. Xóa người truy cập
+Chủ kho lạnh chọn người truy cập cần xóa, chọn chức năng xóa và xác nhận “Xóa” ở hộp thoại xác nhận để xóa hoàn toàn quyền truy cập của người đó.
+<Hình 30>
+5. Thông báo, cảnh báo
+Thông báo của ứng dụng cung cấp các thông tin tức thời đến người dùng. Để mở hộp thoại thông báo, chọn biểu tượng chiếc chuông trên thanh tiêu đề của ứng dụng.
+<Hình 31>
+5.1. Xem thông báo
+Các thông báo mới sẽ được hiển thị ngay trên giao diện, người dùng có thể nhấn vào thông báo đó để xem chi tiết. Đồng thời thông báo mới cũng được thêm vào hộp thoại thông báo.
+<Chưa có giao diện, chưa có router>
+5.2. Xóa thông báo
+Trong phần chi tiết của thông báo, người dùng có thể chọn xóa thông báo đó. Người dùng có thể xóa tất cả thông báo bằng cách nhấn nút “Xóa tất cả” ở hộp thoại danh sách thông báo.
+<Chưa có giao diện, chưa có router, chưa có router xóa tất cả>

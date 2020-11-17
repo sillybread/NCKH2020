@@ -84,63 +84,63 @@ const Matrix = () => {
     const apexAreaChart2Data = [
         {
             name: '0',
-            data: generateData(20, {
+            data: generateData(54, {
                 min: -30,
                 max: 0,
             }),
         },
         {
             name: '1',
-            data: generateData(20, {
+            data: generateData(54, {
                 min: -30,
                 max: 0,
             }),
         },
         {
             name: '2',
-            data: generateData(20, {
+            data: generateData(54, {
                 min: -30,
                 max: 0,
             }),
         },
         {
             name: '3',
-            data: generateData(20, {
+            data: generateData(54, {
                 min: -30,
                 max: 0,
             }),
         },
         {
             name: '4',
-            data: generateData(20, {
+            data: generateData(54, {
                 min: -30,
                 max: 0,
             }),
         },
         {
             name: '5',
-            data: generateData(20, {
+            data: generateData(54, {
                 min: -30,
                 max: 0,
             }),
         },
         {
             name: '6',
-            data: generateData(20, {
+            data: generateData(54, {
                 min: -30,
                 max: 0,
             }),
         },
         {
             name: '7',
-            data: generateData(20, {
+            data: generateData(54, {
                 min: -30,
                 max: 0,
             }),
         },
         {
             name: '8',
-            data: generateData(20, {
+            data: generateData(54, {
                 min: -30,
                 max: 0,
             }),
@@ -154,7 +154,7 @@ const Matrix = () => {
                 series={apexAreaChart2Data}
                 type="heatmap"
                 className="heatmap-charts"
-                height={450}
+                height={300}
             />
             <MySlice max={10} min={0} />
         </>

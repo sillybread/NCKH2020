@@ -1,174 +1,113 @@
-// eslint-disable-next-line
-import React, {useEffect, useRef, useState} from 'react';
+/* eslint-disable react/style-prop-object*/
+import React, {useEffect, useState} from 'react';
 import MySlice from './MySlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const TwoDimensionalChart = (props) => {
-    const [container, setContainer] = useState(null);
-    useEffect(()=>{
-        if (!container) return;
+const helper = {
+    setProps(props){
+        this.data = props.data;
+        this.min = props.min;
+        this.max = props.max;
+        this.width = this.data[0].length;
+        this.height = this.data.length;
+        this.onClick = props.onClick;
+    },
+    createElement(tagName, attribute = {}){
+        let e = document.createElement(tagName);
+        Object.assign(e, attribute);
+        return e;
+    },
+    createEmptyElement(){
+        return this.createElement('p')
+    },
+    xRuler: document.createElement('span'),
+    yRuler: document.createElement('span'),
+    makeRow(rowNumber, container){
+        const { data: DATA, min: MIN, max: MAX, width: WIDTH} = this;
 
-        const DATA = props.data;
-        const MIN = props.min;
-        const MAX = props.max;
-        const WIDTH = DATA[0].length;
-        const HEIGHT = DATA.length;
+        let row = this.createElement('tr');
 
-        const table = document.createElement('table');
-        table.className = 'text-center';//'table-bordered';
-        table.style = "word-break:break-all; width: 100%; height: 100%; font-size:0.67em; cursor: default;";
+        // row.appendChild(
+        //         this.createElement('td', {
+        //             style: "width: 8em; padding-right: 1.56em;",
+        //             innerHTML: rowNumber,
+        //             id: "r"+rowNumber,
+        //         })
+        // );
 
-        for(let iy=HEIGHT-1;iy>=0;iy--){
-            let row = document.createElement('tr');
-
-            let cell = document.createElement('td')
-            cell.style = "width: 1.34em";
-            cell.innerHTML = iy;
-            row.appendChild(cell);
-
-            for(let ix=0;ix<WIDTH;ix++){
-                let cell = document.createElement('td')
-                cell.innerHTML = '&nbsp;';
-                cell.onclick = () => props.onClick(ix,iy);
-                cell.style.background = `hsl(${(240 - 240 * (DATA[iy][ix] - MIN) / (MAX - MIN))},100%,50%`;
-                row.appendChild(cell);
-            }
-            table.appendChild(row);
-        }
-
-        let row = document.createElement('tr');
-        row.style = "height: 1.34em;"
-        let cell = document.createElement('td')
-        cell.innerHTML = "#";
-        row.appendChild(cell);
         for(let ix=0;ix<WIDTH;ix++){
-            let cell = document.createElement('td')
-            cell.innerHTML = ix;
-            row.appendChild(cell);
-        }
-        table.appendChild(row);
-        container.innerHTML = "";
-        container.appendChild(table);
-    },[container, props])
-
-    return(
-        <div
-            className="p-3"
-            ref={
-                e=>setContainer(e)
-            }
-            style={{
-                width: 400,
-                height: 600,
-            }}
-        />
-    )
-}
-TwoDimensionalChart.defaultProps = {
-    onClick: (x, y)=>{console.warn(`x: ${x}\ty:${y}`)},
-}
-
-const rd = () => new Array(15).fill(0).map(
-    x => new Array(10).fill(0).map(
-        x => {
-            return Math.random()*1024;
-        }
-    )
-)
-
-const Matrix = (props) =>{
-    const [dat, setData] = useState(rd());
-
-    useEffect(()=>{
-        setInterval(()=>{
-            setData(rd());
-        },1000);
-    },[])
-
-    // useEffect(()=>{
-    //     console.log(dat);
-    // },[dat])
-
-    return(
-        <>
-            <TwoDimensionalChart data={dat} min={0} max={1024}/>
-            <div className="m-3">
-                <MySlice min={0} max={10} />
-            </div>
-        </>
-    )
-}
-export default Matrix;
-
-// eslint-disable-next-line
-class MatrixHelper{
-    constructor(props){
-        this.opts = this.getApexChartOpts();
-        this.series = (values)=>
-            this.dataFrom2dArray(
-                this.threeToTwo(values)
+            row.appendChild(
+                this.createElement('td', {
+                    onclick: () => this.onClick(ix,rowNumber),
+                    onmouseenter: () => this.onMouseEnter(ix,rowNumber),
+                    onmouseout: () => this.onMouseOut(ix,rowNumber),
+                    style: `background: hsl(${(240 - 240 * (DATA[rowNumber][ix] - MIN) / (MAX - MIN))},100%,50%);`
+                })
             );
-        this.config = props.config;
-        this.level = 0;
-        this.axis = 'x';
-        this.data = null;
-    }
-    getApexChartOpts = () => {
-        return {
-            plotOptions: {
-                heatmap: {
-                    shadeIntensity: 0.5,
-                    radius: 0,
-                    useFillColorAsStroke: false,
-                },
-            },
-            dataLabels: {
-                enabled: false,
-            },
-            stroke: {
-                width: 1,
-            },
-            chart: {
-                events: {
-                    dataPointSelection: (event, chartContext, config) => {
-                        this.showLocation(config);
-                    }
-                },
-                toolbar: {
-                    show: false,
-                },
-                animations:{
-                    enabled: false
-                }
-            },
-
-            tooltip: {
-                custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-                    return (
-                        '<div ><span class="badge badge-light shadow p-3 border-dark">' +
-                        series[seriesIndex][dataPointIndex] +
-                        ' °C</span></div>'
-                    );
-                },
-            },
         }
-    };
-    showLocation = (context) => {
-        alert('x = ' + context.dataPointIndex + '\ny = ' + context.seriesIndex);
-    };
-    dataFrom2dArray(inp){
-        return inp.map((value,index)=>({
-            name: index,
-            data: value.map((e,i)=>[i,e])
-        }));
-    }
-    setSlice(axis, level){
-        this.axis = axis;
-        this.level = level;
-    }
-    threeToTwo(inp){
-        let axis = this.axis;
-        let level = this.level;
+        container.appendChild(row);
+    },
+    makeLastRow(container){
+        let row = this.createElement('tr', { style: "height: 1.5em; padding: 20px!important; margin: 20px!important;"});
+
+        row.appendChild(
+            this.createElement('td',{ innerHTML: "#"})
+        );
+
+        for(let ix=0;ix<this.width;ix++){
+            row.appendChild(
+                this.createElement('td',{
+                    innerHTML: ix,
+                    id: "c"+ix,
+                    style: "height: 5em; width: 10em;"
+                })
+            );
+        }
+        container.appendChild(row);
+    },
+    makeTable(container){
+        const table = helper.createElement('table', {
+            className: 'text-center',
+            style: "width: 100%; height: 100%;"
+        })
+
+        for(let iy=this.height-1;iy>=0;iy--){
+            helper.makeRow(iy, table);
+        }
+        //helper.makeLastRow(table);
+
+        container.innerHTML = '';
+        container.appendChild(table);
+        container.appendChild(this.xRuler);
+        container.appendChild(this.yRuler)
+    },
+    onMouseEnter(x, y){
+        this.xRuler.innerHTML = x;
+        this.yRuler.innerHTML = y;
+    },
+    onMouseOut(x, y){
+        delete [x, y];
+    },
+    handleRuler(container, event){
+        this.xRuler.style = this.yRuler.style = 'display;';
+        let x = event.clientX-this.xRuler.offsetWidth/2;
+        this.xRuler.style = `background: #afa;
+            position: absolute;
+            margin: 3px;
+            left: ${x}px;
+            top: ${container.offsetHeight+container.offsetTop}px;`;
+
+        let y = event.clientY-this.yRuler.offsetHeight/2;
+        this.yRuler.style = `background: #faa;
+            position: absolute;
+            margin: 3px;
+            left: ${container.offsetWidth+container.offsetLeft}px;
+            top: ${y}px;`;
+    },
+    removeRuler(){
+        this.xRuler.style.display = this.yRuler.style.display = 'none';
+    },
+    threeToTwo(inp, config, axis, level){
         let route = {
             x:{
                 fast: 'z',
@@ -187,7 +126,7 @@ class MatrixHelper{
             }
         }
 
-        let ret = [], flatRet = [], size = this.config.size;
+        let ret = [], flatRet = [], size = config.size;
         let iFast = size[route[axis].fast];
         let iSlow = size[route[axis].slow];
         let iImmutable = size[axis]-level-1;
@@ -202,56 +141,69 @@ class MatrixHelper{
         }
         return ret;
     }
-
-    updateMatrixFrom2D(inp){
-        let aCell = document.querySelectorAll(".apexcharts-heatmap-rect");
-        let iLen = aCell.length;
-        this.data = this.threeToTwo(inp.values)
-        let aReverse = this.data.reverse().flat();
-        for (let c=0;c<iLen;c++)
-            aCell[c].setAttribute('fill',`hsl(${
-                (240 - 240 * (aReverse[c] - inp.min) / (inp.max - inp.min))
-            },100%,50%`);
-    }
 }
 
-/*
-import Chart from 'react-apexcharts';
-const Matrix = (props) => {
-    const helper = new MatrixHelper(props);
-    const [axis, setAxis] = useState('x');
-    const [lv, setLv] = useState(0);
-    const [series, setSeries] = useState(helper.series(props.data.values));
-    const size = props.config.size;
+const TwoDimensionalChart = (props) => {
+    const [container, setContainer] = useState(helper.createEmptyElement());
+    useEffect(()=>{
+        helper.setProps(props);
+        helper.makeTable(container);
+        let parent = container.parentElement || container;
+        let sm = (parent.offsetWidth<parent.offsetHeight)?parent.offsetWidth:parent.offsetHeight;
+        const {width: WIDTH, height: HEIGHT} = helper
+        Object.assign(container.style,{
+            width: `${sm/HEIGHT*WIDTH}px`,
+            height: `${sm}px`
+        });
+        console.info(parent, sm);
+    },[container, props])
 
-    useEffect(()=>{
-        helper.updateMatrixFrom2D(props.data)
-    },[])
-    useEffect(()=>{
-        helper.setSlice(axis, lv);
-        //setSeries(helper.series(props.data.values));
-        helper.updateMatrixFrom2D(props.data)
-    },[axis, lv])
-    useEffect(()=>{
-        setSeries(helper.series(props.data.values));
-    },[axis])
-
-    return (
+    return(
         <>
-            <Chart
-                options={helper.opts}
-                series={series}
-                type="heatmap"
-                className="heatmap-charts"
-                height={300}
-            />
-            <MySlice
-                min={0}
-                max={size[axis]-1}
-                onChangeValue={(v)=>setLv(v)}
-                onChangeAxis={(a)=>setAxis(a)}
+            <div
+                ref={
+                    e=>setContainer(e)
+                }
+                style={{
+                    marginLeft: "auto",
+                    marginRight: "auto"
+                }}
+                onMouseOver={(event) => helper.handleRuler(container, event)}
+                onMouseOut={()=>helper.removeRuler()}
             />
         </>
-    );
-};
-*/
+    )
+}
+
+TwoDimensionalChart.defaultProps = {
+    onClick: (x, y)=>{console.log(x, y)},
+}
+
+const Matrix = (props) =>{
+    const [dat, setData] = useState([[]]);
+    const [axis, setAxis] = useState('x');
+    const [sLv, setLevel] = useState(0);
+    const min = props.data.min;
+    const max = props.data.max;
+
+    useEffect(()=>{
+        let d = helper.threeToTwo(props.data.values, props.config, axis, sLv);
+        setData(d);
+        window.s = setLevel;
+    },[props, axis, sLv])
+
+    return(
+        <>
+            <br/>
+            <TwoDimensionalChart data={dat} min={min} max={max}/>
+            <br/>
+            <div className="m-3">
+                <MySlice min={0} max={props.config.size[axis]-1}
+                    onChangeValue={(v)=>setLevel(v)}
+                    onChangeAxis={(ax)=>setAxis(ax)}
+                />
+            </div>
+        </>
+    )
+}
+export default Matrix;
