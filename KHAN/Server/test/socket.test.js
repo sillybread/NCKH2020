@@ -39,6 +39,43 @@ socket.on('access', function(data){
 });
 
 
+
+socket.on('area', function(data){
+    if(data.message == 'add'){
+        console.log(data);  
+    }
+    if(data.message == 'edit'){
+        console.log(data);  
+    }
+    if(data.message == 'delete'){
+        console.log(data);  
+    }
+    if(data.message == 'add-monitor'){
+        console.log(data);  
+    }
+    if(data.message == 'edit-monitor'){
+        console.log(data);  
+    }
+    if(data.message == 'switch-monitor'){
+        console.log(data);  
+    }
+    if(data.message == 'delete-monitor'){
+        console.log(data);  
+    }
+})
+
+
+socket.on('activate', function(data){
+    if(data.message == 'add'){
+        console.log(data); 
+    }
+    if(data.message == 'delete'){
+        console.log(data);  
+    }
+});
+
+
+
 socket.on('room', function(data){
     if(data.message == 'delete'){
         socket.emit('leave-room', 'room'+data.data.room._id);  
@@ -46,16 +83,6 @@ socket.on('room', function(data){
     if(data.message == 'edit'){
         console.log(data);  
     }
-    if(data.message == 'add-area'){
-        console.log(data);  
-    }
-    if(data.message == 'edit-area'){
-        console.log(data);  
-    }
-    if(data.message == 'delete-area'){
-        console.log(data);  
-    }
-
 });
 
 socket.on('structure', function(data){
@@ -66,5 +93,6 @@ socket.on('structure', function(data){
         console.log(data);  
     }
 });
+
 
 socket.on('disconnect', function(){});
