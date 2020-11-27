@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import Axios from 'axios'
-import MySlice from '../../components/MySlice.js'
-import HueBar from './component3DChart/HueBar.js'
-import {BASE_URL} from '../../constants/apiConfig.js'
+import MySlice from 'components/MySlice.js'
+import HueBar from 'components/HueBar.js'
+import {BASE_URL} from 'constants/apiConfig.js'
 import './matrix.css'
 
 const helper = {

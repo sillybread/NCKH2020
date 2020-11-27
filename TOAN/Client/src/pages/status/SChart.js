@@ -1,10 +1,10 @@
 // eslint-disable-next-line
-import React, {useEffect, useState} from 'react';
-import TChart from './component3DChart/3DChart.js'
-import HueBar from './component3DChart/HueBar.js'
 import Axios from 'axios';
-import MySlice from '../../components/MySlice.js';
-import {BASE_URL} from '../../constants/apiConfig.js'
+import React, {useEffect, useState} from 'react';
+import TChart from 'components/3DChart/3DChart.js'
+import HueBar from 'components/HueBar.js'
+import MySlice from 'components/MySlice.js';
+import {BASE_URL} from 'constants/apiConfig.js'
 
 
 let Config =
@@ -39,7 +39,7 @@ let Config =
 
 function axiosTest() {
   // create a promise for the axios request
-  const promise = Axios.get( BASE_URL + "api/sensor/demoTemperature");
+  const promise = Axios.get( BASE_URL + "api/room/data/getDemoData");
 
   // using .then, create a new promise which extracts the data
   const dataPromise = promise.then((response) => response.data)
