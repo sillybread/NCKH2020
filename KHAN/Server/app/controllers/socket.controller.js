@@ -18,6 +18,7 @@ exports.socketController = (socket)=>{
             
                 //join my room
                 socket.join('user'+user._id);
+                socket.emit('log','You are join: user'+user._id);
                 //join access warehouse rooms
                 Access.find({ user: user._id,accepted: true },'role _id room')
                 .populate("room",'name _id')

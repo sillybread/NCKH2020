@@ -8,5 +8,7 @@ const routes = function (app) {
   require("./structure.routes")(app);
   require("./data.routes")(app);
   require("./area.routes")(app);
+  require("./activate.routes")(app);
 };
+
 module.exports = routes;

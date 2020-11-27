@@ -9,4 +9,7 @@ module.exports = function (app) {
 
   /* Get Curren data of Sensor Activate*/
   app.get("/api/room/data/sensor",[authJwt.verifyToken],controller.getSensorData);
+
+  /* Get Curren data of Area */
+  app.get("/api/room/data/area",[authJwt.verifyToken],controller.getAreaData);
 };

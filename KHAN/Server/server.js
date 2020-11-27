@@ -2,7 +2,7 @@
 const express = require("express");
 const app = express();
 const server = require('http').createServer(app);
-
+global.activate_trigger = 1;
 /* Socket.io server------------------------------------*/
 const io = require('socket.io')(server);
 
@@ -42,8 +42,13 @@ app.use(function (req, res, next) {
   );
   next();
 })
-
+app.get('/',(req,res)=>{
+  res.send('Xin Chào, đây là phần mềm quản lý nhiệt độ kho lạnh');
+})
 routes(app);
+/* Get real time data-----*/
+const setRealtimeData = require('./app/controllers/data.controller').setRealtimeData;
+
 
 /* Databasse Connect------------------------------------*/
 const db = require("./app/models");
@@ -56,6 +61,7 @@ db.mongoose
   })
   .then(() => {
     console.log("MongoDB Connect Success");
+    setRealtimeData(io);
   })
   .catch((err) => {
     console.error("Connect to MongoDB failed", err);
@@ -71,18 +77,6 @@ app.set('ip', process.env.IP || '127.0.0.1');
 server.listen(app.get('port'), app.get('ip'), function() {
   console.log('I am nunning at: http://%s:%s', app.get('ip'), app.get('port'));
 });
-
-/* Connect IoT Lab API and Get real time data-----*/
-const axios= require('axios');
-const setRealtimeData = require('./app/controllers/data.controller').setRealtimeData;
-const config = require('./app/config/data.config');
-
-axios.post(config.baseURL+config.api.login,config.loginInfo).then(rep =>{
-  console.log('API IoT Lab Connect Success');
-  setRealtimeData(rep.data.accessToken,io);
-}).catch(err=>{
-  console.error('API IoT Lab Service error:',err);
-}); 
 
 
 

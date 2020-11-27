@@ -1,12 +1,13 @@
 const db = require("../models");
 const result = require("../helps/result.helps");
-const Sensor = require("../models/sensor.model");
-
 
 const Room = db.room;
 const Access = db.access;
 const Structure = db.structure;
 const Area = db.area;
+const Activate = db.activate;
+const Sensor = db.sensor;
+
 
 
 /* Create -------------------------------------*/
@@ -87,22 +88,24 @@ exports.deleteRoom = (req, res) => {
               result.ServerError(res,err);
               return;
             }
-            Sensor
-            .find({room:req.body.room_id})
-            .exec((err,sensors)=>{
-              if (err) {
-                result.ServerError(res,err);
-                return;
-              }
-              sensors.map(sensor => {
-                sensor.room = null;
-                sensor.isAdd = false;
-                sensor.isUsed = false;
-                sensor.save();
-              });
-              req.io.to('room'+req.body.room_id).emit('room',{message:'delete',data:{room:{_id:req.body.room_id}}});
-              result.Ok(res,"Đã xóa kho và các thành phần liên quan");
+            Activate.find({room: req.body.room_id}).exec((err,activates) => {
+              Sensor.deleteMany({activate: {$in: activates.map(at=>(at._id))}}).exec((err)=>{
+                if (err) {
+                  result.ServerError(res,err);
+                  return;
+                }
+                Activate.deleteMany({ room: req.body.room_id}).exec(err=>{
+                  if (err) {
+                    result.ServerError(res,err);
+                    return;
+                  }
 
+                  req.io.to('room'+req.body.room_id).emit('room',{message:'delete',data:{room:{_id:req.body.room_id}}});
+                  result.Ok(res,"Đã xóa kho và các thành phần liên quan");
+
+
+                })
+              })
             })
             
           });
