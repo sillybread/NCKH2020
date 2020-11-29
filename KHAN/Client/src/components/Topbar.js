@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Container } from 'reactstrap';
-import { Menu, X, Search, Settings, User, HelpCircle, Lock, LogOut } from 'react-feather';
-
+import {Button, Container,UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import { Menu, X, Search, Settings, User, HelpCircle, Lock, LogOut,ChevronDown,Plus } from 'react-feather';
 import { showRightSidebar } from '../redux/actions';
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
@@ -101,19 +100,20 @@ class Topbar extends Component {
                         {/* logo */}
                         <Link to="/" className="navbar-brand mr-0 mr-md-2 logo">
                             <span className="logo-lg">
-                                <img src={logo} alt="" height="24" />
-                                <span className="d-inline h5 ml-2 text-logo">WAREHOUSE</span>
+                                <img src={logo} alt="" height="40" />
                             </span>
                             <span className="logo-sm">
-                                <img src={logo} alt="" height="24" />
+                                <img src={logo} alt="" height="40" />
                             </span>
                         </Link>
+                                              
+
 
                         {/* menu*/}
-                        <ul className="navbar-nav bd-navbar-nav flex-row list-unstyled menu-left mb-0">
+                        <ul className="navbar-nav bd-navbar-nav list-unstyled menu-left mb-0">
                             <li className="">
                                 <button
-                                    className="button-menu-mobile open-left disable-btn"
+                                    className="button-menu-mobile open-left disable-btn mr-0"
                                     onClick={this.props.openLeftMenuCallBack}>
                                     <Menu className="menu-icon" />
                                     <X className="close-icon" />
@@ -121,28 +121,55 @@ class Topbar extends Component {
                             </li>
                         </ul>
 
+                        <UncontrolledButtonDropdown>
+                            <DropdownToggle color="default" className="dropdown-toggle text-dark font-weight-bold mt-2" >
+                                Kho lạnh Anh Huy
+                                <i className="icon ml-1"><ChevronDown /></i>
+                            </DropdownToggle>
+                            <DropdownMenu right>
+                                <DropdownItem header>Kho của tôi</DropdownItem>  
+                                <DropdownItem>
+                                    <span>Kho lạnh anh Huy</span>
+                                </DropdownItem>
+                                <DropdownItem>
+                                    <span>Kho lạnh 2</span>
+                                </DropdownItem>
+                                <DropdownItem header>Kho được chia sẽ</DropdownItem>  
+                                <DropdownItem>
+                                    <span>Kho lạnh 3</span>
+                                </DropdownItem>
+                                <DropdownItem divider />
+                                <DropdownItem>
+                                    <Button color="success" className="btn-block">
+                                        <i className="icon ml-1"><Plus /></i>
+                                        Tạo kho lạnh mới
+                                    </Button>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledButtonDropdown>     
+
                         <ul className="navbar-nav flex-row ml-auto d-flex list-unstyled topnav-menu float-right mb-0">
                             <li className="d-none d-sm-block">
                                 <div className="app-search">
                                     <form>
                                         <div className="input-group">
-                                            <input type="text" className="form-control" placeholder="Search..." />
+                                            <input type="text" className="form-control" placeholder="Tìm kiếm ..." />
                                             <Search />
                                         </div>
                                     </form>
                                 </div>
                             </li>
-
+                            
                             <LanguageDropdown tag="li" />
                             <NotificationDropdown notifications={Notifications} />
 
-                            <li className="notification-list">
+                            {/* <li className="notification-list">
                                 <button
                                     className="btn btn-link nav-link right-bar-toggle"
                                     onClick={this.handleRightSideBar}>
                                     <Settings />
                                 </button>
-                            </li>
+                            </li> */}
 
                             <ProfileDropdown
                                 profilePic={profilePic}

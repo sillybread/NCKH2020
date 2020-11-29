@@ -5,6 +5,7 @@ import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 import { fetchJSON } from '../../helpers/api';
 
 import { LOGIN_USER, LOGOUT_USER, REGISTER_USER, FORGET_PASSWORD } from './constants';
+import { BASE_URL} from '../../constants/apiConfig.js';
 
 import {
     loginUserSuccess,
@@ -35,7 +36,8 @@ function* login({ payload: { username, password } }) {
         headers: { 'Content-Type': 'application/json' },
     };
     try {
-        const response = yield call(fetchJSON, 'http://localhost:8080/api/auth/signin', options);
+        const response = yield call(fetchJSON, BASE_URL + 'api/auth/signin', options);
+        window.test = response;
         if (!response.messageError) {
             setSession(response);
             yield put(loginUserSuccess(response));
@@ -73,7 +75,7 @@ function* register({ payload: { username, email, password } }) {
     };
 
     try {
-        const response = yield call(fetchJSON, 'http://localhost:8080/api/auth/signup', options);
+        const response = yield call(fetchJSON, BASE_URL + 'api/auth/signup', options);
         if (!response.messageError) {
             yield put(registerUserSuccess(response));
         } else {

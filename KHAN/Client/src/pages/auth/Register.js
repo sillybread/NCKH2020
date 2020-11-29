@@ -89,16 +89,17 @@ class Register extends Component {
 
                                                     <div className="mx-auto mb-5">
                                                         <a href="/">
-                                                            <img src={logo} alt="" height="24" />
-                                                            <h3 className="d-inline align-middle ml-1 text-logo">
-                                                                WAREHOUSE
-                                                            </h3>
+                                                            
+                                                            <img src={logo} alt="" height="50" />
+                                                            <h4 className="align-middle mt-2 text-logo">
+                                                                QUẢN LÝ NHIỆT ĐỘ KHO LẠNH
+                                                            </h4>
                                                         </a>
                                                     </div>
 
-                                                    <h6 className="h5 mb-0 mt-4">Welcome back!</h6>
+                                                    <h6 className="h5 mb-0 mt-2">Đăng kí</h6>
                                                     <p className="text-muted mt-1 mb-4">
-                                                        Enter your email address and password to access admin panel.
+                                                        Bắt đầu đăng kí một tài khoản mới để sử dụng dịch vụ của chúng tôi
                                                     </p>
 
                                                     {this.props.error && (
@@ -111,7 +112,7 @@ class Register extends Component {
                                                         onValidSubmit={this.handleValidSubmit}
                                                         className="authentication-form">
                                                         <AvGroup className="">
-                                                            <Label for="username">Username</Label>
+                                                            <Label for="username">Tên đăng nhập</Label>
                                                             <InputGroup>
                                                                 <InputGroupAddon addonType="prepend">
                                                                     <span className="input-group-text">
@@ -122,12 +123,12 @@ class Register extends Component {
                                                                     type="text"
                                                                     name="username"
                                                                     id="username"
-                                                                    placeholder="Shreyu N"
+                                                                    placeholder="nhập tên đăng nhập"
                                                                     required
                                                                 />
                                                             </InputGroup>
 
-                                                            <AvFeedback>This field is invalid</AvFeedback>
+                                                            <AvFeedback>Thông tin sai</AvFeedback>
                                                         </AvGroup>
                                                         <AvGroup className="">
                                                             <Label for="email">Email</Label>
@@ -141,12 +142,12 @@ class Register extends Component {
                                                                     type="email"
                                                                     name="email"
                                                                     id="email"
-                                                                    placeholder="hello@coderthemes.com"
+                                                                    placeholder="nhập email"
                                                                     required
                                                                 />
                                                             </InputGroup>
 
-                                                            <AvFeedback>This field is invalid</AvFeedback>
+                                                            <AvFeedback>Email sai</AvFeedback>
                                                         </AvGroup>
 
                                                         <AvGroup className="mb-3">
@@ -161,11 +162,11 @@ class Register extends Component {
                                                                     type="password"
                                                                     name="password"
                                                                     id="password"
-                                                                    placeholder="Enter your password"
+                                                                    placeholder="nhập mật khẩu"
                                                                     required
                                                                 />
                                                             </InputGroup>
-                                                            <AvFeedback>This field is invalid</AvFeedback>
+                                                            <AvFeedback>Mật khẩu không hợp lệ</AvFeedback>
                                                         </AvGroup>
 
                                                         <AvGroup check className="mb-4">
@@ -174,13 +175,13 @@ class Register extends Component {
                                                                 id="terms"
                                                                 defaultChecked="true"
                                                                 className="pl-1"
-                                                                label="I accept Terms and Conditions"
+                                                                label="Tôi đồng ý sử dụng dịch vụ"
                                                             />
                                                         </AvGroup>
 
                                                         <FormGroup className="form-group mb-0 text-center">
                                                             <Button color="primary" className="btn-block">
-                                                                Sign Up
+                                                                Đăng kí
                                                             </Button>
                                                         </FormGroup>
                                                     </AvForm>
@@ -191,12 +192,12 @@ class Register extends Component {
                                                         <div className="overlay"></div>
                                                         <div className="auth-user-testimonial">
                                                             <p className="font-size-24 font-weight-bold text-white mb-1">
-                                                                I simply love it!
+                                                                Xin Chào!
                                                             </p>
                                                             <p className="lead">
-                                                                "It's a elegent templete. I love it very much!"
+                                                                "Cảm ơn bạn đã sử dụng hệ thống của chúng tôi !"
                                                             </p>
-                                                            <p>- Admin User</p>
+                                                            <p>- Admin</p>
                                                         </div>
                                                     </div>
                                                 </Col>
@@ -209,9 +210,9 @@ class Register extends Component {
                             <Row className="mt-1">
                                 <Col className="col-12 text-center">
                                     <p className="text-muted">
-                                        Already have an account?{' '}
+                                       Bạn đã có tài khoản ?{' '}
                                         <Link to="/account/login" className="text-primary font-weight-bold ml-1">
-                                            Sign In
+                                            Đăng nhập
                                         </Link>
                                     </p>
                                 </Col>

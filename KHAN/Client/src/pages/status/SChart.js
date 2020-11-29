@@ -1,10 +1,10 @@
 // eslint-disable-next-line
-import React, {useEffect, useState} from 'react';
-import TChart from './component3DChart/TChart.js'
-import HueBar from './component3DChart/HueBar.js'
 import Axios from 'axios';
-import MySlice from '../../components/MySlice.js';
-import { config } from '@fullcalendar/core';
+import React, {useEffect, useState} from 'react';
+import TChart from 'components/3DChart/3DChart.js'
+import HueBar from 'components/HueBar.js'
+import MySlice from 'components/MySlice.js';
+import {BASE_URL} from 'constants/apiConfig.js'
 
 
 let Config =
@@ -36,54 +36,10 @@ let Config =
 }
 
 
-let _3rd = () => {
-
-  // Example POST method implementation:
-  /* let iMin = 999;
-  let iMax = -999;
-  let rd;
-  return { values: new Array(24).fill(0).map(
-  x => new Array(23).fill(0).map(
-    x => new Array(50).fill(0).map(
-      x => {
-        rd = Math.random()*1024;
-        if (rd < iMin) iMin = rd;
-        if (rd > iMax) iMax = rd;
-        return rd;
-      }
-      )
-    )
-  ),
-  min: iMin,
-  max: iMax
-  } */
-};
-/* let Data =
-{
-	"values": 
-	[[
-		[0, 1, 2],
-		[0, 1, 2],
-		[0, 1, 2]
-	],
-	[
-		[0, 1, 2],
-		[0, 1, 2],
-		[0, 1, 2]
-	],
-	[
-		[0, 1, 2],
-		[0, 1, 2],
-		[0, 1, 2]
-	]],
-	"min": 0,
-	"max": 2
-} */
-
 
 function axiosTest() {
   // create a promise for the axios request
-  const promise = Axios.get("http://localhost:8080/api/sensor/demoTemperature");
+  const promise = Axios.get( BASE_URL + "api/room/data/getDemoData");
 
   // using .then, create a new promise which extracts the data
   const dataPromise = promise.then((response) => response.data)
@@ -95,38 +51,50 @@ function axiosTest() {
 // now we can use that data from the outside!
 
 export default function SChart() {
-  const [data,setData] = useState(null); 
-  const [slice,setSlice] = useState(
-    {
-      axis: "z",
-      level: 0
-  }
-  );
-  useEffect(()=>{
-    axiosTest()
-    .then(data => {
-      setData(data);
-   })
-     .catch(err => console.log(err))
-  },[]);
-  const getMaxSlice = (myslice)=>{
-    if(myslice.axis ==="x") return Config.size.x;
-    if(myslice.axis ==="y") return Config.size.y;
-    if(myslice.axis ==="z") return Config.size.z;
-  }
-/* <div className="chartContainer">
-      <HueBar width={window.innerWidth} height={10} min={0} max={21}/>
-    </div>  */
+    const [data,setData] = useState(null);
+    const [axis, setAxis] = useState('x');
+    const [slice,setSlice] = useState({
+        origin: null,
+        destination: null
+    });
+    const [exTemp, setExTemp] = useState({
+        min: 0,
+        max: 0
+    })
+    useEffect(()=>{
+        axiosTest()
+            .then(data => {
+                setData(data);
+            })
+            .catch(err => console.log(err))
+    },[]);
+
+    useEffect(()=>{
+        data!=null && setExTemp({
+            min: data.min,
+            max: data.max
+        });
+    },[data])
   return (<>
-  <TChart config={Config} data={data} slice={slice}/>
-  <div className="p-x-4">
-    <HueBar min={-12.00} max={-6.07} width={"100%"} height={10}></HueBar>
-  </div>
-  <MySlice max={0} max={getMaxSlice(slice)} 
-      onChangeValue={(value)=> {setSlice({axis:slice.axis,level:value});console.log(slice)}}
-      onChangeAxis={(ax)=>{setSlice({axis:ax,level:slice.level})}}
-  ></MySlice>
+    <TChart config={Config} data={data} slice={slice}/>
+    <div className="p-x-4">
+        <HueBar min={exTemp.min} max={exTemp.max} width={"100%"} height={10}/>
+    </div>
+    <MySlice max={0} max={ Config.size[axis]-1}
+        onChangeValue={(value)=> {
+            let vDes = {
+                x: Config.size.x,
+                y: Config.size.y,
+                z: Config.size.z
+            }
+            vDes[axis] = Config.size[axis] - value;
+            setSlice({
+                origin: null,
+                destination: vDes
+            });
+        }}
+        onChangeAxis={(ax)=>setAxis(ax)}
+    />
   </>
-       
   );
 }

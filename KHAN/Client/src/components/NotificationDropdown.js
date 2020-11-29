@@ -56,9 +56,9 @@ class NotificationDropdown extends Component {
                             <h5 className="m-0 font-size-16">
                                 <span className="float-right">
                                     <Link to="/notifications" className="text-dark">
-                                        <small>Clear All</small>
+                                        <small>Xóa hết</small>
                                     </Link>
-                                </span>Notification
+                                </span>Thông báo
                                 </h5>
                         </div>
                         <PerfectScrollbar style={notificationContainerStyle}>
@@ -74,12 +74,12 @@ class NotificationDropdown extends Component {
                             })}
                         </PerfectScrollbar>
 
-                        <Link to="/" className="dropdown-item text-center text-primary notify-item notify-all border-top">View All</Link>
+                        <Link to="/" className="dropdown-item text-center text-primary notify-item notify-all border-top">xem tất cả</Link>
                     </div>
                 </DropdownMenu>
             </Dropdown>
 
-            <UncontrolledTooltip placement="left" target="notiDropdown">{this.props.notifications.length} new unread notificationse</UncontrolledTooltip>
+            <UncontrolledTooltip placement="left" target="notiDropdown">{this.props.notifications.length} thông báo mới</UncontrolledTooltip>
             </React.Fragment>
         );
     }

@@ -47,7 +47,7 @@ const rootRoute = {
 //status
 const statusRoutes = {
     path: '/Status',
-    name: 'Status',
+    name: 'Giám sát',
     icon: FeatherIcon.Activity,
     badge: {
         variant: 'success',
@@ -60,7 +60,7 @@ const statusRoutes = {
 // dashboards
 const reportRoutes = {
     path: '/Report',
-    name: 'Report',
+    name: 'Báo cáo',
     icon: FeatherIcon.Clipboard,
     component: Report,
     roles: ['Admin'],
@@ -71,8 +71,8 @@ const reportRoutes = {
 
 const configRoutes = {
     path: '/Config',
-    name: 'Warehouse',
-    header: 'Config',
+    name: 'Kho lạnh',
+    header: 'Quản lý',
     icon: FeatherIcon.Box,
     component: Config,
     roles: ['Admin'],
@@ -82,8 +82,8 @@ const configRoutes = {
 //More
 const storeRoutes = {
     path: '/More/Store',
-    name: 'Store',
-    header: 'More',
+    name: 'Cửa hàng',
+    header: 'Thêm',
     icon: FeatherIcon.ShoppingBag,
     component: Store,
     route: PrivateRoute,
@@ -91,7 +91,7 @@ const storeRoutes = {
 };
 const helpRoutes = {
     path: '/More/Help',
-    name: 'Help',
+    name: 'Trợ giúp',
     icon: FeatherIcon.HelpCircle,
     component: Help,
     route: PrivateRoute,
@@ -99,7 +99,7 @@ const helpRoutes = {
 };
 const aboutRoutes = {
     path: '/More/About',
-    name: 'About',
+    name: 'Về chúng tôi',
     icon: FeatherIcon.GitHub,
     component: About,
     route: PrivateRoute,

@@ -19,19 +19,19 @@ const UserProfile = (props) => {
         <React.Fragment>
             <div className="media user-profile mt-2 mb-2">
                 <img
-                    src={props.user.user.avatar}
+                    src={props.user.result.user.avatar}
                     className="avatar-sm rounded-circle mr-2"
-                    alt={props.user.user.username}
+                    alt={props.user.result.user.username}
                 />
                 <img
-                    src={props.user.user.avatar}
+                    src={props.user.result.user.avatar}
                     className="avatar-xs rounded-circle mr-2"
-                    alt={props.user.user.username}
+                    alt={props.user.result.user.username}
                 />
 
                 <div className="media-body">
-                    <h6 className="pro-user-name mt-0 mb-0">{props.user.user.fullname}</h6>
-                    <span className="pro-user-desc">{props.user.user.username}</span>
+                    <h6 className="pro-user-name mt-0 mb-0">{props.user.result.user.fullname}</h6>
+                    <span className="pro-user-desc">{props.user.result.user.username}</span>
                 </div>
 
                 <UncontrolledDropdown className="align-self-center profile-dropdown-menu">
@@ -44,16 +44,16 @@ const UserProfile = (props) => {
                     <DropdownMenu right className="topbar-dropdown-menu profile-dropdown-items">
                         <Link to="/account/info" className="dropdown-item notify-item">
                             <FeatherIcon.User className="icon-dual icon-xs mr-2" />
-                            <span>My Account</span>
+                            <span>Tài khoản</span>
                         </Link>
                         <Link to="/account/lock" className="dropdown-item notify-item">
                             <FeatherIcon.Lock className="icon-dual icon-xs mr-2" />
-                            <span>Lock Screen</span>
+                            <span>Khóa màn hình</span>
                         </Link>
                         <DropdownItem divider />
                         <Link to="/account/logout" className="dropdown-item notify-item">
                             <FeatherIcon.LogOut className="icon-dual icon-xs mr-2" />
-                            <span>Logout</span>
+                            <span>Đăng xuất</span>
                         </Link>
                     </DropdownMenu>
                 </UncontrolledDropdown>
