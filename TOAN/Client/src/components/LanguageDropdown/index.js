@@ -78,7 +78,7 @@ class LanguageDropdown extends Component {
                     </DropdownMenu>
                 </Dropdown>
 
-                <UncontrolledTooltip placement="left" target="langDropdown">Change language</UncontrolledTooltip>
+                <UncontrolledTooltip placement="left" target="langDropdown">Đổi ngôn ngữ</UncontrolledTooltip>
             </React.Fragment>
         );
     }

@@ -26,17 +26,17 @@ class TabsChart extends Component {
         const tabContents = [
             {
                 id: '1',
-                title: 'Line',
+                title: 'Khu vực',
                 disabled: false,
             },
             {
                 id: '2',
-                title: '2D',
+                title: 'Mặt cắt 2D',
                 disabled: false,
             },
             {
                 id: '3',
-                title: '3D',
+                title: 'Mô hình 3D',
                 disabled: false,
             },
         ];

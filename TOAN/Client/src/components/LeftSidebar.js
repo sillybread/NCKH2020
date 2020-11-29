@@ -44,16 +44,16 @@ const UserProfile = (props) => {
                     <DropdownMenu right className="topbar-dropdown-menu profile-dropdown-items">
                         <Link to="/account/info" className="dropdown-item notify-item">
                             <FeatherIcon.User className="icon-dual icon-xs mr-2" />
-                            <span>My Account</span>
+                            <span>Tài khoản</span>
                         </Link>
                         <Link to="/account/lock" className="dropdown-item notify-item">
                             <FeatherIcon.Lock className="icon-dual icon-xs mr-2" />
-                            <span>Lock Screen</span>
+                            <span>Khóa màn hình</span>
                         </Link>
                         <DropdownItem divider />
                         <Link to="/account/logout" className="dropdown-item notify-item">
                             <FeatherIcon.LogOut className="icon-dual icon-xs mr-2" />
-                            <span>Logout</span>
+                            <span>Đăng xuất</span>
                         </Link>
                     </DropdownMenu>
                 </UncontrolledDropdown>
