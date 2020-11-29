@@ -2,10 +2,10 @@
 import { Cookies } from 'react-cookie';
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 
-import { fetchJSON } from '../../helpers/api';
+import { requestApi } from 'helpers/api';
 
-import { LOGIN_USER, LOGOUT_USER, REGISTER_USER, FORGET_PASSWORD } from './constants';
-import { BASE_URL} from '../../constants/apiConfig.js';
+import { LOGIN_USER, LOGOUT_USER, REGISTER_USER, FORGET_PASSWORD ,LOGIN_USER_SUCCESS} from './constants';
+import { BASE_URL} from 'constants/apiConfig.js';
 
 import {
     loginUserSuccess,
@@ -22,8 +22,15 @@ import {
  */
 const setSession = (user) => {
     let cookies = new Cookies();
-    if (user) cookies.set('user', JSON.stringify(user), { path: '/' });
-    else cookies.remove('user', { path: '/' });
+    if (user) {
+        let newuser = Object.assign(user);
+        newuser.user.avatar = null
+        //cookies.set('user', JSON.stringify(user), { path: '/' });
+        cookies.set('user',JSON.stringify(newuser) , { path: '/' });
+        console.log(document.cookie);
+    } else {
+        cookies.remove('user', { path: '/' });
+    }
 };
 /**
  * Login the user
@@ -31,25 +38,49 @@ const setSession = (user) => {
  */
 function* login({ payload: { username, password } }) {
     const options = {
-        body: JSON.stringify({ username, password }),
-        method: 'POST',
+        method: 'post',
         headers: { 'Content-Type': 'application/json' },
+        data:{username,password},
+        url : 'api/auth/signin'
     };
     try {
-        const response = yield call(fetchJSON, BASE_URL + 'api/auth/signin', options);
-        window.test = response;
-        if (!response.messageError) {
-            setSession(response);
-            yield put(loginUserSuccess(response));
+        const response = yield call(requestApi, options);
+        if (response.status==='success') {
+           
+            setSession(response.result);
+            yield put(loginUserSuccess(response.result));
         } else {
             setSession(null);
-            yield put(loginUserFailed(response.messageError)); //message
+            yield put(loginUserFailed(response.result)); //message
         }
     } catch (error) {
         setSession(null);
         yield put(loginUserFailed(error)); //message
     }
 }
+
+
+function* getFistData({ payload: {accessToken} }) { 
+    const options = {
+        method: 'get',
+        headers: { 
+            'Content-Type': 'application/json',
+            'x-access-token':  accessToken
+        },
+        url : 'api/room/access/all'
+    };
+    try {
+        const response = yield call(requestApi, options);
+        if (response.status==='success') {
+            yield console.log(response.result);
+        } else {
+            yield console.log(response.result);
+        }
+    } catch (error) {
+        yield console.error(error);
+    } 
+}
+
 
 /**
  * Logout the user
@@ -69,17 +100,19 @@ function* logout({ payload: { history } }) {
  */
 function* register({ payload: { username, email, password } }) {
     const options = {
-        body: JSON.stringify({ username, email, password }),
-        method: 'POST',
+        method: 'post',
         headers: { 'Content-Type': 'application/json' },
+        data:{username,password,email},
+        url : 'api/auth/signup'
     };
 
     try {
-        const response = yield call(fetchJSON, BASE_URL + 'api/auth/signup', options);
-        if (!response.messageError) {
-            yield put(registerUserSuccess(response));
+        const response = yield call(requestApi,options);
+        if (response.status==='success') {
+           
+            yield put(registerUserSuccess(response.result));
         } else {
-            yield put(registerUserFailed(response.messageError));
+            yield put(registerUserFailed(response.result));
         }
     } catch (error) {
         yield put(registerUserFailed('Erro'));
@@ -97,7 +130,7 @@ function* forgetPassword({ payload: { username } }) {
     };
 
     try {
-        const response = yield call(fetchJSON, '/users/password-reset', options);
+        const response = yield call(requestApi, '/users/password-reset', options);
         yield put(forgetPasswordSuccess(response.message));
     } catch (error) {
         let message;
@@ -119,6 +152,10 @@ export function* watchLoginUser() {
     yield takeEvery(LOGIN_USER, login);
 }
 
+export function* watchGetFirstData() {
+    yield takeEvery(LOGIN_USER_SUCCESS, getFistData);
+}
+
 export function* watchLogoutUser() {
     yield takeEvery(LOGOUT_USER, logout);
 }
@@ -132,7 +169,7 @@ export function* watchForgetPassword() {
 }
 
 function* authSaga() {
-    yield all([fork(watchLoginUser), fork(watchLogoutUser), fork(watchRegisterUser), fork(watchForgetPassword)]);
+    yield all([fork(watchLoginUser), fork(watchLogoutUser), fork(watchRegisterUser), fork(watchForgetPassword),fork(watchGetFirstData)]);
 }
 
 export default authSaga;

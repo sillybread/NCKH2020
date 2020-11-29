@@ -140,11 +140,13 @@ class Topbar extends Component {
                                 </DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem>
-                                    <Button color="success" className="btn-block">
+                                    <Button color='success' className="btn btn-block">
                                         <i className="icon ml-1"><Plus /></i>
                                         Tạo kho lạnh mới
                                     </Button>
                                 </DropdownItem>
+                                    
+                                
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>     
 

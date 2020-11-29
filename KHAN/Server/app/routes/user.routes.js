@@ -24,4 +24,5 @@ module.exports = function (app) {
 
   /* Change Password -------------------------------------*/
   app.post("/api/user/changePassword",[authJwt.verifyToken], controller.changePassword);
+ 
 };

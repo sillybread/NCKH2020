@@ -22,9 +22,11 @@ import { loginUser } from 'redux/actions';
 import { isUserAuthenticated } from 'helpers/authUtils';
 import Loader from 'components/Loader';
 import logo from 'assets/images/logo.png';
+import {useSelector}  from 'react-redux';
 
 class Login extends Component {
     _isMounted = false;
+   
 
     constructor(props) {
         super(props);
