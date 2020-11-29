@@ -192,9 +192,10 @@ const MatrixChart = (props) =>{
     return(
         <>
             <div style={{width:'inherit', height:300}}>
-                <TwoDimensionalChart data={dat} min={min} max={max} onClick={(x,y,h,t)=>{
-                    markCell.current(Math.trunc(h));
-                }} />
+                {//<TwoDimensionalChart data={dat} min={min} max={max} onClick={(x,y,h,t)=>{
+                 //   markCell.current(Math.trunc(h));
+                 //}} />
+                }
             </div>
             <br/><br/>
             <HueBar min={min} max={max} width="100%" height={10} markCell={markCell}/>
@@ -208,54 +209,37 @@ const MatrixChart = (props) =>{
     )
 }
 
-let Config = {
-    size: {
-        x: 53,
-        y: 23,
-        z: 26,
-        tilesize: 5
+MatrixChart.defaultProps = {
+    data: {
+        values: [[[]]],
+        min: 0,
+        max: 0
     },
-    door: {
-        show: !0,
-        direction: "C"
-    },
-    "axis-labels": {
-        "axis-x": {
-            show: !0,
-            list: [0, 13, 26, 53]
+    config: {
+        size: {
+            x: 0,
+            y: 0,
+            z: 0
         },
-        "axis-y": {
+        door: {
             show: !0,
-            list: [22, 10]
+            direction: "A"
         },
-        "axis-z": {
-            show: !0,
-            list: [23, 12, 18]
+        "axis-labels": {
+            "axis-x": {
+                show: !1,
+                list: []
+            },
+            "axis-y": {
+                show: !1,
+                list: []
+            },
+            "axis-z": {
+                show: !1,
+                list: []
+            }
         }
     }
-};
-
-function axiosTest() {
-  // create a promise for the axios request
-  const promise = Axios.get( BASE_URL + "api/sensor/demoTemperature");
-
-  // using .then, create a new promise which extracts the data
-  const dataPromise = promise.then((response) => response.data)
-
-  // return it
-  return dataPromise
 }
 
-const Matrix = () =>{
-    const [dat, setData] = useState(helper.initData(Config.size))
-
-    useEffect(()=>{
-        axiosTest()
-            .then(data => setData(data))
-            .catch(err => console.log(err))
-    },[])
-    return(
-        <MatrixChart config={Config} data={dat}/>
-    )
-}
-export default Matrix;
+export default MatrixChart;

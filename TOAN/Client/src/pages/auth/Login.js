@@ -18,10 +18,10 @@ import {
 import { AvForm, AvGroup, AvInput, AvFeedback } from 'availity-reactstrap-validation';
 import { Mail, Lock } from 'react-feather';
 
-import { loginUser } from '../../redux/actions';
-import { isUserAuthenticated } from '../../helpers/authUtils';
-import Loader from '../../components/Loader';
-import logo from '../../assets/images/logo.png';
+import { loginUser } from 'redux/actions';
+import { isUserAuthenticated } from 'helpers/authUtils';
+import Loader from 'components/Loader';
+import logo from 'assets/images/logo.png';
 
 class Login extends Component {
     _isMounted = false;
@@ -31,7 +31,7 @@ class Login extends Component {
 
         this.handleValidSubmit = this.handleValidSubmit.bind(this);
         this.state = {
-            username: 'vikhan2',
+            username: 'vikhan',
             password: '123456',
         };
     }

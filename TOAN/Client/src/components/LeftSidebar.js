@@ -19,19 +19,19 @@ const UserProfile = (props) => {
         <React.Fragment>
             <div className="media user-profile mt-2 mb-2">
                 <img
-                    src={props.user.user.avatar}
+                    src={props.user.result.user.avatar}
                     className="avatar-sm rounded-circle mr-2"
-                    alt={props.user.user.username}
+                    alt={props.user.result.user.username}
                 />
                 <img
-                    src={props.user.user.avatar}
+                    src={props.user.result.user.avatar}
                     className="avatar-xs rounded-circle mr-2"
-                    alt={props.user.user.username}
+                    alt={props.user.result.user.username}
                 />
 
                 <div className="media-body">
-                    <h6 className="pro-user-name mt-0 mb-0">{props.user.user.fullname}</h6>
-                    <span className="pro-user-desc">{props.user.user.username}</span>
+                    <h6 className="pro-user-name mt-0 mb-0">{props.user.result.user.fullname}</h6>
+                    <span className="pro-user-desc">{props.user.result.user.username}</span>
                 </div>
 
                 <UncontrolledDropdown className="align-self-center profile-dropdown-menu">
