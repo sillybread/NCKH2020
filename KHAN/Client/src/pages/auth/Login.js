@@ -156,7 +156,7 @@ class Login extends Component {
 
                                                         <FormGroup className="form-group mb-0 text-center">
                                                             <Button color="primary" className="btn-block">
-                                                                Log In
+                                                                Đăng nhập
                                                             </Button>
                                                         </FormGroup>
                                                     </AvForm>

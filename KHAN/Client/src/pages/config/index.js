@@ -4,9 +4,10 @@ import Management from './managerments/Management';
 import classnames from 'classnames';
 import SensorMap from './sensorMap/sensorMap';
 import WareHouseConfig from './warehouseConfig/warehouseConfig';
+import ApiService from './apiService/ApiService';
 
 export default function Config() {
-    const [activeTab, setActiveTab] = useState('4');
+    const [activeTab, setActiveTab] = useState('5');
     const tabContents = [
         {
             id: '1',
@@ -78,7 +79,7 @@ export default function Config() {
                                     <Management />
                                 </TabPane>
                                 <TabPane tabId="5">
-                                    <WareHouseConfig />
+                                    <ApiService />
                                 </TabPane>
                             </TabContent>
                         </CardBody>

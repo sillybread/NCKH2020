@@ -19,7 +19,7 @@ const SensorItem = (props) => {
 
             <Media left>
                 <h6 className="mt-1 mb-0 font-size-15">{props.name}</h6>
-                <h6 className="text-muted font-weight-normal mt-1">{Math.round(props.value*100)/100 + ' °C'}</h6>
+                <h6 className="text-muted font-weight-normal mt-1">{Math.round(props.value*100)/100+' '}<i className='uil uil-celsius'></i></h6>
             </Media>
             <Media body></Media>
             <span className={classNames(colorStatus(), 'py-1 px-1 align-self-center mr-2')}>{props.status}</span>

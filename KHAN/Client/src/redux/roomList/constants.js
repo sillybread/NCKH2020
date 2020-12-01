@@ -1,0 +1,3 @@
+export const GET_ROOM_LIST = "ROOM_LIST";
+export const GET_ROOM_LIST_SUCCESS = "ROOM_LIST_SUCCESS";
+export const GET_ROOM_LIST_FAILED = "ROOM_LIST_FAILED";

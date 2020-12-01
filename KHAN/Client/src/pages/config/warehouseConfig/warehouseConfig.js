@@ -13,6 +13,8 @@ const WareHouseConfig=(props)=>{
     const [size,setSize] = React.useState({x:500,y:200,z:200});
     const [sensorDensity,setSensorDensity] = React.useState(10);
     const [door,setDoor] = React.useState({show:false,direction: "B"});
+
+
     return (
         <AvForm className="p-2">
             <Row>
@@ -77,14 +79,17 @@ const WareHouseConfig=(props)=>{
                     <AvField disabled name="z" label="Chiều cao (hướng Z)" type="number" min={10} step={10} required value={size.z} />
                     <AvField disabled name="sensorDensity" label="Khoảng cách cảm biến" type="number" min={10} step={10} value={sensorDensity} required />
                     <p className="text-warning">Đơn vị đo: cm</p>
-                    <ul className="list-inline wizard mt-2 mb-0">
+                    <ul className="list-inline wizard mt-5 mb-0">
                         <li className="next list-inline-item float-right">
-                            <Button color="success" type="submit">
+                            <Button disabled  color="success" type="submit">
                                 Lưu thay đổi
                             </Button>
                         </li>
                     </ul>   
                 </Col>
+            </Row>
+            <Row>
+                
             </Row>
         </AvForm>
     )
