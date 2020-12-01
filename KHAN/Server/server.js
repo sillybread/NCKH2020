@@ -73,6 +73,7 @@ db.mongoose
 app.set('port', process.env.PORT || 8080);
 server.listen(app.get('port'), function() {
   console.log('I am nunning at port: ', app.get('port'));
+  console.log(new Date());
 });
 
 

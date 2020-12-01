@@ -9,6 +9,7 @@ import { Mail,User } from 'react-feather';
 import { isUserAuthenticated } from '../../helpers/authUtils';
 import Loader from '../../components/Loader';
 import logo from '../../assets/images/logo.png';
+import { forgetPassword } from 'redux/actions';
 
 class ForgetPassword extends Component {
     _isMounted = false;
@@ -19,8 +20,8 @@ class ForgetPassword extends Component {
         this.handleValidSubmit = this.handleValidSubmit.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
         this.state = {
-            passwordResetSuccessful: false,
-            isLoading: false
+           email:'',
+           username:''
         }
     }
 
@@ -35,25 +36,17 @@ class ForgetPassword extends Component {
     }
 
     /**
-     * On error dismiss
+     * On errorFogot dismiss
      */
     onDismiss() {
-        this.setState({ passwordResetSuccessful: false });
+        this.props.forgetPasswordFailed('loi',this.props.history);
     }
 
     /**
      * Handles the submit
      */
     handleValidSubmit = (event, values) => {
-        console.log(values);
-        
-        this.setState({ isLoading: true });
-
-        // You can make actual api call to register here
-
-        window.setTimeout(() => {
-            this.setState({ isLoading: false, passwordResetSuccessful: true });
-        }, 1000)
+        this.props.forgetPassword(values.email,values.username, this.props.history);
     }
 
 
@@ -65,7 +58,7 @@ class ForgetPassword extends Component {
         if (isAuthTokenValid) {
             return <Redirect to='/' />
         }
-    }
+    }   
 
     render() {
         const isAuthTokenValid = isUserAuthenticated();
@@ -83,8 +76,7 @@ class ForgetPassword extends Component {
                                         <Row>
                                             <Col md={6} className="p-5 position-relative">
                                                 { /* preloader */}
-                                                {this.state.isLoading && <Loader />}
-
+                                                {this.props.loading && <Loader />}
                                                 <div className="mx-auto mb-5">
                                                         <a href="/">
                                                             
@@ -101,8 +93,11 @@ class ForgetPassword extends Component {
                                                 </p>
 
 
-                                                {this.props.error && <Alert color="danger" isOpen={this.props.error ? true : false}>
-                                                    <div>{this.props.error}</div>
+                                                {this.props.errorFogot && <Alert color="danger" isOpen={this.props.errorFogot ? true : false}>
+                                                    <div>{this.props.errorFogot}</div>
+                                                </Alert>}
+                                                {this.props.passwordResetStatus && <Alert color="success" isOpen={this.props.passwordResetStatus ? true : false}>
+                                                    <div>{this.props.passwordResetStatus}</div>
                                                 </Alert>}
 
                                                 <AvForm onValidSubmit={this.handleValidSubmit} className="authentication-form">
@@ -179,4 +174,10 @@ class ForgetPassword extends Component {
     }
 }
 
-export default connect()(ForgetPassword);
+const mapStateToProps = (state) => {
+    
+    const { passwordResetStatus, loading, errorFogot } = state.Auth;
+    return { passwordResetStatus, loading, errorFogot };
+};
+
+export default connect(mapStateToProps, { forgetPassword })(ForgetPassword);

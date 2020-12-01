@@ -23,11 +23,7 @@ import {
 const setSession = (user) => {
     let cookies = new Cookies();
     if (user) {
-        let newuser = Object.assign(user);
-        newuser.user.avatar = null
-        //cookies.set('user', JSON.stringify(user), { path: '/' });
-        cookies.set('user',JSON.stringify(newuser) , { path: '/' });
-        console.log(document.cookie);
+        cookies.set('user', JSON.stringify(user), { path: '/' });
     } else {
         cookies.remove('user', { path: '/' });
     }
@@ -122,29 +118,23 @@ function* register({ payload: { username, email, password } }) {
 /**
  * forget password
  */
-function* forgetPassword({ payload: { username } }) {
+function* forgetPassword({ payload: {email, username } }) {
     const options = {
-        body: JSON.stringify({ username }),
-        method: 'POST',
+        method: 'post',
         headers: { 'Content-Type': 'application/json' },
+        data:{email,username},
+        url : 'api/user/forgotPassword'
     };
-
     try {
-        const response = yield call(requestApi, '/users/password-reset', options);
-        yield put(forgetPasswordSuccess(response.message));
-    } catch (error) {
-        let message;
-        switch (error.status) {
-            case 500:
-                message = 'Internal Server Error';
-                break;
-            case 401:
-                message = 'Invalid credentials';
-                break;
-            default:
-                message = error;
+        const response = yield call(requestApi, options);
+        if (response.status==='success'){
+            yield put(forgetPasswordSuccess(response.result));
+        } else {
+
+            yield put(forgetPasswordFailed(response.result)); //message
         }
-        yield put(forgetPasswordFailed(message));
+    } catch (error) {
+        yield put(forgetPasswordFailed(error)); //message
     }
 }
 

@@ -13,7 +13,7 @@ class Resize {
 
     await sharp(buffer)
       .resize(100, 100, { // size image 300x300
-        fit: sharp.fit.inside,
+        fit: sharp.position.center,
         withoutEnlargement: true
       })
       .toFile(filepath);

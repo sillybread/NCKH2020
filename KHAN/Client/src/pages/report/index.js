@@ -33,7 +33,7 @@ class Report extends Component {
 
                     <Row className="page-title align-items-center">
                         <Col sm={6} xl={3}>
-                            <h4 className="mb-1 mt-0 inline">Report</h4>
+                            <h4 className="mb-1 mt-0 inline">Báo Cáo</h4>
                         </Col>
                     
                         <Col sm={6} xl={9}>
@@ -50,7 +50,7 @@ class Report extends Component {
                                 </div>
                                 <UncontrolledButtonDropdown>
                                     <DropdownToggle color="primary" className="dropdown-toggle">
-                                        <i className="uil uil-file-alt mr-1"></i>Download
+                                        <i className="uil uil-file-alt mr-1"></i>Tải về
                                         <i className="icon ml-1">
                                             <ChevronDown />
                                         </i>
@@ -62,12 +62,12 @@ class Report extends Component {
                                         </DropdownItem>
                                         <DropdownItem>
                                             <Printer className="icon-dual icon-xs mr-2"></Printer>
-                                            <span>Print</span>
+                                            <span>In</span>
                                         </DropdownItem>
                                         <DropdownItem divider />
                                         <DropdownItem>
                                             <File className="icon-dual icon-xs mr-2"></File>
-                                            <span>Re-Generate</span>
+                                            <span>File</span>
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>

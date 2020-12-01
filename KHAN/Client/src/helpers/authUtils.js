@@ -27,18 +27,6 @@ const getLoggedInUser = () => {
     const cookies = new Cookies();
     const user = cookies.get('user');
     let newUser= user ? (typeof user == 'object' ? user : JSON.parse(user)) : null;
-    if(newUser){
-        let axios = require('axios');
-        axios({
-            method: 'get',
-            url:'http://localhost:8080/api/user/find',
-            headers: { 'Content-Type': 'application/json','x-access-token':newUser.accessToken },
-            data:{}
-        })
-        .then(data=>{
-            newUser.user.avatar = data.data.result.user.avatar;
-        })
-    }
     return newUser;
 };
 

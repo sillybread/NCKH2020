@@ -99,9 +99,9 @@ class Login extends Component {
                                                         Vui lòng đăng nhập để quản lý và giám sát nhiệt độ kho lạnh của bạn
                                                     </p>
 
-                                                    {this.props.error && (
-                                                        <Alert color="danger" isOpen={this.props.error ? true : false}>
-                                                            <div>{this.props.error}</div>
+                                                    {this.props.errorLogin && (
+                                                        <Alert color="danger" isOpen={this.props.errorLogin ? true : false}>
+                                                            <div>{this.props.errorLogin}</div>
                                                         </Alert>
                                                     )}
 
@@ -201,8 +201,8 @@ class Login extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const { user, loading, error } = state.Auth;
-    return { user, loading, error };
+    const { user, loading, errorLogin } = state.Auth;
+    return { user, loading, errorLogin };
 };
 
 export default connect(mapStateToProps, { loginUser })(Login);

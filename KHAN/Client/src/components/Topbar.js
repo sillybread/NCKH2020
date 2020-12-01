@@ -10,6 +10,7 @@ import LanguageDropdown from './LanguageDropdown';
 
 import logo from '../assets/images/logo.png';
 import profilePic from '../assets/images/users/avatar-7.jpg';
+import NewWareHouse from './newWareHouse';
 
 const Notifications = [
     {
@@ -49,6 +50,34 @@ const Notifications = [
     },
 ];
 
+
+const myRoom =[ 
+    {
+        "role":'Owner',
+        "room": {
+        "_id": "5fc06f09a91004001721b0a5",
+        "name": "Kho Lạnh 1"
+        }
+    },
+    {
+        "role":'Owner',
+        "room": {
+        "_id": "5fc06f09a91004001721b0a5",
+        "name": "Kho Lạnh 2"
+    }
+}
+]
+const shareRoom =[ 
+    {
+    "role":'Owner',
+    "room": {
+      "_id": "5fc06f09a91004001721b0a5",
+      "name": "Kho Lạnh 3"
+        }
+    }
+]
+
+
 const ProfileMenus = [
     {
         label: 'My Account',
@@ -81,8 +110,19 @@ const ProfileMenus = [
 class Topbar extends Component {
     constructor(props) {
         super(props);
-
         this.handleRightSideBar = this.handleRightSideBar.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
+        this.state= {
+            newWareHouseModal :false,
+            defaultRoom: (myRoom.length==0) ? 
+            {
+                "role":'Owner',
+                "room": {
+                "_id": "xxx",
+                "name": "Chưa có kho lạnh nào"
+                }
+            }:myRoom[0]
+        }
     }
 
     /**
@@ -91,6 +131,18 @@ class Topbar extends Component {
     handleRightSideBar = () => {
         this.props.showRightSidebar();
     };
+    toggleModal = () =>{
+        this.setState({
+            ...this.state,
+            newWareHouseModal:! this.state.newWareHouseModal
+        })
+    }
+    setDefaultRoom = (obj)=>{
+        this.setState({
+            ...this.state,
+            defaultRoom:obj
+        });
+    }
 
     render() {
         return (
@@ -105,8 +157,7 @@ class Topbar extends Component {
                             <span className="logo-sm">
                                 <img src={logo} alt="" height="40" />
                             </span>
-                        </Link>
-                                              
+                        </Link>                                             
 
 
                         {/* menu*/}
@@ -123,33 +174,42 @@ class Topbar extends Component {
 
                         <UncontrolledButtonDropdown>
                             <DropdownToggle color="default" className="dropdown-toggle text-dark font-weight-bold mt-2" >
-                                Kho lạnh Anh Huy
+                                {this.state.defaultRoom.room.name}
                                 <i className="icon ml-1"><ChevronDown /></i>
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <DropdownItem header>Kho của tôi</DropdownItem>  
-                                <DropdownItem>
-                                    <span>Kho lạnh anh Huy</span>
-                                </DropdownItem>
-                                <DropdownItem>
-                                    <span>Kho lạnh 2</span>
-                                </DropdownItem>
-                                <DropdownItem header>Kho được chia sẽ</DropdownItem>  
-                                <DropdownItem>
-                                    <span>Kho lạnh 3</span>
-                                </DropdownItem>
+                                {(myRoom.length>0)? <DropdownItem header>Kho của tôi</DropdownItem>:<></>}
+                                {
+                                    myRoom.map((obj)=>(
+                                        <DropdownItem onClick={()=>{this.setDefaultRoom(obj)}}>
+                                            <span>{obj.room.name}</span>
+                                        </DropdownItem>
+                                    ))
+                                }
+                                
+                                {(shareRoom.length>0)? <DropdownItem header>Kho được chia sẽ</DropdownItem>:<></>}
+                    
+                                {
+                                    shareRoom.map((obj)=>(
+                                        <DropdownItem onClick={()=>{this.setDefaultRoom(obj)}}>
+                                            <span>{obj.room.name}</span>
+                                        </DropdownItem>
+                                    ))
+                                }
                                 <DropdownItem divider />
-                                <DropdownItem>
-                                    <Button color='success' className="btn btn-block">
+                                <DropdownItem className="text-success"
+                                    onClick={this.toggleModal}
+                                >
                                         <i className="icon ml-1"><Plus /></i>
                                         Tạo kho lạnh mới
-                                    </Button>
-                                </DropdownItem>
-                                    
-                                
+                                </DropdownItem>     
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>     
-
+                        <NewWareHouse 
+                            isOpen={this.state.newWareHouseModal} 
+                            toggleOpen={this.toggleModal} 
+                            submit={(value)=>{ console.log('Tao kho moi',value);this.toggleModal();}}
+                        />
                         <ul className="navbar-nav flex-row ml-auto d-flex list-unstyled topnav-menu float-right mb-0">
                             <li className="d-none d-sm-block">
                                 <div className="app-search">

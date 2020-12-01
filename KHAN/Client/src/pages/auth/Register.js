@@ -16,7 +16,7 @@ import {
     InputGroupAddon,
     CustomInput,
 } from 'reactstrap';
-import { AvForm, AvGroup, AvInput, AvFeedback } from 'availity-reactstrap-validation';
+import { AvForm, AvGroup, AvInput, AvFeedback,AvCheckboxGroup } from 'availity-reactstrap-validation';
 import { Mail, Lock, User } from 'react-feather';
 
 import { registerUser } from '../../redux/actions';
@@ -47,7 +47,10 @@ class Register extends Component {
      * Handles the submit
      */
     handleValidSubmit = (event, values) => {
+        console.log(values);
         this.props.registerUser(values.username, values.email, values.password);
+        
+        
     };
 
     /**
@@ -102,9 +105,9 @@ class Register extends Component {
                                                         Bắt đầu đăng kí một tài khoản mới để sử dụng dịch vụ của chúng tôi
                                                     </p>
 
-                                                    {this.props.error && (
-                                                        <Alert color="danger" isOpen={this.props.error ? true : false}>
-                                                            <div>{this.props.error}</div>
+                                                    {this.props.errorRegister && (
+                                                        <Alert color="danger" isOpen={this.props.errorRegister ? true : false}>
+                                                            <div>{this.props.errorRegister}</div>
                                                         </Alert>
                                                     )}
 
@@ -172,11 +175,13 @@ class Register extends Component {
                                                         <AvGroup check className="mb-4">
                                                             <CustomInput
                                                                 type="checkbox"
-                                                                id="terms"
-                                                                defaultChecked="true"
+                                                                id="termsX"
+                                                                name ='termsX'
                                                                 className="pl-1"
+                                                                defaultChecked
                                                                 label="Tôi đồng ý sử dụng dịch vụ"
                                                             />
+                                                            <AvFeedback>Mật khẩu không hợp lệ</AvFeedback>
                                                         </AvGroup>
 
                                                         <FormGroup className="form-group mb-0 text-center">
@@ -226,8 +231,8 @@ class Register extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const { user, loading, error } = state.Auth;
-    return { user, loading, error };
+    const { user, loading, errorRegister } = state.Auth;
+    return { user, loading, errorRegister };
 };
 
 export default connect(mapStateToProps, { registerUser })(Register);
