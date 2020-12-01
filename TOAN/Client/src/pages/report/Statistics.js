@@ -10,28 +10,28 @@ const Statistics = () => {
             <Row>
                 <Col md={6} xl={3}>
                     <StatisticsWidget
-                        description="Today Sensor"
-                        title="1"
+                        description="Tổng số cảm biến"
+                        title="18"
                         icon={FeatherIcon.Cpu}
                         iconClass="icon-dual-primary"></StatisticsWidget>
                 </Col>
                 <Col md={6} xl={3}>
                     <StatisticsWidget
-                        description="Manager"
+                        description="Người quản lý"
                         title="4"
                         icon={FeatherIcon.Users}
                         iconClass="icon-dual-warning"></StatisticsWidget>
                 </Col>
                 <Col md={6} xl={3}>
                     <StatisticsWidget
-                        description="Total Cels"
-                        title="1000"
+                        description="Khu vực"
+                        title="2"
                         icon={FeatherIcon.Grid}
                         iconClass="icon-dual-success"></StatisticsWidget>
                 </Col>
                 <Col md={6} xl={3}>
                     <StatisticsWidget
-                        description="Warning Temperature"
+                        description="Cảnh báo"
                         title="7"
                         icon={FeatherIcon.Bell}
                         iconClass="icon-dual-info"></StatisticsWidget>
