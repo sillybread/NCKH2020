@@ -16,12 +16,12 @@ import {
     InputGroupAddon,
 } from 'reactstrap';
 import { AvForm, AvGroup, AvInput, AvFeedback } from 'availity-reactstrap-validation';
-import { User, Lock } from 'react-feather';
+import { Mail, Lock } from 'react-feather';
 
-import { loginUser } from 'redux/actions';
-import { isUserAuthenticated } from 'helpers/authUtils';
-import Loader from 'components/Loader';
-import logo from 'assets/images/logo.png';
+import { loginUser } from '../../redux/actions';
+import { isUserAuthenticated } from '../../helpers/authUtils';
+import Loader from '../../components/Loader';
+import logo from '../../assets/images/logo.png';
 
 class Login extends Component {
     _isMounted = false;
@@ -31,7 +31,7 @@ class Login extends Component {
 
         this.handleValidSubmit = this.handleValidSubmit.bind(this);
         this.state = {
-            username: 'vikhan',
+            username: 'vikhan2',
             password: '123456',
         };
     }
@@ -84,17 +84,16 @@ class Login extends Component {
 
                                                     <div className="mx-auto mb-5">
                                                         <a href="/">
-                                                            
-                                                            <img src={logo} alt="" height="50" />
-                                                            <h4 className="align-middle mt-2 text-logo">
-                                                                QUẢN LÝ NHIỆT ĐỘ KHO LẠNH
-                                                            </h4>
+                                                            <img src={logo} alt="" height="24" />
+                                                            <h3 className="d-inline align-middle ml-1 text-logo">
+                                                                WAREHOUSE
+                                                            </h3>
                                                         </a>
                                                     </div>
 
-                                                    <h6 className="h5 mb-0 mt-2">Chào mừng bạn!</h6>
+                                                    <h6 className="h5 mb-0 mt-4">Welcome back!</h6>
                                                     <p className="text-muted mt-1 mb-4">
-                                                        Vui lòng đăng nhập để quản lý và giám sát nhiệt độ kho lạnh của bạn
+                                                        Enter your email address and password to access admin panel.
                                                     </p>
 
                                                     {this.props.error && (
@@ -107,32 +106,32 @@ class Login extends Component {
                                                         onValidSubmit={this.handleValidSubmit}
                                                         className="authentication-form">
                                                         <AvGroup className="">
-                                                            <Label for="username">Tên đăng nhập</Label>
+                                                            <Label for="username">Username</Label>
                                                             <InputGroup>
                                                                 <InputGroupAddon addonType="prepend">
                                                                     <span className="input-group-text">
-                                                                        <User className="icon-dual" />
+                                                                        <Mail className="icon-dual" />
                                                                     </span>
                                                                 </InputGroupAddon>
                                                                 <AvInput
                                                                     type="text"
                                                                     name="username"
                                                                     id="username"
+                                                                    placeholder="hello@coderthemes.com"
                                                                     value={this.state.username}
-                                                                    placeholder="nhập tên đăng nhập"
                                                                     required
                                                                 />
                                                             </InputGroup>
 
-                                                            <AvFeedback>Tên đăng nhập không hợp lệ</AvFeedback>
+                                                            <AvFeedback>This field is invalid</AvFeedback>
                                                         </AvGroup>
 
                                                         <AvGroup className="mb-3">
-                                                            <Label for="password">Mật khẩu</Label>
+                                                            <Label for="password">Password</Label>
                                                             <Link
                                                                 to="/account/forget-password"
                                                                 className="float-right text-muted text-unline-dashed ml-1">
-                                                                Quên mật khẩu?
+                                                                Forgot your password?
                                                             </Link>
                                                             <InputGroup>
                                                                 <InputGroupAddon addonType="prepend">
@@ -144,12 +143,12 @@ class Login extends Component {
                                                                     type="password"
                                                                     name="password"
                                                                     id="password"
-                                                                    placeholder="nhập mật khẩu"
+                                                                    placeholder="Enter your password"
                                                                     value={this.state.password}
                                                                     required
                                                                 />
                                                             </InputGroup>
-                                                            <AvFeedback>Mật khuẩu không hợp lệ</AvFeedback>
+                                                            <AvFeedback>This field is invalid</AvFeedback>
                                                         </AvGroup>
 
                                                         <FormGroup className="form-group mb-0 text-center">
@@ -165,12 +164,12 @@ class Login extends Component {
                                                         <div className="overlay"></div>
                                                         <div className="auth-user-testimonial">
                                                             <p className="font-size-24 font-weight-bold text-white mb-1">
-                                                                Xin Chào!
+                                                                I simply love it!
                                                             </p>
                                                             <p className="lead">
-                                                                "Cảm ơn bạn đã sử dụng hệ thống của chúng tôi !"
+                                                                "It's a elegent templete. I love it very much!"
                                                             </p>
-                                                            <p>- Admin</p>
+                                                            <p>- Admin User</p>
                                                         </div>
                                                     </div>
                                                 </Col>
@@ -183,9 +182,9 @@ class Login extends Component {
                             <Row className="mt-3">
                                 <Col className="col-12 text-center">
                                     <p className="text-muted">
-                                        Bạn không có tài khoản?{' '}
+                                        Don't have an account?{' '}
                                         <Link to="/account/register" className="text-primary font-weight-bold ml-1">
-                                            Đăng kí
+                                            Sign Up
                                         </Link>
                                     </p>
                                 </Col>

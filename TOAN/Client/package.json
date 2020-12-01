@@ -14,7 +14,7 @@
     "availity-reactstrap-validation": "^2.6.0",
     "axios": "^0.20.0",
     "bootstrap": "^4.3.1",
-    "draft-js": "^0.11.7",
+    "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.4",
     "jwt-decode": "^2.2.0",
     "metismenujs": "^1.1.0",
@@ -64,8 +64,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "devDependencies": {
-    "babel-plugin-module-resolver": "^4.0.0"
-  }
+  ]
 }

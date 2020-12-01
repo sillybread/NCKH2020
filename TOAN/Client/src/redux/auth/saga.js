@@ -37,7 +37,6 @@ function* login({ payload: { username, password } }) {
     };
     try {
         const response = yield call(fetchJSON, BASE_URL + 'api/auth/signin', options);
-        window.test = response;
         if (!response.messageError) {
             setSession(response);
             yield put(loginUserSuccess(response));

@@ -1,15 +1,8 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 import { DropdownMenu, DropdownToggle, UncontrolledButtonDropdown, DropdownItem, Row, Col } from 'reactstrap';
-import MySlice from 'components/MySlice';
+import MySlice from '../../components/MySlice';
 import SensorItem from './sensorItem';
-
-const demoMap = [
-    [0, 0, 0, 0],
-    [1, 3, 3, 1],
-    [1, 2, 2, 1],
-    [1, 1, 1, 1],
-];
 
 const SensorMap = () => {
     const apexAreaChart2Opts = {
