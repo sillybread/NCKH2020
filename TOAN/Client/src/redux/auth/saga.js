@@ -42,7 +42,6 @@ function* login({ payload: { username, password } }) {
     try {
         const response = yield call(requestApi, options);
         if (response.status==='success') {
-           
             setSession(response.result);
             yield put(loginUserSuccess(response.result));
         } else {
