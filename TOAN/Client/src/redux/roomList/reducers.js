@@ -16,12 +16,31 @@ const RoomList = (state = INIT_STATE, action) =>{
                 loading: true
             }
         case GET_ROOM_LIST_SUCCESS:
+            console.log(GET_ROOM_LIST_SUCCESS);
+            const rooms = action.payload;
+            const myRoom = rooms.filter((e)=>(e.role==="Owner"));
+            const sharedRoom = rooms.filter((e)=>(e.role!="Owner"));
+            let defaultRoom = {
+                role:'Owner',
+                room: {
+                    _id: "xxx",
+                    name: "Chưa có kho lạnh nào"
+                }
+            };
+            if (sharedRoom.length>0){
+                defaultRoom = sharedRoom[0];
+            }
+            if (myRoom.length>0){
+                defaultRoom = myRoom[0];
+            }
+            //console.log(myRoom, sharedRoom, defaultRoom);
             return {
                 ...state,
                 loading: false,
                 errorGetRoomList: false,
-                myRoom: action.payload.myRoom,
-                sharedRoom: action.payload.sharedRoom
+                myRoom,
+                sharedRoom,
+                defaultRoom
             }
         case GET_ROOM_LIST_FAILED:
             return {

@@ -5,7 +5,6 @@ import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 import { requestApi } from 'helpers/api';
 
 import { LOGIN_USER, LOGOUT_USER, REGISTER_USER, FORGET_PASSWORD ,LOGIN_USER_SUCCESS} from './constants';
-import { BASE_URL} from 'constants/apiConfig.js';
 
 import {
     loginUserSuccess,
@@ -14,7 +13,8 @@ import {
     registerUserFailed,
     forgetPasswordSuccess,
     forgetPasswordFailed,
-} from './actions';
+    getRoomList,
+} from 'redux/actions';
 
 /**
  * Sets the session
@@ -104,7 +104,6 @@ function* register({ payload: { username, email, password } }) {
     try {
         const response = yield call(requestApi,options);
         if (response.status==='success') {
-           
             yield put(registerUserSuccess(response.result));
         } else {
             yield put(registerUserFailed(response.result));

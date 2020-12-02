@@ -51,31 +51,31 @@ const Notifications = [
 ];
 
 
-const myRoom =[ 
-    {
-        "role":'Owner',
-        "room": {
-        "_id": "5fc06f09a91004001721b0a5",
-        "name": "Kho Lạnh 1"
-        }
-    },
-    {
-        "role":'Owner',
-        "room": {
-        "_id": "5fc06f09a91004001721b0a5",
-        "name": "Kho Lạnh 2"
-    }
-}
-]
-const shareRoom =[ 
-    {
-    "role":'Owner',
-    "room": {
-      "_id": "5fc06f09a91004001721b0a5",
-      "name": "Kho Lạnh 3"
-        }
-    }
-]
+// const myRoom =[ 
+//     {
+//         "role":'Owner',
+//         "room": {
+//         "_id": "5fc06f09a91004001721b0a5",
+//         "name": "Kho Lạnh 1"
+//         }
+//     },
+//     {
+//         "role":'Owner',
+//         "room": {
+//         "_id": "5fc06f09a91004001721b0a5",
+//         "name": "Kho Lạnh 2"
+//     }
+// }
+// ]
+// const shareRoom =[ 
+//     {
+//     "role":'Owner',
+//     "room": {
+//       "_id": "5fc06f09a91004001721b0a5",
+//       "name": "Kho Lạnh 3"
+//         }
+//     }
+// ]
 
 
 const ProfileMenus = [
@@ -114,14 +114,7 @@ class Topbar extends Component {
         this.toggleModal = this.toggleModal.bind(this);
         this.state= {
             newWareHouseModal :false,
-            defaultRoom: (myRoom.length==0) ? 
-            {
-                "role":'Owner',
-                "room": {
-                "_id": "xxx",
-                "name": "Chưa có kho lạnh nào"
-                }
-            }:myRoom[0]
+            defaultRoom: this.props.defaultRoom
         }
     }
 
@@ -157,7 +150,7 @@ class Topbar extends Component {
                             <span className="logo-sm">
                                 <img src={logo} alt="" height="40" />
                             </span>
-                        </Link>                                             
+                        </Link>
 
 
                         {/* menu*/}
@@ -174,23 +167,23 @@ class Topbar extends Component {
 
                         <UncontrolledButtonDropdown>
                             <DropdownToggle color="default" className="dropdown-toggle text-dark font-weight-bold mt-2" >
-                                {this.state.defaultRoom.room.name}
+                                {this.state.defaultRoom && this.state.defaultRoom.room.name}
                                 <i className="icon ml-1"><ChevronDown /></i>
                             </DropdownToggle>
                             <DropdownMenu right>
-                                {(myRoom.length>0)? <DropdownItem header>Kho của tôi</DropdownItem>:<></>}
+                                {(this.props.myRoom && this.props.myRoom.length>0)? <DropdownItem header>Kho của tôi</DropdownItem>:<></>}
                                 {
-                                    myRoom.map((obj)=>(
+                                    this.props.myRoom && this.props.myRoom.map((obj)=>(
                                         <DropdownItem onClick={()=>{this.setDefaultRoom(obj)}}>
                                             <span>{obj.room.name}</span>
                                         </DropdownItem>
                                     ))
                                 }
-                                
-                                {(shareRoom.length>0)? <DropdownItem header>Kho được chia sẽ</DropdownItem>:<></>}
-                    
+
+                                {(this.props.sharedRoom && this.props.sharedRoom.length>0)? <DropdownItem header>Kho được chia sẽ</DropdownItem>:<></>}
+
                                 {
-                                    shareRoom.map((obj)=>(
+                                    this.props.sharedRoom && this.props.sharedRoom.map((obj)=>(
                                         <DropdownItem onClick={()=>{this.setDefaultRoom(obj)}}>
                                             <span>{obj.room.name}</span>
                                         </DropdownItem>
@@ -221,7 +214,7 @@ class Topbar extends Component {
                                     </form>
                                 </div>
                             </li>
-                            
+
                             <LanguageDropdown tag="li" />
                             <NotificationDropdown notifications={Notifications} />
 
@@ -247,4 +240,9 @@ class Topbar extends Component {
     }
 }
 
-export default connect(null, { showRightSidebar })(Topbar);
+const mapStateToProps = (state) =>{
+    const {myRoom, sharedRoom, defaultRoom} = state.RoomList;
+    return {myRoom, sharedRoom, defaultRoom};
+}
+
+export default connect(mapStateToProps, { showRightSidebar })(Topbar);

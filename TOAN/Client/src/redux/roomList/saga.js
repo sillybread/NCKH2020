@@ -1,5 +1,5 @@
 import { all, call, fork, takeEvery, put } from 'redux-saga/effects';
-
+import { requestApi } from 'helpers/api';
 import {
     GET_ROOM_LIST,
     GET_ROOM_LIST_SUCCESS,
@@ -12,9 +12,20 @@ import {
     getRoomListFailed as getRoomListFailedAction
 } from './actions';
 
-function* getRoomList(){
+function* getRoomList({payload: user}){
     try{
-        yield ()=>{}
+        const response = yield call(requestApi, {
+            method: 'get',
+            headers: {
+                'x-access-token': user.accessToken,
+            },
+            url: 'api/room/access/all'
+        });
+        if (response.status=="success"){
+            yield put(getRoomListSuccessAction(response.result.accesses));
+        } else {
+            yield put(getRoomListFailedAction(response.result));
+        }
     } catch (error){}
 }
 

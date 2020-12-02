@@ -5,9 +5,9 @@ import {
     GET_ROOM_LIST_FAILED,
 } from './constants';
 
-export const getRoomList = (roomList) => ({
+export const getRoomList = (user) => ({
     type: GET_ROOM_LIST,
-    payload: roomList
+    payload: user
 })
 
 export const getRoomListSuccess = (data) => ({

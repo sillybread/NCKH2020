@@ -5,7 +5,6 @@ const constants = require('constants/apiConfig');
  * @param {*} config
  */
 const requestApi =(config={}) => {
-    console.log(config);
     return axios({...config,baseURL: constants.BASE_URL})
         .then(res=>{
             /* console.log(res.status);
