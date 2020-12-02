@@ -2,10 +2,12 @@ import React from 'react';
 import { Modal ,ModalHeader,CardBody, ModalFooter, Card, Button, Label, Media} from 'reactstrap';
 import { AvForm, AvGroup} from 'availity-reactstrap-validation';
 import Select from 'react-select';
+import Loader from 'components/Loader';
 
 
 
 const AddUser=(props)=>{
+    const [loading,setLoading] = React.useState(false);
     const state = 
         {
             value: 'Mời',
@@ -83,12 +85,14 @@ const AddUser=(props)=>{
 
     return (
         <Modal isOpen={props.isOpen} toggle={props.toggleOpen}>
+            {loading && <Loader />}
             <AvForm>
             <ModalHeader >
                 {state.Name}
             </ModalHeader>
             <Card className='shadow-none'>
                 <CardBody>
+                    
                     <AvGroup>
                         <Label for="username">Người dùng</Label>
                         <Select

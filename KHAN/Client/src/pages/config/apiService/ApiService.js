@@ -10,6 +10,9 @@ import {
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import {dateToString} from 'helpers/datetimeCover';
 import ConfirmDialog from 'components/ConfirmDialog';
+import AddApi from './addApi';
+
+
 
 
 
@@ -71,8 +74,8 @@ const ApiService = () => {
                 <Button className="mt-4"  color="primary"
                     onClick={()=>{setmodalnew(!modalnew)}}
                 >
-                    <i className='uil uil-file-medical'></i>
-                    Thêm API mới
+                    <i className='uil uil-plug mr-1'></i>
+                    Kích hoạt API mới
                 </Button>
             </CardHeader>
             <CardBody >
@@ -81,7 +84,7 @@ const ApiService = () => {
             </CardBody>
             
         </Card> 
-       
+        <AddApi isOpen={modalnew} toggleOpen={()=>{setmodalnew(!modalnew)}} submit={(value)=>{console.log('addApi',value);setmodalnew(!modalnew);}}/>
         </>
     );
 };
@@ -128,6 +131,7 @@ const API = (props) => {
         </ConfirmDialog>
     </React.Fragment>
 }
+
 
 
 export default ApiService;

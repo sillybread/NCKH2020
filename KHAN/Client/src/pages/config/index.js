@@ -7,7 +7,7 @@ import WareHouseConfig from './warehouseConfig/warehouseConfig';
 import ApiService from './apiService/ApiService';
 
 export default function Config() {
-    const [activeTab, setActiveTab] = useState('5');
+    const [activeTab, setActiveTab] = useState('1');
     const tabContents = [
         {
             id: '1',

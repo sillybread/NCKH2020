@@ -3,6 +3,7 @@ import Chart from 'react-apexcharts';
 import { DropdownMenu, DropdownToggle, UncontrolledButtonDropdown, DropdownItem, Row, Col } from 'reactstrap';
 import MySlice from 'components/MySlice';
 import SensorItem from './sensorItem';
+import ConfigSensor from './configSensor';
 
 const demoMap = [
     [0, 0, 0, 0],
@@ -12,6 +13,15 @@ const demoMap = [
 ];
 
 const SensorMap = () => {
+
+    const [modalConfig,setModalConfig] = React.useState({
+        x:0,
+        y:0,
+        z:0,
+        show:false,
+    });
+
+
     const apexAreaChart2Opts = {
         plotOptions: {
             heatmap: {
@@ -22,16 +32,29 @@ const SensorMap = () => {
                     ranges: [
                         {
                             from: -1,
-                            to: -1,
-                            name: 'no-Sensor',
-                            color: '#000000',
+                            to: 0,
+                            name: 'Trống',
+                            color: '#fafafa',
                         },
 
                         {
                             from: 0,
-                            to: 0,
-                            name: 'Sensor',
+                            to: 1,
+                            name: 'Đang chạy',
                             color: '#00A100',
+                        },
+                        {
+                            from: 1,
+                            to: 2,
+                            name: 'Đang tắt',
+                            color: '#FFAA00',
+                        },
+
+                        {
+                            from: 2,
+                            to: 3,
+                            name: 'Cần thiết',
+                            color: '#DC0404',
                         },
                     ],
                 },
@@ -58,7 +81,13 @@ const SensorMap = () => {
         },
     };
     const showLocation = function (context) {
-        alert('x= ' + context.dataPointIndex + ' y= ' + context.seriesIndex);
+        console.log(context.dataPointIndex,context.seriesIndex);
+        setModalConfig({
+            x:context.dataPointIndex,
+            y:context.seriesIndex,
+            z:0,
+            show: true,
+        });
     };
     const generateData = (count, yrange) => {
         var i = 0;
@@ -76,63 +105,63 @@ const SensorMap = () => {
             name: '0',
             data: generateData(20, {
                 min: -1,
-                max: 0,
+                max: 3,
             }),
         },
         {
             name: '1',
             data: generateData(20, {
                 min: -1,
-                max: 0,
+                max: 3,
             }),
         },
         {
             name: '2',
             data: generateData(20, {
                 min: -1,
-                max: 0,
+                max: 3,
             }),
         },
         {
             name: '3',
             data: generateData(20, {
                 min: -1,
-                max: 0,
+                max: 3,
             }),
         },
         {
             name: '4',
             data: generateData(20, {
                 min: -1,
-                max: 0,
+                max: 3,
             }),
         },
         {
             name: '5',
             data: generateData(20, {
                 min: -1,
-                max: 0,
+                max: 3,
             }),
         },
         {
             name: '6',
             data: generateData(20, {
                 min: -1,
-                max: 0,
+                max: 3,
             }),
         },
         {
             name: '7',
             data: generateData(20, {
                 min: -1,
-                max: 0,
+                max: 3,
             }),
         },
         {
             name: '8',
             data: generateData(20, {
                 min: -1,
-                max: 0,
+                max: 3,
             }),
         },
     ];
@@ -283,7 +312,8 @@ const SensorMap = () => {
           }
     ];
     return (
-        <>
+        <>  
+            <ConfigSensor config={modalConfig} toggle={()=>{setModalConfig({...modalConfig,show:!modalConfig.show})}}/>
             <Chart
                 options={apexAreaChart2Opts}
                 series={apexAreaChart2Data}
