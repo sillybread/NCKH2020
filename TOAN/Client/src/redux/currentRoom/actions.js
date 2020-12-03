@@ -1,21 +1,23 @@
-import { all } from 'redux-saga/effects';
 import {
-    GET_CURR_ROOM,
-    GET_CURR_ROOM_SUCCESS,
-    GET_CURR_ROOM_FAILED,
+    GET_CURR_ROOM_INFO,
+    GET_CURR_ROOM_INFO_SUCCESS,
+    GET_CURR_ROOM_INFO_FAILED,
 } from './constants';
 
-export const getCurrentRoom = (currentRoom) => ({
-    type: GET_CURR_ROOM,
-    payload: currentRoom
+export const getCurrentRoomInfo = (room_id, token) => ({
+    type: GET_CURR_ROOM_INFO,
+    payload: {
+        room_id,
+        token
+    }
 })
 
-export const getCurrentRoomSuccess = (data) => ({
-    type: GET_CURR_ROOM_SUCCESS,
+export const getCurrentRoomInfoSuccess = (data) => ({
+    type: GET_CURR_ROOM_INFO_SUCCESS,
     payload: data
 })
 
-export const getCurrentRoomFailed = (error) => ({
-    type: GET_CURR_ROOM_FAILED,
+export const getCurrentRoomInfoFailed = (error) => ({
+    type: GET_CURR_ROOM_INFO_FAILED,
     payload: error
 })

@@ -1,52 +1,43 @@
 import { all, call, fork, takeEvery, put } from 'redux-saga/effects';
-
 import {
-    GET_CURR_ROOM,
-    GET_CURR_ROOM_SUCCESS,
-    GET_CURR_ROOM_FAILED,
+    GET_CURR_ROOM_INFO,
 } from './constants';
-
 import {
-    getCurrentRoom as getCurrentRoomAction,
-    getCurrentRoomSuccess as getCurrentRoomSuccessAction,
-    getCurrentRoomFailed as getCurrentRoomFailedAction
+    getCurrentRoomInfoSuccess,
+    getCurrentRoomInfoFailed
 } from './actions';
+import {requestApi} from 'helpers/api';
 
-function* getCurrentRoom(){
+function aGet(token, url, params){
+    return call(requestApi, {
+        method: 'get',
+        headers: {
+            'x-access-token': token,
+        },
+        url,
+        params
+    });
+}
+
+function* getCurrentRoomInfo({payload: {room_id, token}}){
     try{
-        yield ()=>{}
+        const res = yield aGet(token, 'api/room', {room_id});
+        if (res.status==='success'){
+            yield put(getCurrentRoomInfoSuccess({ info: res.result.room}));
+        } else {
+            yield put(getCurrentRoomInfoFailed(res.result));
+        }
     } catch (error){}
 }
 
-function* getCurrentRoomSuccess(){
-    try{
-        yield ()=>{}
-    } catch (error){}
-}
-function* getCurrentRoomFailed(){
-    try{
-        yield ()=>{}
-    } catch (error){}
-}
-
-function * watchGetCurrentRoom(){
-    yield takeEvery(GET_CURR_ROOM, getCurrentRoom);
-}
-
-function * watchGetCurrentRoomSuccess(){
-    yield takeEvery(GET_CURR_ROOM_SUCCESS, getCurrentRoomSuccess);
-}
-
-function * watchGetCurrentRoomFailed(){
-    yield takeEvery(GET_CURR_ROOM_FAILED, getCurrentRoomFailed);
+function * watchGetCurrentRoomInfo(){
+    yield takeEvery(GET_CURR_ROOM_INFO, getCurrentRoomInfo);
 }
 
 
 function* CurrentRoomSaga(){
     yield all([
-        fork(watchGetCurrentRoom),
-        fork(watchGetCurrentRoomSuccess),
-        fork(watchGetCurrentRoomFailed)
+        fork(watchGetCurrentRoomInfo),
     ])
 }
 

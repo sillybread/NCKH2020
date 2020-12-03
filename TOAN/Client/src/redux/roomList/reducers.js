@@ -16,7 +16,6 @@ const RoomList = (state = INIT_STATE, action) =>{
                 loading: true
             }
         case GET_ROOM_LIST_SUCCESS:
-            console.log(GET_ROOM_LIST_SUCCESS);
             const rooms = action.payload;
             const myRoom = rooms.filter((e)=>(e.role==="Owner"));
             const sharedRoom = rooms.filter((e)=>(e.role!="Owner"));
@@ -33,7 +32,6 @@ const RoomList = (state = INIT_STATE, action) =>{
             if (myRoom.length>0){
                 defaultRoom = myRoom[0];
             }
-            //console.log(myRoom, sharedRoom, defaultRoom);
             return {
                 ...state,
                 loading: false,

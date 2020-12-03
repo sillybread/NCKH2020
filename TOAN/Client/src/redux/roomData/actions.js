@@ -1,4 +1,3 @@
-import { all } from 'redux-saga/effects';
 import {
     GET_ROOM_DATA,
     GET_ROOM_DATA_SUCCESS,
