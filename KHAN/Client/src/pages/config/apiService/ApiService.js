@@ -5,6 +5,8 @@ import {
     CardBody,
     Media,
     Button,
+    Row,
+    Col,
 } from 'reactstrap';
 
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -68,24 +70,40 @@ const ApiService = () => {
     
 
     return (
-        <>
-        <Card className='shadow-none'>
-            <CardHeader className='bg-transparent text-right'>
-                <Button className="mt-4"  color="primary"
-                    onClick={()=>{setmodalnew(!modalnew)}}
-                >
-                    <i className='uil uil-plug mr-1'></i>
-                    Kích hoạt API mới
-                </Button>
-            </CardHeader>
-            <CardBody >
-                {apis.map(api=>(<API api={api} />)
-                )}   
-            </CardBody>
-            
-        </Card> 
-        <AddApi isOpen={modalnew} toggleOpen={()=>{setmodalnew(!modalnew)}} submit={(value)=>{console.log('addApi',value);setmodalnew(!modalnew);}}/>
-        </>
+
+        <React.Fragment>
+            <Row className="page-title align-items-center">
+            <Col xs={12}>
+                    <h4 className="mb-1 mt-0">Quản lý tài khoản Api</h4>
+            </ Col>
+            </Row>
+            <Row>
+                <Col xs={12}>
+                    <Card className="mb-5">
+                        <CardBody>
+                        <Card className='shadow-none'>
+                        <CardHeader className='bg-transparent text-right'>
+                            <Button className="mt-1"  color="primary"
+                                onClick={()=>{setmodalnew(!modalnew)}}
+                            >
+                                <i className='uil uil-plug mr-1'></i>
+                                Kích hoạt API mới
+                            </Button>
+                        </CardHeader>
+                        <CardBody >
+                            {apis.map(api=>(<API api={api} />)
+                            )}   
+                        </CardBody>
+                        
+                    </Card> 
+                    <AddApi isOpen={modalnew} toggleOpen={()=>{setmodalnew(!modalnew)}} submit={(value)=>{console.log('addApi',value);setmodalnew(!modalnew);}}/>        
+
+
+                        </CardBody>
+                    </Card>
+                </Col>
+            </Row>
+        </React.Fragment>
     );
 };
 
@@ -93,10 +111,11 @@ const ApiService = () => {
 const API = (props) => {
     const [modalDelete,setModalDelete]= React.useState(false);
 
-    return <React.Fragment>
+    return (
+        <React.Fragment>
         <Card className="border mb-3">
             <CardBody className="p-3">
-                <Button className="float-right dropdown-toggle p-0 arrow-none cursor-pointer" color='danger'
+                <Button className="float-right p-0" color='outline-danger'
                     onClick={()=>{setModalDelete(!modalDelete)}}
                 >
                     <i className="uil uil-trash mx-1"></i>
@@ -129,7 +148,8 @@ const API = (props) => {
             toggle={()=>{setModalDelete(!modalDelete)}} 
             confirm={()=>{}}>
         </ConfirmDialog>
-    </React.Fragment>
+        </React.Fragment>
+    );
 }
 
 

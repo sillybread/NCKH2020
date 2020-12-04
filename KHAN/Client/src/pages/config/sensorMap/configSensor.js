@@ -169,37 +169,31 @@ const ConfigSensor = (props) => {
                 <Label for="vitri">Tọa độ</Label>
                 <AvGroup id='vitri'>
                     <div className="input-group">
-                        <InputGroupAddon addonType="prepend" >
-                            X
-                        </InputGroupAddon>
-                        <AvInput name="x"  defaultValue={(props.config.x ==0)?'0':props.config.x}/>
+                        <div class="input-group-prepend text-danger"><span class="input-group-text text-danger font-weight-bold">X</span></div>
+                        <AvInput name="x" disabled value={(props.config.x ==0)?'0':props.config.x}/>
                     </div>
                 </AvGroup>
                 <AvGroup>
                     <div className="input-group">
-                        <InputGroupAddon addonType="prepend" >
-                            Y
-                        </InputGroupAddon>
-                        <AvInput name="y"  defaultValue={(props.config.y ==0)?'0':props.config.y} />
+                        <div class="input-group-prepend text-danger"><span class="input-group-text text-success font-weight-bold">Y</span></div>
+                        <AvInput name="y" disabled value={(props.config.y ==0)?'0':props.config.y} />
                     </div>
                 </AvGroup>
                 <AvGroup>
                     <div className="input-group">
-                        <InputGroupAddon addonType="prepend" >
-                            Z
-                        </InputGroupAddon>
-                        <AvInput name="z"  defaultValue={(props.config.z ==0)?'0':props.config.z}/>
+                        <div class="input-group-prepend text-danger"><span class="input-group-text text-primary font-weight-bold">Z</span></div>
+                        <AvInput name="z" disabled value={(props.config.z ==0)?'0':props.config.z}/>
                     </div>
                 </AvGroup>
                 
             </Col>
           
             <Col>
-            <Label for="khoangchach">Khoảng cách đến O(0,0,0)</Label>
+            <Label for="khoangchach">Khoảng cách đến trục</Label>
                 <AvGroup id='khoangchach'>
                     <div className="input-group">
                        
-                        <AvInput name="dx" />
+                        <AvInput disabled name="dx" value={(props.config.x ==0)?'0':props.config.x*10} />
                         <InputGroupAddon addonType="append" >
                             cm
                         </InputGroupAddon>
@@ -207,7 +201,7 @@ const ConfigSensor = (props) => {
                 </AvGroup>
                 <AvGroup>
                     <div className="input-group">
-                        <AvInput name="dy" />
+                        <AvInput disabled name="dy" value={(props.config.y ==0)?'0':props.config.y*10} />
                         <InputGroupAddon addonType="append" >
                             cm
                         </InputGroupAddon>
@@ -216,7 +210,7 @@ const ConfigSensor = (props) => {
                 <AvGroup>
                     <div className="input-group">
         
-                        <AvInput name="dz" />
+                        <AvInput disabled name="dz" value={(props.config.z ==0)?'0':props.config.z*10} />
                         <InputGroupAddon addonType="append" >
                             cm
                         </InputGroupAddon>
@@ -253,15 +247,15 @@ const ConfigSensor = (props) => {
         </ModalBody>
         <ModalFooter className="text-right">
     
-            <button type = "button" className ='btn btn-danger'>
+            <button disabled type="button" className ='btn btn-danger'>
                 <i className ='uil uil-trash-alt mr-1'> </i>
                 Gỡ cảm biên
             </button>
-            <button type = "button" className ='btn btn-warning' >
+            <button disabled type="button" className ='btn btn-warning' >
                 <i className ='uil uil-wrench mr-1' > </i>
                 Đổi cảm biến
             </button>
-            <button type = "button" className ='btn btn-success' >
+            <button disabled type="button" className ='btn btn-success' >
                 <i className ='uil uil-plus mr-1 mr-1' > </i>
                 Thêm cảm biến
             </button>

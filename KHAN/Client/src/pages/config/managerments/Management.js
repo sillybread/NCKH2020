@@ -9,6 +9,8 @@ import {
     DropdownToggle,
     Media,
     Button,
+    Row,
+    Col,
 } from 'reactstrap';
 
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -124,7 +126,24 @@ const Members = () => {
 };
 
 const Management = () => {
-    return <Members />;
+    return (
+        <React.Fragment>
+            <Row className="page-title align-items-center">
+            <Col xs={12}>
+                    <h4 className="mb-1 mt-0">Quản lý quyền truy cập</h4>
+            </ Col>
+            </Row>
+            <Row>
+                <Col xs={12}>
+                    <Card className="mb-5">
+                        <CardBody>
+                            <Members />
+                        </CardBody>
+                    </Card>
+                </Col>
+            </Row>
+        </React.Fragment>
+    )
 };
 
 export default Management;

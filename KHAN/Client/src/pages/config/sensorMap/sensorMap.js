@@ -1,6 +1,6 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
-import { DropdownMenu, DropdownToggle, UncontrolledButtonDropdown, DropdownItem, Row, Col } from 'reactstrap';
+import { DropdownMenu, DropdownToggle, UncontrolledButtonDropdown, DropdownItem, Row, Col, Card, CardBody } from 'reactstrap';
 import MySlice from 'components/MySlice';
 import SensorItem from './sensorItem';
 import ConfigSensor from './configSensor';
@@ -312,44 +312,65 @@ const SensorMap = () => {
           }
     ];
     return (
-        <>  
-            <ConfigSensor config={modalConfig} toggle={()=>{setModalConfig({...modalConfig,show:!modalConfig.show})}}/>
-            <Chart
-                options={apexAreaChart2Opts}
-                series={apexAreaChart2Data}
-                type="heatmap"
-                className="heatmap-charts"
-                height={450}
-            />
+        <React.Fragment>
+            <Row className="page-title align-items-center">
+            <Col xs={12}>
+                    <h4 className="mb-1 mt-0">Quản lý mạng cảm biến</h4>
+            </ Col>
+            </Row>
+            <Row>
+                <Col xs={12}>
+                    <Card className="mb-5">
+                        <CardBody>
+                        <ConfigSensor config={modalConfig} toggle={()=>{setModalConfig({...modalConfig,show:!modalConfig.show})}}/>
+                        <Chart
+                            options={apexAreaChart2Opts}
+                            series={apexAreaChart2Data}
+                            type="heatmap"
+                            className="heatmap-charts"
+                            height={450}
+                        />
 
-            <MySlice min={0} max={100} />
-
-            <Row className="mb-2 mt-5">
-                <Col sm={3}>
-                    <h5>Danh sách cảm biến</h5>
-                </Col>
-
-                <Col sm={9}>
-                    <div className="float-sm-right mt-3 mt-sm-0">
-                        <UncontrolledButtonDropdown className="d-inline-block">
-                            <DropdownToggle tag="button" className="btn btn-secondary btn-sm dropdown-toggle">
-                                <i className="uil uil-filter"></i>{' '}
-                                Tất cả
-                            </DropdownToggle>
-                            <DropdownMenu right>
-                                <DropdownItem>Tất cả</DropdownItem>
-                                <DropdownItem className='text-success'>Đang chạy</DropdownItem>
-                                <DropdownItem className='text-primary'>Đang bật</DropdownItem>
-                                <DropdownItem className='text-warning'>Đang tắt</DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledButtonDropdown>
-                    </div>
+                        <MySlice min={0} max={100} />
+                        </CardBody>
+                    </Card>
                 </Col>
             </Row>
-            {sensors.map((sensor) => {
-                return <SensorItem id={sensor._id} value={sensor.value} name={sensor.name} status={sensor.status} />;
-            })}
-        </>
+     
+            <Row>
+                <Col xs={12}>
+                    <Card className="mb-5">
+                        <CardBody>
+                        <Row className="mb-2">
+                            <Col sm={3}>
+                                <h5>Danh sách cảm biến</h5>
+                            </Col>
+
+                            <Col sm={9}>
+                                <div className="float-sm-right mt-3 mt-sm-0">
+                                    <UncontrolledButtonDropdown className="d-inline-block">
+                                        <DropdownToggle tag="button" className="btn btn-secondary btn-sm dropdown-toggle">
+                                            <i className="uil uil-filter"></i>{' '}
+                                            Tất cả
+                                        </DropdownToggle>
+                                        <DropdownMenu right>
+                                            <DropdownItem>Tất cả</DropdownItem>
+                                            <DropdownItem className='text-success'>Đang chạy</DropdownItem>
+                                            <DropdownItem className='text-primary'>Đang bật</DropdownItem>
+                                            <DropdownItem className='text-warning'>Đang tắt</DropdownItem>
+                                        </DropdownMenu>
+                                    </UncontrolledButtonDropdown>
+                                </div>
+                            </Col>
+                        </Row>
+                        {sensors.map((sensor) => {
+                            return <SensorItem id={sensor._id} value={sensor.value} name={sensor.name} status={sensor.status} />;
+                        })}
+                        </CardBody>
+                    </Card>
+                </Col>
+            </Row>
+        </React.Fragment>
     );
 };
 

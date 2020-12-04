@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {Button, Container,UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import {Button, Container,UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle, Toast, ToastBody, ToastHeader } from 'reactstrap';
 import { Menu, X, Search, Settings, User, HelpCircle, Lock, LogOut,ChevronDown,Plus } from 'react-feather';
 import { showRightSidebar } from '../redux/actions';
 import NotificationDropdown from './NotificationDropdown';
@@ -11,45 +11,6 @@ import LanguageDropdown from './LanguageDropdown';
 import logo from '../assets/images/logo.png';
 import profilePic from '../assets/images/users/avatar-7.jpg';
 import NewWareHouse from './newWareHouse';
-
-const Notifications = [
-    {
-        id: 1,
-        text: 'New user registered',
-        subText: '1 min ago',
-        icon: 'uil uil-user-plus',
-        bgColor: 'primary',
-    },
-    {
-        id: 2,
-        text: 'Karen Robinson',
-        subText: 'Wow ! this admin looks good and awesome design',
-        icon: 'uil uil-comment-message',
-        bgColor: 'success',
-    },
-    {
-        id: 3,
-        text: 'Cristina Pride',
-        subText: 'Hi, How are you? What about our next meeting',
-        icon: 'uil uil-comment-message',
-        bgColor: 'danger',
-    },
-    {
-        id: 4,
-        text: 'New user registered',
-        subText: '1 day ago',
-        icon: 'uil uil-user-plus',
-        bgColor: 'info',
-    },
-    {
-        id: 5,
-        text: 'Sensor 0001',
-        subText: '100%',
-        icon: 'uil uil-processor',
-        bgColor: 'danger',
-    },
-];
-
 
 const myRoom =[ 
     {
@@ -124,12 +85,20 @@ class Topbar extends Component {
             }:myRoom[0]
         }
     }
+    componentDidMount() {
+        if (!("Notification" in window)) {
+          console.log("This browser does not support desktop notification");
+        } else {
+          Notification.requestPermission();
+        }
+    }
 
     /**
      * Toggles the right sidebar
      */
     handleRightSideBar = () => {
         this.props.showRightSidebar();
+        
     };
     toggleModal = () =>{
         this.setState({
@@ -223,7 +192,7 @@ class Topbar extends Component {
                             </li>
                             
                             <LanguageDropdown tag="li" />
-                            <NotificationDropdown notifications={Notifications} />
+                            <NotificationDropdown />
 
                             {/* <li className="notification-list">
                                 <button

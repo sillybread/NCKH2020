@@ -16,11 +16,17 @@ const Status = React.lazy(() => import('../pages/status'));
 // dashboard
 const Report = React.lazy(() => import('../pages/report'));
 // config
-const Config = React.lazy(() => import('../pages/config'));
+const SensorMap = React.lazy(() => import('../pages/config/sensorMap/sensorMap'));
+const AreaConfig = React.lazy(() => import('../pages/config/area/areaConfig'));
+const Management = React.lazy(() => import('../pages/config/managerments/Management'));
+const WareHouseConfig = React.lazy(() => import('../pages/config/warehouseConfig/warehouseConfig'));
+const ApiService = React.lazy(() => import('../pages/config/apiService/ApiService'));
+
 //more pages
 const Store = React.lazy(() => import('../pages/store'));
 const Help = React.lazy(() => import('../pages/help'));
 const About = React.lazy(() => import('../pages/about'));
+
 // handle auth and authorization
 const PrivateRoute = ({ component: Component, roles, ...rest }) => (
     <Route
@@ -68,22 +74,56 @@ const reportRoutes = {
 };
 
 //Config
-
-const configRoutes = {
-    path: '/Config',
-    name: 'Kho lạnh',
-    header: 'Quản lý',
-    icon: FeatherIcon.Box,
-    component: Config,
+const configSensorMap = {
+    path: '/Config/Sensor',
+    header: 'Quản lý kho lạnh',
+    name: 'Cảm biến',
+    icon: FeatherIcon.Cpu,
+    component: SensorMap,
     roles: ['Admin'],
     route: PrivateRoute,
 };
+const configArea = {
+    path: '/Config/Area',
+    name: 'Khu vực',
+    icon: FeatherIcon.Codepen,
+    component: AreaConfig,
+    roles: ['Admin'],
+    route: PrivateRoute,
+};
+const configManager = {
+    path: '/Config/Manager',
+    name: 'Người truy cập',
+    icon: FeatherIcon.Users,
+    component: Management,
+    roles: ['Admin'],
+    route: PrivateRoute,
+};
+const configWarehouse = {
+    path: '/Config/Info',
+    name: 'Thông tin kho',
+    icon: FeatherIcon.AlertCircle,
+    component: WareHouseConfig,
+    roles: ['Admin'],
+    route: PrivateRoute,
+};
+const configApi = {
+    path: '/Config/Api',
+    name: 'Tài khoản Api',
+    icon: FeatherIcon.Rss,
+    component: ApiService,
+    roles: ['Admin'],
+    route: PrivateRoute,
+};
+
+
+const configRoutes = [configSensorMap, configArea, configManager,configWarehouse,configApi];
 
 //More
 const storeRoutes = {
     path: '/More/Store',
     name: 'Cửa hàng',
-    header: 'Thêm',
+    header: 'Tiện ích',
     icon: FeatherIcon.ShoppingBag,
     component: Store,
     route: PrivateRoute,
@@ -160,8 +200,8 @@ const flattenRoutes = (routes) => {
 };
 
 // All routes
-const allRoutes = [rootRoute, statusRoutes, reportRoutes, configRoutes, ...moreRoute, authRoutes];
+const allRoutes = [rootRoute, statusRoutes, reportRoutes,...configRoutes,...moreRoute,authRoutes];
 
-const authProtectedRoutes = [statusRoutes, reportRoutes, configRoutes, ...moreRoute];
+const authProtectedRoutes = [statusRoutes, reportRoutes,...configRoutes, ...moreRoute];
 const allFlattenRoutes = flattenRoutes(allRoutes);
 export { allRoutes, authProtectedRoutes, allFlattenRoutes };
