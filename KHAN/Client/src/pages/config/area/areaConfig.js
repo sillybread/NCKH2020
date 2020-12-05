@@ -66,10 +66,10 @@ const AreaConfig = (props)=>{
         setNewModal(!newModal);
     }
 
+
     return (
         <React.Fragment>
             <NewArea isOpen={newModal} toggleOpen={toggleNewModal}>
-
             </NewArea>
             <Row className="page-title align-items-center">
             <Col xs={12}>
@@ -200,9 +200,7 @@ const AreaConfig = (props)=>{
             </Row>
 
 
-       {/*  --------------------------------------------------------------- */}
-
-
+       {/*  --------------------------------------------------------------- */}                               
             <Row>
                 <Col xs={12}>
                     <Card className="mb-5">
@@ -212,7 +210,8 @@ const AreaConfig = (props)=>{
                                 <h5>Danh sách thời gian và nhiệt độ giám sát</h5>
                             </Col>
                             <Col sm={5} className='text-right mb-4'>
-                                <Button color='secondary' size='sm'>
+                                <Button color='secondary' size='sm'
+                                >
                                     <i className="uil uil-plus mr-1"></i>
                                     Thêm khung thời gian
                                 </Button>
