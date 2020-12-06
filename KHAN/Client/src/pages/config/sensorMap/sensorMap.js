@@ -4,6 +4,7 @@ import { DropdownMenu, DropdownToggle, UncontrolledButtonDropdown, DropdownItem,
 import MySlice from 'components/MySlice';
 import SensorItem from './sensorItem';
 import ConfigSensor from './configSensor';
+import { useSelector } from 'react-redux';
 
 const demoMap = [
     [0, 0, 0, 0],
@@ -13,7 +14,7 @@ const demoMap = [
 ];
 
 const SensorMap = () => {
-
+    const sensors = useSelector(state =>state.RoomData.sensorData)
     const [modalConfig,setModalConfig] = React.useState({
         x:0,
         y:0,
@@ -165,152 +166,7 @@ const SensorMap = () => {
             }),
         },
     ];
-    const sensors = [
-        {
-            "_id": "5fc06f5fa91004001721b0a8",
-            "datatype_id": "101",
-            "data_id": 3078047,
-            "value": -19.44000053,
-            "name": "Cảm biến nhiệt độ 101",
-            "status": "RUNNING"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0a9",
-            "datatype_id": "102",
-            "data_id": 3078048,
-            "value": -17.65999985,
-            "name": "Cảm biến nhiệt độ 102",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0aa",
-            "datatype_id": "103",
-            "data_id": 3078049,
-            "value": -16.11000061,
-            "name": "Cảm biến nhiệt độ 103",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0ab",
-            "datatype_id": "104",
-            "data_id": 3078050,
-            "value": -18.44000053,
-            "name": "Cảm biến nhiệt độ 104",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0ac",
-            "datatype_id": "105",
-            "data_id": 3078051,
-            "value": -17,
-            "name": "Cảm biến nhiệt độ 105",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0ad",
-            "datatype_id": "106",
-            "data_id": 3078052,
-            "value": -18.87999916,
-            "name": "Cảm biến nhiệt độ 106",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0ae",
-            "datatype_id": "107",
-            "data_id": 3078053,
-            "value": -17.77000046,
-            "name": "Cảm biến nhiệt độ 107",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0af",
-            "datatype_id": "112",
-            "data_id": 3078054,
-            "value": -19.54999924,
-            "name": "Cảm biến nhiệt độ 112",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0b0",
-            "datatype_id": "108",
-            "data_id": 3078055,
-            "value": -17.11000061,
-            "name": "Cảm biến nhiệt độ 108",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0b1",
-            "datatype_id": "109",
-            "data_id": 3078056,
-            "value": -17.44000053,
-            "name": "Cảm biến nhiệt độ 109",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0b2",
-            "datatype_id": "110",
-            "data_id": 3078057,
-            "value": -16.11000061,
-            "name": "Cảm biến nhiệt độ 110",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0b3",
-            "datatype_id": "111",
-            "data_id": 3078058,
-            "value": -17.44000053,
-            "name": "Cảm biến nhiệt độ 111",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0b4",
-            "datatype_id": "114",
-            "data_id": 3078059,
-            "value": -17.828750252499994,
-            "name": "Cảm biến nhiệt độ 114",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0b5",
-            "datatype_id": "113",
-            "data_id": 3078060,
-            "value": -18.77000046,
-            "name": "Cảm biến nhiệt độ 113",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0b6",
-            "datatype_id": "115",
-            "data_id": 3078061,
-            "value": -18.65999985,
-            "name": "Cảm biến nhiệt độ 115",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0b7",
-            "datatype_id": "118",
-            "data_id": 3078062,
-            "value": -17.828750252499994,
-            "name": "Cảm biến nhiệt độ 118",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0b8",
-            "datatype_id": "117",
-            "data_id": 3078063,
-            "value": -17.11000061,
-            "name": "Cảm biến nhiệt độ 117",
-            "status": "ON"
-          },
-          {
-            "_id": "5fc06f5fa91004001721b0b9",
-            "datatype_id": "116",
-            "data_id": 3078064,
-            "value": -17.77000046,
-            "name": "Cảm biến nhiệt độ 116",
-            "status": "ON"
-          }
-    ];
+    
     return (
         <React.Fragment>
             <Row className="page-title align-items-center">
@@ -363,8 +219,8 @@ const SensorMap = () => {
                                 </div>
                             </Col>
                         </Row>
-                        {sensors.map((sensor) => {
-                            return <SensorItem id={sensor._id} value={sensor.value} name={sensor.name} status={sensor.status} />;
+                        {(sensors !=null)&& (sensors.data !=null) && sensors.data.map((sensor,i) => {
+                            return <SensorItem id={sensor._id} value={sensor.value} name={sensor.name} status={sensor.status} key={i}/>;
                         })}
                         </CardBody>
                     </Card>

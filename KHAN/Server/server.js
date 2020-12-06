@@ -4,7 +4,11 @@ const app = express();
 const server = require('http').createServer(app);
 global.activate_trigger = 1;
 /* Socket.io server------------------------------------*/
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+  }
+});
 
 const socketController = require("./app/controllers/socket.controller").socketController;
 io.on('connection', socket => {
@@ -39,7 +43,7 @@ app.use(function (req, res, next) {
   req.body = {...req.body,...req.query};
   res.header(
     "Access-Control-Allow-Headers",
-    "x-access-token, Origin, Content-Type, Accept"
+    "*"
   );
   next();
 })

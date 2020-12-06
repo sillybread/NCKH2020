@@ -3,11 +3,16 @@ import {
     GET_ROOM_LIST,
     GET_ROOM_LIST_SUCCESS,
     GET_ROOM_LIST_FAILED,
-    SET_DEFAULT_ROOM
+    SET_DEFAULT_ROOM,
+    CREATE_ROOM,
+    CREATE_ROOM_SUCCESS,
+    CREATE_ROOM_FAILED
 } from './constants';
 
 const INIT_STATE = {
     loading: false,
+    createRoomSuccess : false,
+    defaultRoom: getRoomCookieDefault()
 
 }
 
@@ -22,29 +27,39 @@ const RoomList = (state = INIT_STATE, action) =>{
             const rooms = action.payload;
             const myRoom = rooms.filter((e)=>(e.role==="Owner"));
             const sharedRoom = rooms.filter((e)=>(e.role!="Owner"));
-            let defaultRoom = {
-                role:'User',
-                room: {
-                    _id: "xxx",
-                    name: "Chưa có kho lạnh nào"
+            let newDefaultRoom = getRoomCookieDefault();
+            if(newDefaultRoom == null || state.defaultRoom == null){
+                newDefaultRoom = {
+                    role:'User',
+                    room: {
+                        _id: "xxx",
+                        name: "Chưa có kho lạnh nào"
+                    }
+                };
+                if (sharedRoom.length>0 ){
+                    newDefaultRoom = sharedRoom[0];  
                 }
-            };
-            if (sharedRoom.length>0 ){
-                defaultRoom = sharedRoom[0];
-                //defaultRoom = (getRoomCookieDefault() !=null)?getRoomCookieDefault():sharedRoom[0];
+                if (myRoom.length>0){
+                    newDefaultRoom = myRoom[0];
+                }
+                return {
+                    ...state,
+                    loading: false,
+                    errorGetRoomList: false,
+                    myRoom,
+                    sharedRoom,
+                    defaultRoom: newDefaultRoom
+                }
+            }else{
+                return {
+                    ...state,
+                    loading: false,
+                    errorGetRoomList: false,
+                    myRoom,
+                    sharedRoom
+                }
             }
-            if (myRoom.length>0){
-                defaultRoom = myRoom[0];
-               // defaultRoom = (getRoomCookieDefault() !=null)?getRoomCookieDefault(): myRoom[0];
-            }
-            return {
-                ...state,
-                loading: false,
-                errorGetRoomList: false,
-                myRoom,
-                sharedRoom,
-                defaultRoom
-            }
+           
         case GET_ROOM_LIST_FAILED:
             return {
                 ...state,
@@ -55,6 +70,27 @@ const RoomList = (state = INIT_STATE, action) =>{
             return {
                 ...state,
                 defaultRoom: action.payload
+            }
+        case CREATE_ROOM:
+            return {
+                ...state,
+                loading: true,
+                createRoomSuccess: false,
+                error:null
+            }
+        case CREATE_ROOM_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                createRoomSuccess: true,
+                error: null
+            }
+        case CREATE_ROOM_FAILED:
+            return {
+                ...state,
+                loading: false,
+                createRoomSuccess: false,
+                error: action.payload
             }
         
         default:

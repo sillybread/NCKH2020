@@ -7,6 +7,7 @@ import {
     getCurrentRoomInfoFailed
 } from './actions';
 import {requestApi} from 'helpers/api';
+import { getAreaData, getCurrentData, getSensorData } from 'redux/roomData/actions';
 
 function aGet(token, url, params){
     return call(requestApi, {
@@ -24,6 +25,11 @@ function* getCurrentRoomInfo({payload: {room_id, token}}){
         const res = yield aGet(token, 'api/room', {room_id});
         if (res.status==='success'){
             yield put(getCurrentRoomInfoSuccess(res.result.room));
+            yield all([
+                put(getAreaData(room_id, token)),
+                put(getCurrentData(room_id, token)),
+                put(getSensorData(room_id,token))
+            ]);
         } else {
             yield put(getCurrentRoomInfoFailed(res.result));
         }

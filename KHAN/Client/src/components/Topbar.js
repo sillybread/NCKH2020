@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {Container,UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import { Menu, X, Search, Settings, User, HelpCircle, Lock, LogOut,ChevronDown,Plus } from 'react-feather';
-import { showRightSidebar, getCurrentRoomInfo,setDefaultRoom} from '../redux/actions';
+import { showRightSidebar, getCurrentRoomInfo,setDefaultRoom, createRoom} from '../redux/actions';
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import LanguageDropdown from './LanguageDropdown';
@@ -12,7 +12,7 @@ import logo from '../assets/images/logo.png';
 import profilePic from '../assets/images/users/avatar-7.jpg';
 import NewWareHouse from './newWareHouse';
 import {useDispatch, useSelector} from 'react-redux';
-import { setRoomCookieDefault } from 'helpers/roomUtils';
+import { getRoomCookieDefault, setRoomCookieDefault } from 'helpers/roomUtils';
 
 
 const ProfileMenus = [
@@ -48,22 +48,34 @@ const Topbar = (props) =>{
     const [newWareHouseModal, setNewWareHouseModal] = useState(false);
     const dispatch = useDispatch();
 
-    const auth = useSelector(state => state.Auth);
+    const auth = useSelector(state => state.Auth);;
+    const createRoomSuccess = useSelector(state => state.RoomList.createRoomSuccess)
+    const loading = useSelector(state => state.RoomList.loading)
+    const error = useSelector(state => state.RoomList.error);
 
     const toggleModal = () => {
         setNewWareHouseModal(!newWareHouseModal)
     };
 
     useEffect(()=>{
-        if (props.defaultRoom.room._id){
+        if(props.defaultRoom !=null){
+            if(props.defaultRoom.room._id !='xxx')
             dispatch(getCurrentRoomInfo(props.defaultRoom.room._id,auth.user.accessToken));
+            
         }
         setRoomCookieDefault(props.defaultRoom);
-        /* dispatch(setDefaultRoom(currentRoom)); */
     },[props.defaultRoom])
     const setCurrentRoom = (obj)=>{
         dispatch(setDefaultRoom(obj));
     }
+    const submitNewRoom = (room) =>{
+        dispatch(createRoom(auth.user, room));
+    }
+    useEffect(()=>{
+        if(createRoomSuccess==true){
+            setNewWareHouseModal(false);
+        }
+    },[createRoomSuccess])
 
 
     return (
@@ -95,7 +107,7 @@ const Topbar = (props) =>{
 
                     <UncontrolledButtonDropdown>
                         <DropdownToggle color="default" className="dropdown-toggle text-dark font-weight-bold mt-2" >
-                            {props.defaultRoom.room.name}
+                            {props.defaultRoom && props.defaultRoom.room.name}
                             <i className="icon ml-1"><ChevronDown /></i>
                         </DropdownToggle>
                         <DropdownMenu right>
@@ -125,9 +137,11 @@ const Topbar = (props) =>{
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
                     <NewWareHouse
+                        error={error}
                         isOpen={newWareHouseModal}
                         toggleOpen={toggleModal}
-                        submit={(value)=>{ console.log('Tao kho moi',value);toggleModal();}}
+                        submit={(value)=>{submitNewRoom(value)}}
+                        loading={loading}
                     />
                     <ul className="navbar-nav flex-row ml-auto d-flex list-unstyled topnav-menu float-right mb-0">
                         <li className="d-none d-sm-block">
