@@ -46,7 +46,7 @@ exports.getAvatar = (req, res) => {
           res.end(data); // Send the file data to the browser.
         }
       });
-    }catch(errx){
+    }catch(err){
       res.status(404).send("Not Found");
     }
     

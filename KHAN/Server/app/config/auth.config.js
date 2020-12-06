@@ -1,5 +1,5 @@
 module.exports = {
   secret: "bezkoder-secret-key",
-  baseUrl: "http://localhost:8080/",
+  baseUrl: "http://vikhan.herokuapp.com/",
   avatarDefault: "default.jpg"
 };

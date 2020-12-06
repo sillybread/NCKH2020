@@ -24,12 +24,12 @@ app.use(cors());
 require("dotenv").config();
 
 /* Express Session------------------------------------*/
-const session = require('express-session');
+/* const session = require('express-session');
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true
-}));
+})); */
 
 /* App Router------------------------------------*/
 const routes = require("./app/routes");
@@ -74,7 +74,6 @@ db.mongoose
 app.set('port', process.env.PORT || 8080);
 server.listen(app.get('port'), function() {
   console.log('I am nunning at port: ', app.get('port'));
-  console.log(new Date());
 });
 
 
