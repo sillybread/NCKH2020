@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 import * as FeatherIcon from 'react-feather';
 
 import { isUserAuthenticated } from '../helpers/authUtils';
+import {useSelector} from 'react-redux';
 
 // auth
 const Login = React.lazy(() => import('../pages/auth/Login'));
@@ -16,25 +17,44 @@ const Status = React.lazy(() => import('../pages/status'));
 // dashboard
 const Report = React.lazy(() => import('../pages/report'));
 // config
-const Config = React.lazy(() => import('../pages/config'));
+const SensorMap = React.lazy(() => import('../pages/config/sensorMap/sensorMap'));
+const AreaConfig = React.lazy(() => import('../pages/config/area/areaConfig'));
+const Management = React.lazy(() => import('../pages/config/managerments/Management'));
+const WareHouseConfig = React.lazy(() => import('../pages/config/warehouseConfig/warehouseConfig'));
+const ApiService = React.lazy(() => import('../pages/config/apiService/ApiService'));
+
+
 //more pages
 const Store = React.lazy(() => import('../pages/store'));
 const Help = React.lazy(() => import('../pages/help'));
 const About = React.lazy(() => import('../pages/about'));
+
 // handle auth and authorization
-const PrivateRoute = ({ component: Component, roles, ...rest }) => (
-    <Route
+const PrivateRoute = ({ component: Component, roles, ...rest }) => {
+    const currentRole = useSelector(state => { 
+        if(state.RoomList.defaultRoom)
+            return state.RoomList.defaultRoom.role
+        else
+            return null;
+        });
+
+    return (
+        <Route
         {...rest}
         render={(props) => {
             if (!isUserAuthenticated()) {
                 // not logged in so redirect to login page with the return url
                 return <Redirect to={{ pathname: '/account/login', state: { from: props.location } }} />;
             }
+            if  (currentRole!=null && roles) 
+                if(!roles.includes(currentRole))
+                    return <Redirect to={{ pathname: '/More/About', state: { from: props.location } }} />;
             // authorised so return component
             return <Component {...props} />;
         }}
-    />
-);
+        />
+    )
+};
 
 // root routes
 const rootRoute = {
@@ -54,7 +74,7 @@ const statusRoutes = {
         text: '1',
     },
     component: Status,
-    roles: ['Admin'],
+    roles: ['Owner','Manager','Viewer'],
     route: PrivateRoute,
 };
 // dashboards
@@ -63,31 +83,65 @@ const reportRoutes = {
     name: 'Báo cáo',
     icon: FeatherIcon.Clipboard,
     component: Report,
-    roles: ['Admin'],
+    roles: ['Owner','Manager'],
     route: PrivateRoute,
 };
 
 //Config
-
-const configRoutes = {
-    path: '/Config',
-    name: 'Kho lạnh',
-    header: 'Quản lý',
-    icon: FeatherIcon.Box,
-    component: Config,
-    roles: ['Admin'],
+const configSensorMap = {
+    path: '/Config/Sensor',
+    header: 'Quản lý kho lạnh',
+    name: 'Cảm biến',
+    icon: FeatherIcon.Cpu,
+    component: SensorMap,
+    roles: ['Owner','Manager'],
     route: PrivateRoute,
 };
+const configArea = {
+    path: '/Config/Area',
+    name: 'Khu vực',
+    icon: FeatherIcon.Codepen,
+    component: AreaConfig,
+    roles: ['Owner','Manager'],
+    route: PrivateRoute,
+};
+const configManager = {
+    path: '/Config/Manager',
+    name: 'Người truy cập',
+    icon: FeatherIcon.Users,
+    component: Management,
+    roles: ['Owner','Manager'],
+    route: PrivateRoute,
+};
+const configWarehouse = {
+    path: '/Config/Info',
+    name: 'Thông tin kho',
+    icon: FeatherIcon.AlertCircle,
+    component: WareHouseConfig,
+    roles: ['Owner','Manager'],
+    route: PrivateRoute,
+};
+const configApi = {
+    path: '/Config/Api',
+    name: 'Tài khoản Api',
+    icon: FeatherIcon.Rss,
+    component: ApiService,
+    roles: ['Owner','Manager'],
+    route: PrivateRoute,
+};
+
+
+const configRoutes = [configSensorMap, configArea, configManager,configWarehouse,configApi];
 
 //More
 const storeRoutes = {
     path: '/More/Store',
     name: 'Cửa hàng',
-    header: 'Thêm',
+    header: 'Tiện ích',
     icon: FeatherIcon.ShoppingBag,
     component: Store,
     route: PrivateRoute,
-    roles: ['Admin'],
+    roles: ['User','Owner','Manager','Viewer'],
 };
 const helpRoutes = {
     path: '/More/Help',
@@ -95,7 +149,7 @@ const helpRoutes = {
     icon: FeatherIcon.HelpCircle,
     component: Help,
     route: PrivateRoute,
-    roles: ['Admin'],
+    roles: ['User','Owner','Manager','Viewer'],
 };
 const aboutRoutes = {
     path: '/More/About',
@@ -103,7 +157,7 @@ const aboutRoutes = {
     icon: FeatherIcon.GitHub,
     component: About,
     route: PrivateRoute,
-    roles: ['Admin'],
+    roles: ['User','Owner','Manager','Viewer'],
 };
 const moreRoute = [storeRoutes, helpRoutes, aboutRoutes];
 // auth
@@ -160,8 +214,8 @@ const flattenRoutes = (routes) => {
 };
 
 // All routes
-const allRoutes = [rootRoute, statusRoutes, reportRoutes, configRoutes, ...moreRoute, authRoutes];
+const allRoutes = [rootRoute, statusRoutes, reportRoutes,...configRoutes,...moreRoute,authRoutes];
 
-const authProtectedRoutes = [statusRoutes, reportRoutes, configRoutes, ...moreRoute];
+const authProtectedRoutes = [statusRoutes, reportRoutes,...configRoutes, ...moreRoute];
 const allFlattenRoutes = flattenRoutes(allRoutes);
 export { allRoutes, authProtectedRoutes, allFlattenRoutes };

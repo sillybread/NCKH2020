@@ -13,8 +13,8 @@ import {
     registerUserFailed,
     forgetPasswordSuccess,
     forgetPasswordFailed,
-    getRoomList,
 } from 'redux/actions';
+import { setRoomCookieDefault } from 'helpers/roomUtils';
 
 /**
  * Sets the session
@@ -67,7 +67,7 @@ function* getFistData({ payload: {accessToken} }) {
     try {
         const response = yield call(requestApi, options);
         if (response.status==='success') {
-            yield console.log(response.result);
+            yield console.log(response.result.accesses);
         } else {
             yield console.log(response.result);
         }
@@ -84,6 +84,7 @@ function* getFistData({ payload: {accessToken} }) {
 function* logout({ payload: { history } }) {
     try {
         setSession(null);
+        setRoomCookieDefault(null);
         yield call(() => {
             history.push('/account/login');
         });

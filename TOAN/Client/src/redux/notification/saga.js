@@ -4,6 +4,7 @@ import {
     GET_NOTIFICATION_LIST,
     DELETE_NOTIFICATION,
     DELETE_ALL_NOTIFICATION,
+    UPDATE_NOTIFICATION
 } from './constants';
 
 import {
@@ -15,14 +16,14 @@ import {
     deleteAllNotificationFailed,
 } from './actions';
 
-function * getNotificationList({payload: token}){
+function * getNotificationList({payload: {token}}){
     const res = yield requestApi({
         method: 'get',
         headers: {
             'x-access-token': token
         },
         url: 'api/notification/all'
-    })
+    });
     if (res.status === 'success'){
         put(getNotificationListSuccess(res.result.notifications));
     } else {
@@ -63,6 +64,10 @@ function * deleteAllNotification({payload: token}){
     }
 }
 
+function * updateNotification({payload: {id, data}}){
+
+}
+
 function * watchGetNotification(){
     yield takeEvery(GET_NOTIFICATION_LIST, getNotificationList)
 }
@@ -72,12 +77,16 @@ function * watchDeleteNotification(){
 function * watchDeleteAllNotification(){
     yield takeEvery(DELETE_ALL_NOTIFICATION, deleteAllNotification)
 }
+function * watchUpdateNotification(){
+    yield takeEvery(UPDATE_NOTIFICATION, updateNotification)
+}
 
 function * Notification(){
     yield all([
         fork(watchGetNotification),
         fork(watchDeleteNotification),
         fork(watchDeleteAllNotification),
+        fork(watchUpdateNotification),
     ])
 }
 

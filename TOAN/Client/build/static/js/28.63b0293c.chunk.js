@@ -1,2 +1,0 @@
-(this["webpackJsonpshreyu-react"]=this["webpackJsonpshreyu-react"]||[]).push([[28],{561:function(e,t,n){"use strict";n.r(t),n.d(t,"default",(function(){return u}));var r=n(0),a=n.n(r);function u(){return a.a.createElement(a.a.Fragment,null,a.a.createElement("h3",null,"Help Me"))}}}]);
-//# sourceMappingURL=28.63b0293c.chunk.js.map

@@ -1,9 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import {Container,UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
-import { Menu, X, Search, Settings, User, HelpCircle, Lock, LogOut,ChevronDown,Plus } from 'react-feather';
-import { showRightSidebar, getCurrentRoomInfo} from '../redux/actions';
+import React, {
+    useEffect,
+    useState
+} from 'react';
+import {
+    connect
+} from 'react-redux';
+import {
+    Link
+} from 'react-router-dom';
+import {
+    Container,
+    UncontrolledButtonDropdown,
+    DropdownMenu,
+    DropdownItem,
+    DropdownToggle
+} from 'reactstrap';
+import {
+    Menu,
+    X,
+    Search,
+    Settings,
+    User,
+    HelpCircle,
+    Lock,
+    LogOut,
+    ChevronDown,
+    Plus
+} from 'react-feather';
+import {
+    showRightSidebar,
+    getCurrentRoomInfo,
+    setDefaultRoom,
+    getNotificationList
+} from '../redux/actions';
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import LanguageDropdown from './LanguageDropdown';
@@ -11,45 +40,14 @@ import LanguageDropdown from './LanguageDropdown';
 import logo from '../assets/images/logo.png';
 import profilePic from '../assets/images/users/avatar-7.jpg';
 import NewWareHouse from './newWareHouse';
-import {useDispatch, useSelector} from 'react-redux';
+import {
+    useDispatch,
+    useSelector
+} from 'react-redux';
+import {
+    setRoomCookieDefault
+} from 'helpers/roomUtils';
 
-const Notifications = [
-    {
-        id: 1,
-        text: 'New user registered',
-        subText: '1 min ago',
-        icon: 'uil uil-user-plus',
-        bgColor: 'primary',
-    },
-    {
-        id: 2,
-        text: 'Karen Robinson',
-        subText: 'Wow ! this admin looks good and awesome design',
-        icon: 'uil uil-comment-message',
-        bgColor: 'success',
-    },
-    {
-        id: 3,
-        text: 'Cristina Pride',
-        subText: 'Hi, How are you? What about our next meeting',
-        icon: 'uil uil-comment-message',
-        bgColor: 'danger',
-    },
-    {
-        id: 4,
-        text: 'New user registered',
-        subText: '1 day ago',
-        icon: 'uil uil-user-plus',
-        bgColor: 'info',
-    },
-    {
-        id: 5,
-        text: 'Sensor 0001',
-        subText: '100%',
-        icon: 'uil uil-processor',
-        bgColor: 'danger',
-    },
-];
 
 const ProfileMenus = [
     {
@@ -82,9 +80,6 @@ const ProfileMenus = [
 
 const Topbar = (props) =>{
     const [newWareHouseModal, setNewWareHouseModal] = useState(false);
-
-    const [currentRoom, setCurrentRoom] = useState({room: {name:""}});
-
     const dispatch = useDispatch();
 
     const auth = useSelector(state => state.Auth);
@@ -94,14 +89,20 @@ const Topbar = (props) =>{
     };
 
     useEffect(()=>{
-        if (currentRoom.room._id){
-            dispatch(getCurrentRoomInfo(currentRoom.room._id,auth.user.accessToken));
+        if (props.defaultRoom.room._id){
+            dispatch(getCurrentRoomInfo(props.defaultRoom.room._id,auth.user.accessToken));
         }
-    },[currentRoom])
+        setRoomCookieDefault(props.defaultRoom);
+    },[props.defaultRoom])
 
     useEffect(()=>{
-        setCurrentRoom(props.defaultRoom);
-    },[props.defaultRoom]);
+        dispatch(getNotificationList(auth.user.accessToken));
+    },[])
+
+    const setCurrentRoom = (obj)=>{
+        dispatch(setDefaultRoom(obj));
+    }
+
 
     return (
         <React.Fragment>
@@ -132,7 +133,7 @@ const Topbar = (props) =>{
 
                     <UncontrolledButtonDropdown>
                         <DropdownToggle color="default" className="dropdown-toggle text-dark font-weight-bold mt-2" >
-                            {currentRoom.room.name}
+                            {props.defaultRoom.room.name}
                             <i className="icon ml-1"><ChevronDown /></i>
                         </DropdownToggle>
                         <DropdownMenu right>
@@ -179,7 +180,7 @@ const Topbar = (props) =>{
                         </li>
 
                         <LanguageDropdown tag="li" />
-                        <NotificationDropdown notifications={Notifications} />
+                        <NotificationDropdown />
 
                         {/* <li className="notification-list">
                             <button

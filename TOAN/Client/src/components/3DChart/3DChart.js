@@ -10,6 +10,9 @@ const TChart = (props) => {
 
     useEffect(()=>{
         chart.current = new perfectChart(container.current);
+        return(()=>{
+            chart.current.clearEvent();
+        })
     },[])
 
     useEffect(() => {

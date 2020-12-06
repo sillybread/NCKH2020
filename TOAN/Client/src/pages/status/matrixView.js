@@ -1,4 +1,3 @@
-import React from 'react'
 import "components/matrix.js"
 
 let Config = {
@@ -28,16 +27,16 @@ let Config = {
     }
 };
 
-// function axiosTest() {
-//   // create a promise for the axios request
-//   const promise = Axios.get( BASE_URL + "api/room/data/getDemoData");
+function axiosTest() {
+  // create a promise for the axios request
+  const promise = Axios.get( BASE_URL + "api/room/data/getDemoData");
 
-//   // using .then, create a new promise which extracts the data
-//   const dataPromise = promise.then((response) => response.data)
+  // using .then, create a new promise which extracts the data
+  const dataPromise = promise.then((response) => response.data)
 
-//   // return it
-//   return dataPromise
-// }
+  // return it
+  return dataPromise
+}
 
 const matrixView = () =>{
     // const [dat, setData] = useState(helper.initData(Config.size))
@@ -50,8 +49,6 @@ const matrixView = () =>{
     // return(
     //     <MatrixChart config={Config} data={dat}/>
     // )
-    return(
-        <div/>
-    );
+    return <div/>
 }
 export default matrixView;

@@ -320,6 +320,9 @@ class perfectChart {
         this.updateFaceEF(true);
         this.updateFaceEF(false);
     }
+    clearEvent(){
+        
+    }
 }
 
 export default perfectChart;

@@ -8,10 +8,10 @@ import {
     DELETE_ALL_NOTIFICATION,
     DELETE_ALL_NOTIFICATION_SUCCESS,
     DELETE_ALL_NOTIFICATION_FAILED,
+    UPDATE_NOTIFICATION
 } from './constants';
 
 const INIT_STATE = {
-    code: 0
 }
 const Notification = (state = INIT_STATE, action) => {
     switch (action.type){
@@ -61,10 +61,15 @@ const Notification = (state = INIT_STATE, action) => {
                 ...state,
                 code: 9
             }
+        case UPDATE_NOTIFICATION:
+            return{
+                ...state,
+                code: 0
+            }
         default:
             return {
                 ...state,
-                code: 10
+                code: -1
             }
     }
 }

@@ -1,37 +1,77 @@
 import {
-    GET_ROOM_DATA,
-    GET_ROOM_DATA_SUCCESS,
-    GET_ROOM_DATA_FAILED,
+    GET_AREA_DATA,
+    GET_AREA_DATA_SUCCESS,
+    GET_AREA_DATA_FAILED,
+    GET_CURRENT_DATA,
+    GET_CURRENT_DATA_SUCCESS,
+    GET_CURRENT_DATA_FAILED,
+    GET_SENSOR_DATA,
+    GET_SENSOR_DATA_SUCCESS,
+    GET_SENSOR_DATA_FAILED,
 } from './constants';
-
-const INIT_STATE = {
-    loading: false,
-};
-
-const RoomData = (state = INIT_STATE, action) =>{
+const INIT_STATE = {};
+const RoomData = (state = INIT_STATE, action) => {
     switch (action.type) {
-        case GET_ROOM_DATA:
+        case GET_AREA_DATA:
             return {
                 ...state,
-                loading: true
             }
-        case GET_ROOM_DATA_SUCCESS:
+        case GET_AREA_DATA_SUCCESS:
             return {
                 ...state,
-                loading: false,
-                errorGetRoomData: false,
-                areaData: action.payload.areaData,
-                currentData: action.payload.currentData,
-                sensorData: action.payload.sensorData
+                areaData: action.payload
             }
-        case GET_ROOM_DATA_FAILED:
+        case GET_AREA_DATA_FAILED:
             return {
                 ...state,
-                loading: false,
-                errorGetRoomData: action.payload
+                error: action.payload
+            }
+        case GET_CURRENT_DATA:
+            return {
+                ...state,
+            }
+        case GET_CURRENT_DATA_SUCCESS:
+            return {
+                ...state,
+                currentData: action.payload
+            }
+        case GET_CURRENT_DATA_FAILED:
+            return {
+                ...state,
+                error: action.payload
+            }
+        case GET_CURRENT_DATA:
+            return {
+                ...state,
+            }
+        case GET_CURRENT_DATA_SUCCESS:
+            return {
+                ...state,
+                currentData: action.payload
+            }
+        case GET_CURRENT_DATA_FAILED:
+            return {
+                ...state,
+                error: action.payload
+            }
+        case GET_SENSOR_DATA:
+            return {
+                ...state,
+            }
+        case GET_SENSOR_DATA_SUCCESS:
+            return {
+                ...state,
+                sensorData: action.payload
+            }
+        case GET_SENSOR_DATA_FAILED:
+            return {
+                ...state,
+                error: action.payload
             }
         default:
-            return {...state}
+            return {
+                ...state,
+            }
     }
 }
 export default RoomData;

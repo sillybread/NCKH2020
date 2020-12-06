@@ -1,6 +1,7 @@
 // @flow
 import jwtDecode from 'jwt-decode';
 import { Cookies } from 'react-cookie';
+import {requestApi} from './api';
 /**
  * Checks if user is authenticated
  */

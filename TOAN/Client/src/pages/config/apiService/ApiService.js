@@ -3,99 +3,64 @@ import {
     CardHeader,
     Card,
     CardBody,
-    UncontrolledDropdown,
-    DropdownMenu,
-    DropdownItem,
-    DropdownToggle,
     Media,
     Button,
+    Row,
+    Col,
 } from 'reactstrap';
 
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import classNames from 'classnames';
-
-import avatarImg1 from 'assets/images/users/avatar-1.jpg';
-import avatarImg4 from 'assets/images/users/avatar-4.jpg';
-import avatarImg7 from 'assets/images/users/avatar-7.jpg';
-import avatarImg9 from 'assets/images/users/avatar-9.jpg';
+import {dateToString} from 'helpers/datetimeCover';
 import ConfirmDialog from 'components/ConfirmDialog';
-import { get } from 'sortablejs';
+import AddApi from './addApi';
+
+
+
 
 
 const apis= [
     {
         "api": {
             "username": "tester@kholanhctu",
-            "password": "tester@123"
         },
         "_id": "5fc06f5fa91004001721b0a7",
         "station_id": 8,
-        "station_name": "Kho lạnh CTU_01"
+        "station_name": "Kho lạnh CTU_01",
+        "createdAt": "2020-11-27T03:15:43.586Z"
     },
     {
         "api": {
             "username": "tester@kholanhctu",
-            "password": "tester@123"
         },
         "_id": "5fc06f5fa91004011721b0a7",
         "station_id": 9,
-        "station_name": "Kho lạnh CTU_01"
+        "station_name": "Kho lạnh CTU_02",
+        "createdAt": "2020-11-27T03:15:43.586Z"
     }
 
 ]
 
-const GetTool = (props)=>{
-    const [modalEdit,setModalEdit] = React.useState(false);
-    const [modalDelete,setModalDelete] =React.useState(false);
-
+const APIDetail = (props) => {
     return (
         <>
-        <UncontrolledDropdown className="align-self-center float-right">
-            <DropdownToggle tag="button" className="btn btn-link p-0 dropdown-toggle text-muted">
-                <i className="uil uil-ellipsis-v"></i>
-            </DropdownToggle>
-            <DropdownMenu right>
-                <DropdownItem
-                    onClick={
-                        ()=>{setModalEdit(!modalEdit)}
-                    }
-                    disabled={props.role==='chủ kho lạnh'}
-                >
-                    <i className="uil uil-edit-alt mr-2"></i>Sửa quyền
-                </DropdownItem>
-                <DropdownItem divider />
-                <DropdownItem className="text-danger"
-                    disabled={props.role==='chủ kho lạnh'}
-                    onClick={
-                        ()=>{setModalDelete(!modalDelete)}
-                    }
-                >
-                    <i className="uil uil-trash mr-2"></i>Xóa quyền
-                </DropdownItem>
-            </DropdownMenu>
-        </UncontrolledDropdown>
-        <ConfirmDialog 
-            title="Xác nhận xóa bỏ tài khoản"
-            content={<APIDetail name={props.name} image={props.image} role={props.role} />} 
-            color='danger' 
-            isOpen={modalDelete} 
-            toggle={()=>{setModalDelete(!modalDelete)}} 
-            confirm={()=>{}}>
-        </ConfirmDialog>
+            <h6 className="mt-0 mb-2 font-size-15">
+            <p href="/" className="text-body">{props.api.station_name}</p>
+            </h6>
+            <p> 
+                <span className="text-black-50">Tên đăng nhập: </span>
+                {props.api.api.username}
+            </p>
+            <p className="mb-0 mt-4">
+                <span className="text-nowrap align-middle font-size-13">
+                    <i className="uil uil-rss-alt text-muted mr-1"></i>
+                    {props.api.station_id}
+                </span>
+                <small className="float-right text-muted">
+                    <i className="uil uil-calender mr-1"></i>
+                    {dateToString(props.api.createdAt)}
+                </small>
+            </p>
         </>
-    );
-}
-const APIDetail = ({ image, name, role}) => {
-    return (
-    
-        <Media className="mt-1 pt-3">
-            <img src={image} className={'avatar rounded mr-3'} alt={name} />
-            <Media body>
-                <h6 className="mt-1 mb-0 font-size-15">{name}</h6>
-                <h6 className="text-muted font-weight-normal mt-1 mb-3">{role}</h6>
-            </Media>
-        </Media>
-  
     );
 };
 
@@ -105,57 +70,88 @@ const ApiService = () => {
     
 
     return (
-        <>
-        <Card className='shadow-none'>
-            <CardHeader className='bg-transparent text-right'>
-                <Button className="mt-4"  color="primary"
-                    onClick={()=>{setmodalnew(!modalnew)}}
-                >
-                    <i className='uil uil-file-medical'></i>
-                    Thêm API mới
-                </Button>
-            </CardHeader>
-            <CardBody >
-                {apis.map(api=>(<API api={api} />)
-                )}   
-            </CardBody>
-            
-        </Card> 
-        </>
+
+        <React.Fragment>
+            <Row className="page-title align-items-center">
+            <Col xs={12}>
+                    <h4 className="mb-1 mt-0">Quản lý tài khoản Api</h4>
+            </ Col>
+            </Row>
+            <Row>
+                <Col xs={12}>
+                    <Card className="mb-5">
+                        <CardBody>
+                        <Card className='shadow-none'>
+                        <CardHeader className='bg-transparent text-right'>
+                            <Button className="mt-1"  color="primary"
+                                onClick={()=>{setmodalnew(!modalnew)}}
+                            >
+                                <i className='uil uil-plug mr-1'></i>
+                                Kích hoạt API mới
+                            </Button>
+                        </CardHeader>
+                        <CardBody >
+                            {apis.map(api=>(<API api={api} />)
+                            )}   
+                        </CardBody>
+                        
+                    </Card> 
+                    <AddApi isOpen={modalnew} toggleOpen={()=>{setmodalnew(!modalnew)}} submit={(value)=>{console.log('addApi',value);setmodalnew(!modalnew);}}/>        
+
+
+                        </CardBody>
+                    </Card>
+                </Col>
+            </Row>
+        </React.Fragment>
     );
 };
 
 
 const API = (props) => {
-    return <React.Fragment>
+    const [modalDelete,setModalDelete]= React.useState(false);
+
+    return (
+        <React.Fragment>
         <Card className="border mb-3">
             <CardBody className="p-3">
-                <UncontrolledDropdown className="float-right" direction="left">
-                    <DropdownToggle tag="a" className="dropdown-toggle p-0 arrow-none cursor-pointer">
-                        <i className="uil uil-ellipsis-v font-size-14"></i>
-                    </DropdownToggle>
-
-                    <DropdownMenu>
-                        <DropdownItem><i className="uil uil-edit-alt mr-2"></i>Edit</DropdownItem>
-                        <DropdownItem className="text-danger"><i className="uil uil-trash mr-2"></i>Delete</DropdownItem>
-                    </DropdownMenu>
-                </UncontrolledDropdown>
-
+                <Button className="float-right p-0" color='outline-danger'
+                    onClick={()=>{setModalDelete(!modalDelete)}}
+                >
+                    <i className="uil uil-trash mx-1"></i>
+                </Button>
+                
                 <h6 className="mt-0 mb-2 font-size-15">
                     <p href="/" className="text-body">{props.api.station_name}</p>
                 </h6>
-
+                <p> 
+                    <span className="text-black-50">Tên đăng nhập: </span>
+                    {props.api.api.username}
+                </p>
                 <p className="mb-0 mt-4">
                     <span className="text-nowrap align-middle font-size-13">
-                        <i className="uil uil-processor text-muted mr-1"></i>
-                        18
+                        <i className="uil uil-rss-alt text-muted mr-1"></i>
+                        {props.api.station_id}
                     </span>
-                    <small className="float-right text-muted">khan</small>
+                    <small className="float-right text-muted">
+                        <i className="uil uil-calender mr-1"></i>
+                        {dateToString(props.api.createdAt)}
+                    </small>
                 </p>
             </CardBody>
         </Card>
-    </React.Fragment>
+        <ConfirmDialog 
+            title="Xác nhận xóa bỏ tài khoản API"
+            content={<APIDetail api={props.api} />} 
+            color='danger' 
+            isOpen={modalDelete} 
+            toggle={()=>{setModalDelete(!modalDelete)}} 
+            confirm={()=>{}}>
+        </ConfirmDialog>
+        </React.Fragment>
+    );
 }
+
 
 
 export default ApiService;

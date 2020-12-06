@@ -47,7 +47,7 @@ const StatusChart = () => {
             labels: {
                 show: true,
                 formatter: (value) => {
-                    return '-' + value + '°';
+                    return value + '°';
                 },
             },
         },
@@ -90,23 +90,23 @@ const StatusChart = () => {
         {
             name: 'KV Cá Ngừ',
             data: generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 50, {
-                min: 0,
-                max: 40,
+                min: -20,
+                max: 5,
             }),
         },
         {
             name: 'KV Cá Tra',
             data: generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 50, {
-                min: 0,
-                max: 20,
+                min: -18,
+                max: 5,
             }),
         },
 
         {
             name: 'KV Tôm',
             data: generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 50, {
-                min: 0,
-                max: 35,
+                min: -18,
+                max: 10,
             }),
         },
     ];
