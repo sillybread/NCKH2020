@@ -18,6 +18,7 @@ const CurrentRoom = (state = INIT_STATE, action) =>{
         case GET_CURR_ROOM_INFO_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 info: action.payload
             }
         case GET_CURR_ROOM_INFO_FAILED:

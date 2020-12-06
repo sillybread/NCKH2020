@@ -1,11 +1,14 @@
+import { getRoomCookieDefault } from 'helpers/roomUtils';
 import {
     GET_ROOM_LIST,
     GET_ROOM_LIST_SUCCESS,
     GET_ROOM_LIST_FAILED,
+    SET_DEFAULT_ROOM
 } from './constants';
 
 const INIT_STATE = {
     loading: false,
+
 }
 
 const RoomList = (state = INIT_STATE, action) =>{
@@ -20,17 +23,19 @@ const RoomList = (state = INIT_STATE, action) =>{
             const myRoom = rooms.filter((e)=>(e.role==="Owner"));
             const sharedRoom = rooms.filter((e)=>(e.role!="Owner"));
             let defaultRoom = {
-                role:'Owner',
+                role:'User',
                 room: {
                     _id: "xxx",
                     name: "Chưa có kho lạnh nào"
                 }
             };
-            if (sharedRoom.length>0){
+            if (sharedRoom.length>0 ){
                 defaultRoom = sharedRoom[0];
+                //defaultRoom = (getRoomCookieDefault() !=null)?getRoomCookieDefault():sharedRoom[0];
             }
             if (myRoom.length>0){
                 defaultRoom = myRoom[0];
+               // defaultRoom = (getRoomCookieDefault() !=null)?getRoomCookieDefault(): myRoom[0];
             }
             return {
                 ...state,
@@ -46,6 +51,12 @@ const RoomList = (state = INIT_STATE, action) =>{
                 loading: false,
                 errorGetRoomList: action.payload
             }
+        case SET_DEFAULT_ROOM:
+            return {
+                ...state,
+                defaultRoom: action.payload
+            }
+        
         default:
             return {...state}
     }

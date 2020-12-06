@@ -23,7 +23,7 @@ function* getCurrentRoomInfo({payload: {room_id, token}}){
     try{
         const res = yield aGet(token, 'api/room', {room_id});
         if (res.status==='success'){
-            yield put(getCurrentRoomInfoSuccess({ info: res.result.room}));
+            yield put(getCurrentRoomInfoSuccess(res.result.room));
         } else {
             yield put(getCurrentRoomInfoFailed(res.result));
         }

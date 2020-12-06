@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 import * as FeatherIcon from 'react-feather';
 
 import { isUserAuthenticated } from '../helpers/authUtils';
+import {useSelector} from 'react-redux';
 
 // auth
 const Login = React.lazy(() => import('../pages/auth/Login'));
@@ -22,25 +23,38 @@ const Management = React.lazy(() => import('../pages/config/managerments/Managem
 const WareHouseConfig = React.lazy(() => import('../pages/config/warehouseConfig/warehouseConfig'));
 const ApiService = React.lazy(() => import('../pages/config/apiService/ApiService'));
 
+
 //more pages
 const Store = React.lazy(() => import('../pages/store'));
 const Help = React.lazy(() => import('../pages/help'));
 const About = React.lazy(() => import('../pages/about'));
 
 // handle auth and authorization
-const PrivateRoute = ({ component: Component, roles, ...rest }) => (
-    <Route
+const PrivateRoute = ({ component: Component, roles, ...rest }) => {
+    const currentRole = useSelector(state => { 
+        if(state.RoomList.defaultRoom)
+            return state.RoomList.defaultRoom.role
+        else
+            return null;
+        });
+
+    return (
+        <Route
         {...rest}
         render={(props) => {
             if (!isUserAuthenticated()) {
                 // not logged in so redirect to login page with the return url
                 return <Redirect to={{ pathname: '/account/login', state: { from: props.location } }} />;
             }
+            if  (currentRole!=null && roles) 
+                if(!roles.includes(currentRole))
+                    return <Redirect to={{ pathname: '/More/About', state: { from: props.location } }} />;
             // authorised so return component
             return <Component {...props} />;
         }}
-    />
-);
+        />
+    )
+};
 
 // root routes
 const rootRoute = {
@@ -60,7 +74,7 @@ const statusRoutes = {
         text: '1',
     },
     component: Status,
-    roles: ['Admin'],
+    roles: ['Owner','Manager','Viewer'],
     route: PrivateRoute,
 };
 // dashboards
@@ -69,7 +83,7 @@ const reportRoutes = {
     name: 'Báo cáo',
     icon: FeatherIcon.Clipboard,
     component: Report,
-    roles: ['Admin'],
+    roles: ['Owner','Manager'],
     route: PrivateRoute,
 };
 
@@ -80,7 +94,7 @@ const configSensorMap = {
     name: 'Cảm biến',
     icon: FeatherIcon.Cpu,
     component: SensorMap,
-    roles: ['Admin'],
+    roles: ['Owner','Manager'],
     route: PrivateRoute,
 };
 const configArea = {
@@ -88,7 +102,7 @@ const configArea = {
     name: 'Khu vực',
     icon: FeatherIcon.Codepen,
     component: AreaConfig,
-    roles: ['Admin'],
+    roles: ['Owner','Manager'],
     route: PrivateRoute,
 };
 const configManager = {
@@ -96,7 +110,7 @@ const configManager = {
     name: 'Người truy cập',
     icon: FeatherIcon.Users,
     component: Management,
-    roles: ['Admin'],
+    roles: ['Owner','Manager'],
     route: PrivateRoute,
 };
 const configWarehouse = {
@@ -104,7 +118,7 @@ const configWarehouse = {
     name: 'Thông tin kho',
     icon: FeatherIcon.AlertCircle,
     component: WareHouseConfig,
-    roles: ['Admin'],
+    roles: ['Owner','Manager'],
     route: PrivateRoute,
 };
 const configApi = {
@@ -112,7 +126,7 @@ const configApi = {
     name: 'Tài khoản Api',
     icon: FeatherIcon.Rss,
     component: ApiService,
-    roles: ['Admin'],
+    roles: ['Owner','Manager'],
     route: PrivateRoute,
 };
 
@@ -127,7 +141,7 @@ const storeRoutes = {
     icon: FeatherIcon.ShoppingBag,
     component: Store,
     route: PrivateRoute,
-    roles: ['Admin'],
+    roles: ['User','Owner','Manager','Viewer'],
 };
 const helpRoutes = {
     path: '/More/Help',
@@ -135,7 +149,7 @@ const helpRoutes = {
     icon: FeatherIcon.HelpCircle,
     component: Help,
     route: PrivateRoute,
-    roles: ['Admin'],
+    roles: ['User','Owner','Manager','Viewer'],
 };
 const aboutRoutes = {
     path: '/More/About',
@@ -143,7 +157,7 @@ const aboutRoutes = {
     icon: FeatherIcon.GitHub,
     component: About,
     route: PrivateRoute,
-    roles: ['Admin'],
+    roles: ['User','Owner','Manager','Viewer'],
 };
 const moreRoute = [storeRoutes, helpRoutes, aboutRoutes];
 // auth

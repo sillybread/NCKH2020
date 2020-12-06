@@ -10,14 +10,20 @@ import { UncontrolledDropdown, DropdownMenu, DropdownToggle, DropdownItem } from
 import * as FeatherIcon from 'react-feather';
 
 import AppMenu from './AppMenu';
-import {useSelector}  from 'react-redux';
+import {useSelector, useDispatch}  from 'react-redux';
+import { getRoomList } from 'redux/actions';
 
 /**
  * User Widget
  */
 const UserProfile = (props) => {
     const state = useSelector(state => state.Auth);
-  
+    const dispatch = useDispatch();
+
+    React.useEffect(()=>{
+        dispatch(getRoomList(state.user))
+    },[])
+
     return (
         <React.Fragment>
             <div className="media user-profile mt-2 mb-2">

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {Container,UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import { Menu, X, Search, Settings, User, HelpCircle, Lock, LogOut,ChevronDown,Plus } from 'react-feather';
-import { showRightSidebar, getCurrentRoomInfo} from '../redux/actions';
+import { showRightSidebar, getCurrentRoomInfo,setDefaultRoom} from '../redux/actions';
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import LanguageDropdown from './LanguageDropdown';
@@ -12,6 +12,7 @@ import logo from '../assets/images/logo.png';
 import profilePic from '../assets/images/users/avatar-7.jpg';
 import NewWareHouse from './newWareHouse';
 import {useDispatch, useSelector} from 'react-redux';
+import { setRoomCookieDefault } from 'helpers/roomUtils';
 
 
 const ProfileMenus = [
@@ -45,9 +46,6 @@ const ProfileMenus = [
 
 const Topbar = (props) =>{
     const [newWareHouseModal, setNewWareHouseModal] = useState(false);
-
-    const [currentRoom, setCurrentRoom] = useState({room: {name:""}});
-
     const dispatch = useDispatch();
 
     const auth = useSelector(state => state.Auth);
@@ -57,14 +55,16 @@ const Topbar = (props) =>{
     };
 
     useEffect(()=>{
-        if (currentRoom.room._id){
-            dispatch(getCurrentRoomInfo(currentRoom.room._id,auth.user.accessToken));
+        if (props.defaultRoom.room._id){
+            dispatch(getCurrentRoomInfo(props.defaultRoom.room._id,auth.user.accessToken));
         }
-    },[currentRoom])
+        setRoomCookieDefault(props.defaultRoom);
+        /* dispatch(setDefaultRoom(currentRoom)); */
+    },[props.defaultRoom])
+    const setCurrentRoom = (obj)=>{
+        dispatch(setDefaultRoom(obj));
+    }
 
-    useEffect(()=>{
-        setCurrentRoom(props.defaultRoom);
-    },[props.defaultRoom]);
 
     return (
         <React.Fragment>
@@ -95,7 +95,7 @@ const Topbar = (props) =>{
 
                     <UncontrolledButtonDropdown>
                         <DropdownToggle color="default" className="dropdown-toggle text-dark font-weight-bold mt-2" >
-                            {currentRoom.room.name}
+                            {props.defaultRoom.room.name}
                             <i className="icon ml-1"><ChevronDown /></i>
                         </DropdownToggle>
                         <DropdownMenu right>
