@@ -3,7 +3,17 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {Container,UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import { Menu, X, Search, Settings, User, HelpCircle, Lock, LogOut,ChevronDown,Plus } from 'react-feather';
-import { showRightSidebar, getCurrentRoomInfo,setDefaultRoom, createRoom} from '../redux/actions';
+import {
+    showRightSidebar,
+    getCurrentRoomInfo,
+    setDefaultRoom,
+    createRoom,
+    getCurrentRoomActivate,
+    getCurrentRoomArea,
+    getCurrentRoomAccess,
+    getCurrentRoomSensorMap,
+    getCurrentRoomSensorList,
+} from '../redux/actions';
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import LanguageDropdown from './LanguageDropdown';
@@ -58,10 +68,16 @@ const Topbar = (props) =>{
     };
 
     useEffect(()=>{
-        if(props.defaultRoom !=null){
-            if(props.defaultRoom.room._id !='xxx')
-            dispatch(getCurrentRoomInfo(props.defaultRoom.room._id,auth.user.accessToken));
-            
+        const defaultRoom = props.defaultRoom;
+        const room_id = defaultRoom.room._id;
+        const token = auth.user.accessToken;
+        if(defaultRoom !=null && room_id != 'xxx'){
+            dispatch(getCurrentRoomInfo(room_id,token));
+            dispatch(getCurrentRoomArea(room_id,token));
+            dispatch(getCurrentRoomAccess(room_id,token));
+            dispatch(getCurrentRoomActivate(room_id,token));
+            dispatch(getCurrentRoomSensorMap(room_id,token));
+            dispatch(getCurrentRoomSensorList(room_id,token));
         }
         setRoomCookieDefault(props.defaultRoom);
     },[props.defaultRoom])
