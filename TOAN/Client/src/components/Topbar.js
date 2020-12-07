@@ -13,6 +13,8 @@ import {
     getCurrentRoomAccess,
     getCurrentRoomSensorMap,
     getCurrentRoomSensorList,
+    getNotificationList,
+    updateNotification,
 } from '../redux/actions';
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
@@ -81,6 +83,10 @@ const Topbar = (props) =>{
         }
         setRoomCookieDefault(props.defaultRoom);
     },[props.defaultRoom])
+
+    useEffect(()=>{
+        dispatch(getNotificationList(auth.user.accessToken));
+    },[])
     const setCurrentRoom = (obj)=>{
         dispatch(setDefaultRoom(obj));
     }

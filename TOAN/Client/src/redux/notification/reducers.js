@@ -18,58 +18,57 @@ const Notification = (state = INIT_STATE, action) => {
         case GET_NOTIFICATION_LIST:
             return {
                 ...state,
-                code: 1
             }
         case GET_NOTIFICATION_LIST_SUCCESS:
             return {
                 ...state,
-                code: 2,
-                list: action.payload
+                list: action.payload.result
             }
         case GET_NOTIFICATION_LIST_FAILED:
             return {
                 ...state,
-                code: 3
             }
         case DELETE_NOTIFICATION:
             return {
                 ...state,
-                code: 4
             }
         case DELETE_NOTIFICATION_SUCCESS:
             return {
                 ...state,
-                code: 5
             }
         case DELETE_NOTIFICATION_FAILED:
             return {
                 ...state,
-                code: 6
             }
         case DELETE_ALL_NOTIFICATION:
             return {
                 ...state,
-                code: 7
             }
         case DELETE_ALL_NOTIFICATION_SUCCESS:
             return {
                 ...state,
-                code: 8
             }
         case DELETE_ALL_NOTIFICATION_FAILED:
             return {
                 ...state,
-                code: 9
             }
         case UPDATE_NOTIFICATION:
-            return{
-                ...state,
-                code: 0
+            const newState = {...state}
+            const list = newState.list;
+            if (!list) return newState;
+            const targetIndex = list.findIndex(e => (e._id === action.payload.id));
+            if (targetIndex!=-1){
+                newState.list[targetIndex] = {
+                    ...newState.list[targetIndex],
+                    ...action.payload.data
+                }
+            } else {
+                //Not found
             }
+            return newState;
         default:
             return {
                 ...state,
-                code: -1
             }
     }
 }
