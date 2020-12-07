@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
 import Chart from 'react-apexcharts';
+import { useSelector } from 'react-redux';
+const {timeToString} = require('helpers/datetimeCover')
 
 // StackedAreaChart
 const StatusChart = () => {
     const apexAreaChart2Opts = {
         chart: {
-            height: 380,
-            type: 'area',
             stacked: true,
             events: {
                 selection: function (chart, e) {
@@ -15,7 +15,6 @@ const StatusChart = () => {
                 },
             },
         },
-        colors: ['#5369f8', '#43d39e', '#f77e53', '#1ce1ac', '#25c2e3', '#ffbe0b'],
         dataLabels: {
             enabled: false,
         },
@@ -40,7 +39,7 @@ const StatusChart = () => {
             },
         },
         xaxis: {
-            type: 'datetime',
+            type: 'text',
         },
 
         yaxis: {
@@ -50,6 +49,8 @@ const StatusChart = () => {
                     return value + '°';
                 },
             },
+            min: -30,
+            max: 0,
         },
         grid: {
             row: {
@@ -111,11 +112,32 @@ const StatusChart = () => {
         },
     ];
 
+    const areaData = useSelector(state => state.RoomData.areaData);
+    const data = ()=>{
+        if(areaData){
+            if(areaData.length>0)
+            return areaData[0].areas.map((areaT,index)=>{
+                return {
+                    name: areaT.name,
+                    data: areaData.map(data=>({
+                        x:timeToString(data.time),
+                        y:(data.areas[index].average)?data.areas[index].average:data.areas[index].value
+                    })),
+                }
+            })
+        }
+        return []; 
+    }
+    const [crData,setCrData] = React.useState(data());
+    React.useEffect(()=>{
+        setCrData(data());
+    },[areaData])
+
     return (
         <Chart
             options={apexAreaChart2Opts}
-            series={apexAreaChart2Data}
-            type="area"
+            series={crData}
+            type="line"
             className="apex-charts"
             height={450}
         />

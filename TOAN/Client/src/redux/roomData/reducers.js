@@ -17,9 +17,15 @@ const RoomData = (state = INIT_STATE, action) => {
                 ...state,
             }
         case GET_AREA_DATA_SUCCESS:
+         
+            let cr = (state.areaData)?[...state.areaData]: new Array();
+             cr.push(action.payload);
+            if(cr.length >10){
+                cr.shift()
+            } 
             return {
                 ...state,
-                areaData: action.payload
+                areaData: cr
             }
         case GET_AREA_DATA_FAILED:
             return {

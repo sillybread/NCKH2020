@@ -1,12 +1,13 @@
 import React from 'react';
 import { Step, Steps, Wizard } from 'react-albus';
 
-import { CardBody, Col, Progress, Card, Button, Row, CustomInput,Modal,ModalHeader,ModalBody, Label } from 'reactstrap';
+import { CardBody, Col, Progress, Card, Button, Row, CustomInput,Modal,ModalHeader,ModalBody, Label, Alert } from 'reactstrap';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 import AvRadioGroup from 'availity-reactstrap-validation/lib/AvRadioGroup';
 import AvRadio from 'availity-reactstrap-validation/lib/AvRadio';
 import AvGroup from 'availity-reactstrap-validation/lib/AvGroup';
 import dinhhuong from 'assets/images/dinhhuong.svg'
+import Loader from 'components/Loader';
 
 
 export default function NewWareHouse(props) {
@@ -18,10 +19,16 @@ export default function NewWareHouse(props) {
     
     return(
         <Modal isOpen={props.isOpen} toggle={props.toggleOpen}>
+            {props.loading && <Loader />}
             <ModalHeader>Kho lạnh mới</ModalHeader>
             <ModalBody>
             <Card className="shadow-none">
             <CardBody>
+            {props.error && (
+                <Alert color="danger" isOpen={props.error ? true : false}>
+                    <div>{props.error}</div>
+                </Alert>
+            )}
             <Wizard
                 render={({ step, steps }) => (
                     <React.Fragment>
@@ -106,6 +113,7 @@ export default function NewWareHouse(props) {
                             <Step
                                 id="door"
                                 render={({ previous }) => (
+                                    
                                     <AvForm
                                     onValidSubmit={(event, values) => {
                                         props.submit({

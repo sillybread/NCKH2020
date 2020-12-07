@@ -30,7 +30,7 @@ function* getAreaData({payload: {token, room_id}}){
             }
         });
         if (res.status === "success"){
-            yield put(getAreaDataSuccess(res.result.areas))
+            yield put(getAreaDataSuccess(res.result))
         } else {
             yield put(getAreaDataFailed(res.result))
         }
@@ -50,7 +50,7 @@ function* getCurrentData({payload:{token, room_id}}){
             }
         });
         if (res.status === "success"){
-            yield put(getCurrentDataSuccess(res.result.data))
+            yield put(getCurrentDataSuccess(res.result))
         } else {
             yield put(getCurrentDataFailed(res.result))
         }
@@ -69,7 +69,7 @@ function* getSensorData({payload: {token, room_id}}){
             }
         });
         if (res.status === "success"){
-            yield put(getSensorDataSuccess(res.result.data))
+            yield put(getSensorDataSuccess(res.result))
         } else {
             yield put(getSensorDataFailed(res.result))
         }

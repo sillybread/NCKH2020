@@ -13,6 +13,9 @@ import {
     registerUserFailed,
     forgetPasswordSuccess,
     forgetPasswordFailed,
+    getRoomList,
+    getRoomListSuccess,
+    getRoomListFailed,
 } from 'redux/actions';
 import { setRoomCookieDefault } from 'helpers/roomUtils';
 

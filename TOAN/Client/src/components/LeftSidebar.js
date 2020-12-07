@@ -12,17 +12,26 @@ import * as FeatherIcon from 'react-feather';
 import AppMenu from './AppMenu';
 import {useSelector, useDispatch}  from 'react-redux';
 import { getRoomList } from 'redux/actions';
+import MySocket from 'socket.controller';
+const {BASE_URL} = require('constants/apiConfig');
 
+var io = require('socket.io-client');
 /**
  * User Widget
  */
 const UserProfile = (props) => {
     const state = useSelector(state => state.Auth);
+    const roomList = useSelector(state => state.RoomList);
     const dispatch = useDispatch();
 
     React.useEffect(()=>{
         dispatch(getRoomList(state.user))
     },[])
+    React.useEffect(()=>{
+        var socket = io.connect(BASE_URL);
+        console.log('Socket io Client','run socket client');
+        MySocket(socket,dispatch,state);
+    },[state.user.accessToken,roomList.defaultRoom])
 
     return (
         <React.Fragment>
