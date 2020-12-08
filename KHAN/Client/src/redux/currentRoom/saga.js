@@ -20,6 +20,8 @@ import {
     getCurrentRoomActivateFailed,
     getCurrentRoomSensorMapSuccess,
     getCurrentRoomSensorMapFailed,
+    getCurrentRoomSensorListSuccess,
+    getCurrentRoomSensorListFailed,
 } from './actions';
 
 import {requestApi} from 'helpers/api';
@@ -96,9 +98,9 @@ function * getCurrentRoomSensorList({payload: {room_id, token}}){
     try{
         const res = yield aGet(token, 'api/room/sensor/all', {room_id});
         if (res.status==='success'){
-            yield put(getCurrentRoomInfoSuccess(res.result.sensors));
+            yield put(getCurrentRoomSensorListSuccess(res.result.sensors));
         } else {
-            yield put(getCurrentRoomInfoFailed(res.result));
+            yield put(getCurrentRoomSensorListFailed(res.result));
         }
     } catch (error){}
 }

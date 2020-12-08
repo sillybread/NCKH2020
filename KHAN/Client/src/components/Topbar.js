@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {Container,UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import { Menu, X, Search, Settings, User, HelpCircle, Lock, LogOut,ChevronDown,Plus } from 'react-feather';
-import { showRightSidebar, getCurrentRoomInfo,setDefaultRoom, createRoom, getCurrentRoomArea, getCurrentRoomAccess, getCurrentRoomActivate, getCurrentRoomSensorMap, getCurrentRoomSensorList} from '../redux/actions';
+import { showRightSidebar, getCurrentRoomInfo,setDefaultRoom, createRoom, getCurrentRoomArea, getCurrentRoomAccess, getCurrentRoomActivate, getCurrentRoomSensorMap, getCurrentRoomSensorList, getNotificationList} from '../redux/actions';
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import LanguageDropdown from './LanguageDropdown';
@@ -59,15 +59,14 @@ const Topbar = (props) =>{
 
     useEffect(()=>{
         const defaultRoom = props.defaultRoom;
-        const room_id = defaultRoom.room._id;
         const token = auth.user.accessToken;
-        if(defaultRoom !=null && room_id != 'xxx'){
-            dispatch(getCurrentRoomInfo(room_id,token));
-            dispatch(getCurrentRoomArea(room_id,token));
-            dispatch(getCurrentRoomAccess(room_id,token));
-            dispatch(getCurrentRoomActivate(room_id,token));
-            dispatch(getCurrentRoomSensorMap(room_id,token));
-            dispatch(getCurrentRoomSensorList(room_id,token));
+        if(defaultRoom !=null && defaultRoom.room._id != 'xxx'){
+            dispatch(getCurrentRoomInfo(defaultRoom.room._id,token));
+            dispatch(getCurrentRoomArea(defaultRoom.room._id,token));
+            dispatch(getCurrentRoomAccess(defaultRoom.room._id,token));
+            dispatch(getCurrentRoomActivate(defaultRoom.room._id,token));
+            dispatch(getCurrentRoomSensorMap(defaultRoom.room._id,token));
+            dispatch(getCurrentRoomSensorList(defaultRoom.room._id,token));
         }
         setRoomCookieDefault(props.defaultRoom);
     },[props.defaultRoom])
@@ -77,6 +76,9 @@ const Topbar = (props) =>{
     const submitNewRoom = (room) =>{
         dispatch(createRoom(auth.user, room));
     }
+    useEffect(()=>{
+        dispatch(getNotificationList(auth.user.accessToken));
+    },[])
     useEffect(()=>{
         if(createRoomSuccess==true){
             setNewWareHouseModal(false);
