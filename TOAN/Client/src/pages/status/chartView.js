@@ -2,10 +2,10 @@
 import Axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import TChart from 'components/3DChart/3DChart.js'
-import HueBar from 'components/HueBar.js'
+import HueBar from 'components/HueBar.js';
 import MySlice from 'components/MySlice.js';
-import {BASE_URL} from 'constants/apiConfig.js'
-
+import {BASE_URL} from 'constants/apiConfig.js';
+import {useSelector} from 'redux-saga';
 
 let Config =
 {

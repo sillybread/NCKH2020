@@ -71,6 +71,7 @@ const Topbar = (props) =>{
 
     useEffect(()=>{
         const defaultRoom = props.defaultRoom;
+        if (!defaultRoom) return;
         const room_id = defaultRoom.room._id;
         const token = auth.user.accessToken;
         if(defaultRoom !=null && room_id != 'xxx'){
