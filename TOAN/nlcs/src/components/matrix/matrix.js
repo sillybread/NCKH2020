@@ -143,10 +143,11 @@ const TwoDimensionalChart = (props) => {
 }
 
 TwoDimensionalChart.defaultProps = {
+    data: [[]], axis: 'x', min: 0, max: 0,
     onClick: (x, y, hue, temp)=>{console.log(x, y, hue, temp)},
 }
 
-const Matrix = (props) =>{
+const MatrixView = (props) =>{
     const [dat, setData] = useState([[]]);
     const [axis, setAxis] = useState('x');
     const [sLv, setLevel] = useState(0);
@@ -154,54 +155,48 @@ const Matrix = (props) =>{
     const min = props.data.min;
     const max = props.data.max;
 
-    // const threeToTwo = (inp, config, axis, level) => {
-    //     let route = {
-    //         x:{
-    //             fast: 'z',
-    //             slow: 'y',
-    //             map: (a, i, f, s) => a[i][s][f]
-    //         },
-    //         y:{
-    //             fast: 'x',
-    //             slow: 'z',
-    //             map: (a, i, f, s) => a[f][i][s]
-    //         },
-    //         z:{
-    //             fast: 'x',
-    //             slow: 'y',
-    //             map: (a, i, f, s) => a[f][s][i]
-    //         }
-    //     }
+    const threeToTwo = (inp, config, axis, level) => {
+        let route = {
+            x:{
+                fast: 'z',
+                slow: 'y',
+                map: (a, i, f, s) => a[i][s][f]
+            },
+            y:{
+                fast: 'x',
+                slow: 'z',
+                map: (a, i, f, s) => a[f][i][s]
+            },
+            z:{
+                fast: 'x',
+                slow: 'y',
+                map: (a, i, f, s) => a[f][s][i]
+            }
+        }
 
-    //     let ret = [], flatRet = [], size = config.size;
-    //     let iFast = size[route[axis].fast];
-    //     let iSlow = size[route[axis].slow];
-    //     let iImmutable = size[axis]-level-1;
-    //     for (let s=0;s<iSlow;s++){
-    //         for(let f=0;f<iFast;f++){
-    //             flatRet.push(
-    //                 route[axis].map(inp,iImmutable,f,s)
-    //             );
-    //         }
-    //         ret.push(flatRet);
-    //         flatRet = [];
-    //     }
-    //     return ret;
-    // }
-
-    useEffect(()=>{
-        // let data = threeToTwo(props.data.values, props.config, axis, sLv);
-        // if (data.length == 0) data = [[[0]]];
-        // setData(data);
-    },[props, sLv]);
+        let ret = [], flatRet = [], size = config.size;
+        let iFast = size[route[axis].fast];
+        let iSlow = size[route[axis].slow];
+        let iImmutable = size[axis]-level-1;
+        for (let s=0;s<iSlow;s++){
+            for(let f=0;f<iFast;f++){
+                flatRet.push(
+                    route[axis].map(inp,iImmutable,f,s)
+                );
+            }
+            ret.push(flatRet);
+            flatRet = [];
+        }
+        return ret;
+    }
 
     useEffect(()=>{
-        console.log('debug vdata =>',dat);
-    },[dat])
+        setData(threeToTwo(props.data.values, props.config, axis, sLv));
+    },[props, sLv])
 
     return(
         <>
-            {/* <div style={{width:'inherit', height:300}}>
+            <div style={{width:'inherit', height:300}}>
                 <TwoDimensionalChart data={dat} axis={axis} min={min} max={max} onClick={(x,y,h,t)=>{
                     markCell.current(Math.trunc(h));}} />
             </div>
@@ -212,14 +207,14 @@ const Matrix = (props) =>{
                     onChangeValue={(v)=>setLevel(v)}
                     onChangeAxis={(ax)=>setAxis(ax)}
                 />
-            </div> */}
+            </div>
         </>
     )
 }
 
-Matrix.defaultProps = {
+MatrixView.defaultProps = {
     data: {
-        values: [[[0]]], min: 0, max: 0
+        values: [[[]]], min: 0, max: 0
     },
     config: {
         size: {
@@ -228,4 +223,4 @@ Matrix.defaultProps = {
     }
 }
 
-export default Matrix;
+export default MatrixView;

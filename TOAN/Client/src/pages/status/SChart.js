@@ -10,9 +10,9 @@ import NoiSuyBaChieu from 'helpers/Interpolations/cubeInterpolation';
 
 export default function SChart() {
     const [data,setData] = useState(null);
-    const currentRoom = useSelector(state => state.CurrentRoom);
-    const roomData = useSelector(state => state.RoomData);
     const [config,setConfig] = useState(null);
+    const roomData = useSelector(state => state.RoomData);
+    const currentRoom = useSelector(state => state.CurrentRoom);
 
     useEffect(()=>{
       if(roomData && currentRoom && roomData.currentData && currentRoom.info && currentRoom.info.size){
@@ -73,7 +73,7 @@ export default function SChart() {
             max: data.max
         });
     },[data])
-  
+
      return (config !=null && data != null) && (
       <>
       <TChart config={config} data={data} slice={slice}/>
@@ -95,6 +95,6 @@ export default function SChart() {
           }}
           onChangeAxis={(ax)=>setAxis(ax)}
       />
-      </> 
+      </>
     )
 }
