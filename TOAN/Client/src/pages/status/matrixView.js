@@ -39,16 +39,15 @@ function axiosTest() {
 }
 
 const matrixView = () =>{
-    // const [dat, setData] = useState(helper.initData(Config.size))
+    const [dat, setData] = useState(helper.initData(Config.size))
 
-    // useEffect(()=>{
-    //     axiosTest()
-    //         .then(data => setData(data))
-    //         .catch(err => console.log(err))
-    // },[])
-    // return(
-    //     <MatrixChart config={Config} data={dat}/>
-    // )
-    return <div/>
+    useEffect(()=>{
+        axiosTest()
+            .then(data => setData(data))
+            .catch(err => console.log(err))
+    },[])
+    return(
+        <MatrixView config={Config} data={dat}/>
+    )
 }
 export default matrixView;

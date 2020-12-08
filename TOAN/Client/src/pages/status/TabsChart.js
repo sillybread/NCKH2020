@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import classnames from 'classnames';
 import StatusChart from './StatusChart';
-import SChart3D from './chartView';
+import SChart3D from './SChart';
 import Matrix from 'components/matrix/matrix.js';
 
 class TabsChart extends Component {

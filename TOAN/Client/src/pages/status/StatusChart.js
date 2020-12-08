@@ -46,11 +46,9 @@ const StatusChart = () => {
             labels: {
                 show: true,
                 formatter: (value) => {
-                    return value + '°';
+                    return value + '°C';
                 },
             },
-            min: -30,
-            max: 0,
         },
         grid: {
             row: {

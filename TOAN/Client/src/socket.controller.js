@@ -11,9 +11,12 @@ const MySocket = (socket,dispatch,state) => {
     socket.on('data_room', function(data){
         let df = getRoomCookieDefault()
         if(df)
-            if(df.room._id === data.room)
+            if(df.room._id === data.room){
                 dispatch(getSensorData(data.room,state.user.accessToken));
-            //console.log('Socket io Client',data);
+                dispatch(getCurrentDataSuccess(data))
+            }
+                
+            console.log('Socket io Client',data);
     });
     socket.on('log', function(data){
         console.log('Socket io Client',data);
