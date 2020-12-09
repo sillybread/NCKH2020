@@ -25,7 +25,7 @@ import {
 } from './actions';
 
 import {requestApi} from 'helpers/api';
-import { getAreaData, getCurrentData, getSensorData } from 'redux/roomData/actions';
+import { getAreaData, getCurrentData, getCurrentDataFailed, getSensorData } from 'redux/roomData/actions';
 
 function aGet(token, url, params){
     return call(requestApi, {

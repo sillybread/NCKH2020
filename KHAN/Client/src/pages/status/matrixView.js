@@ -17,6 +17,8 @@ const  MatrixView = (props) =>{
           }else{
             setData(NoiSuyBaChieu(roomData.currentData.datas,currentRoom.info));
           }
+      }else{
+        setData(null);
       }
 
     },[roomData.currentData,currentRoom.info])

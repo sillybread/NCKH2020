@@ -70,8 +70,8 @@ const  NotificationDetail = (props) =>{
                 {
                     (props.content.type ==='Access-Invite')?(
                         <>
-                           <Button color='primary'>Chấp nhận</Button>
-                           <Button color='secondary' className="ml-1">Từ chối</Button>
+                           <Button color='primary' onClick={props.sayYesAccess}>Chấp nhận</Button>
+                           <Button color='secondary' onClick={props.sayNoAccess}className="ml-1">Từ chối</Button>
                         </>
                     ):(
                         <>

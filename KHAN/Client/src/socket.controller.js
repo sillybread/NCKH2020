@@ -1,8 +1,9 @@
 import { getRoomCookieDefault, setRoomCookieDefault } from "helpers/roomUtils";
+import { showNotification } from "helpers/webNotification";
 import { getRoomList,setDefaultRoom,getCurrentDataSuccess ,getCurrentRoomInfo, getSensorData, getAreaDataSuccess, pushNotification, updateNotification} from "redux/actions";
 
 
-const MySocket = (socket,dispatch,state) => {
+const MySocket = (socket,dispatch,state,addToast) => {
     socket.on('connect', function(){
         console.log('Socket io Client',"connect");
         socket.emit('login',state.user.accessToken);
@@ -35,6 +36,15 @@ const MySocket = (socket,dispatch,state) => {
     socket.on('notification', function(data){
         if(data.message =='add'){
             dispatch(pushNotification(data.data));
+
+            if (Notification.permission == "granted"){
+                showNotification('Quản lý nhiệt độ kho lạnh',data.data.content);
+            }else{
+                addToast(data.data.content, {
+                    appearance: 'warning',
+                    autoDismiss: true,
+                });
+            }
         }
         if(data.message =='update'){
             dispatch(updateNotification(data.data._id,data.data));
@@ -43,11 +53,19 @@ const MySocket = (socket,dispatch,state) => {
     });
 
 
-    /*
+  
     socket.on('access', function(data){
         console.log('Socket io Client',data);
         if(data.message =='add'){
-            socket.emit('join-room', 'room'+data.data.access.room);  
+            socket.emit('join-room', 'room'+data.data.access.room);
+            if (Notification.permission == "granted"){
+                showNotification('Quản lý nhiệt độ kho lạnh',data.data.content);
+            }else{
+                addToast(data.data.content, {
+                    appearance: 'warning',
+                    autoDismiss: true,
+                });
+            }
         }
         if(data.message =='edit'){
             //do something
@@ -57,7 +75,7 @@ const MySocket = (socket,dispatch,state) => {
         }
         
     });
-
+      /*
 
 
     socket.on('area', function(data){

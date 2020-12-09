@@ -13,6 +13,7 @@ import AppMenu from './AppMenu';
 import {useSelector, useDispatch}  from 'react-redux';
 import { getRoomList } from 'redux/actions';
 import MySocket from 'socket.controller';
+import { useToasts } from 'react-toast-notifications'
 const {BASE_URL} = require('constants/apiConfig');
 
 var io = require('socket.io-client');
@@ -23,6 +24,7 @@ const UserProfile = (props) => {
     const state = useSelector(state => state.Auth);
     const roomList = useSelector(state => state.RoomList);
     const dispatch = useDispatch();
+    const { addToast } = useToasts();
 
     React.useEffect(()=>{
         dispatch(getRoomList(state.user))
@@ -30,7 +32,7 @@ const UserProfile = (props) => {
     React.useEffect(()=>{
         var socket = io.connect(BASE_URL);
         console.log('Socket io Client','run socket client');
-        MySocket(socket,dispatch,state);
+        MySocket(socket,dispatch,state,addToast);
     },[state.user.accessToken,roomList.defaultRoom])
 
     return (

@@ -100,11 +100,16 @@ const Clear = ()=>{
     <Link to='#' className="text-dark" onClick={()=>{
         dispatch(deleteAllNotification(auth.user.accessToken));
 
-        addToast('Đã xóa toàn bộ thông báo', {
-            appearance: 'success',
-            autoDismiss: true,
-          });
-          showNotification('Quản lý nhiệt độ kho lạnh','Đã xóa toàn bộ thông báo');
+        if (Notification.permission == "granted"){
+            showNotification('Quản lý nhiệt độ kho lạnh','Đã xóa toàn bộ thông báo');
+        }else{
+            addToast('Đã xóa toàn bộ thông báo', {
+                appearance: 'success',
+                autoDismiss: true,
+            });
+        }
+        
+          
     }}>
     <small>Xóa hết</small>
     </Link>

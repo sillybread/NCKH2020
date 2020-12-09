@@ -70,6 +70,8 @@ const RoomList = (state = INIT_STATE, action) =>{
             return {
                 ...state,
                 loading: false,
+                myRoom:[],
+                sharedRoom:[],
                 errorGetRoomList: action.payload
             }
         case SET_DEFAULT_ROOM:

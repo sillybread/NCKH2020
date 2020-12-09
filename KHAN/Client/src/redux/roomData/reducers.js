@@ -30,6 +30,7 @@ const RoomData = (state = INIT_STATE, action) => {
         case GET_AREA_DATA_FAILED:
             return {
                 ...state,
+                areaData:null,
                 error: action.payload
             }
         case GET_CURRENT_DATA:
@@ -44,20 +45,7 @@ const RoomData = (state = INIT_STATE, action) => {
         case GET_CURRENT_DATA_FAILED:
             return {
                 ...state,
-                error: action.payload
-            }
-        case GET_CURRENT_DATA:
-            return {
-                ...state,
-            }
-        case GET_CURRENT_DATA_SUCCESS:
-            return {
-                ...state,
-                currentData: action.payload
-            }
-        case GET_CURRENT_DATA_FAILED:
-            return {
-                ...state,
+                currentData:null,
                 error: action.payload
             }
         case GET_SENSOR_DATA:
@@ -72,6 +60,7 @@ const RoomData = (state = INIT_STATE, action) => {
         case GET_SENSOR_DATA_FAILED:
             return {
                 ...state,
+                sensorData: null,
                 error: action.payload
             }
         default:
