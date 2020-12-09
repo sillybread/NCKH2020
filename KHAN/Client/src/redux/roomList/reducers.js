@@ -6,7 +6,13 @@ import {
     SET_DEFAULT_ROOM,
     CREATE_ROOM,
     CREATE_ROOM_SUCCESS,
-    CREATE_ROOM_FAILED
+    CREATE_ROOM_FAILED,
+    UPDATE_ROOM,
+    UPDATE_ROOM_SUCCESS,
+    UPDATE_ROOM_FAILED,
+    DELETE_ROOM,
+    DELETE_ROOM_SUCCESS,
+    DELETE_ROOM_FAILED
 } from './constants';
 
 const INIT_STATE = {
@@ -92,7 +98,49 @@ const RoomList = (state = INIT_STATE, action) =>{
                 createRoomSuccess: false,
                 error: action.payload
             }
-        
+        case UPDATE_ROOM:
+            return {
+                ...state,
+                loading: true,
+                updateRoomSuccess: false,
+                error:null
+            }
+        case UPDATE_ROOM_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                updateRoomSuccess: true,
+                error: null
+            }
+        case UPDATE_ROOM_FAILED:
+            return {
+                ...state,
+                loading: false,
+                updateRoomSuccess: false,
+                error: action.payload
+            }
+        case DELETE_ROOM:
+            return {
+                ...state,
+                loading: true,
+                deleteRoomSuccess: false,
+                error:null
+            }
+        case DELETE_ROOM_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                deleteRoomSuccess: true,
+                error: null
+            }
+        case DELETE_ROOM_FAILED:
+            return {
+                ...state,
+                loading: false,
+                deleteRoomSuccess: false,
+                error: action.payload
+            }
+            
         default:
             return {...state}
     }

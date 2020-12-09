@@ -1,54 +1,43 @@
-import "components/matrix.js"
+import Matrix from 'components/matrix/matrix.js';
+import React, {useEffect, useState} from 'react';
+import { useSelector } from 'react-redux';
+import NoiSuyBaChieu from 'helpers/Interpolations/cubeInterpolation';
 
-let Config = {
-    size: {
-        x: 53,
-        y: 23,
-        z: 26,
-        tilesize: 5
-    },
-    door: {
-        show: !0,
-        direction: "C"
-    },
-    "axis-labels": {
-        "axis-x": {
-            show: !0,
-            list: [0, 13, 26, 53]
-        },
-        "axis-y": {
-            show: !0,
-            list: [22, 10]
-        },
-        "axis-z": {
-            show: !0,
-            list: [23, 12, 18]
-        }
-    }
-};
 
-function axiosTest() {
-  // create a promise for the axios request
-  const promise = Axios.get( BASE_URL + "api/room/data/getDemoData");
+const  MatrixView = (props) =>{
+    const [data,setData] = useState(null);
+    const currentRoom = useSelector(state => state.CurrentRoom);
+    const roomData = useSelector(state => state.RoomData);
+    const [config,setConfig] = useState(null);
 
-  // using .then, create a new promise which extracts the data
-  const dataPromise = promise.then((response) => response.data)
+    useEffect(()=>{
+      if(roomData && currentRoom && roomData.currentData && currentRoom.info && currentRoom.info.size){
+          if(roomData.currentData.data){
+            setData(NoiSuyBaChieu(roomData.currentData.data,currentRoom.info));
+          }else{
+            setData(NoiSuyBaChieu(roomData.currentData.datas,currentRoom.info));
+          }
+      }
 
-  // return it
-  return dataPromise
+    },[roomData.currentData,currentRoom.info])
+
+    useEffect(()=>{
+      if(currentRoom && currentRoom.info && currentRoom.info.size){
+          const density = currentRoom.info.sensorDensity;
+          const xBlock = currentRoom.info.size.x / density -1;
+          const yBlock = currentRoom.info.size.y / density -1;
+          const zBlock = currentRoom.info.size.z / density -1;
+          setConfig({
+              "size": {
+                "x": xBlock,
+                "y": yBlock,
+                "z": zBlock,
+                "tilesize": 5
+              }
+          });
+      }
+    },[currentRoom.info])
+
+     return (data && config ) && <Matrix data={data} config={config} />
 }
-
-const matrixView = () =>{
-    // const [dat, setData] = useState(helper.initData(Config.size))
-
-    // useEffect(()=>{
-    //     axiosTest()
-    //         .then(data => setData(data))
-    //         .catch(err => console.log(err))
-    // },[])
-    // return(
-    //     <MatrixChart config={Config} data={dat}/>
-    // )
-    return <div/>
-}
-export default matrixView;
+export default MatrixView;

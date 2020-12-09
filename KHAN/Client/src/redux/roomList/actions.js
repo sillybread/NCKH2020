@@ -4,9 +4,15 @@ import {
     GET_ROOM_LIST_SUCCESS,
     GET_ROOM_LIST_FAILED,
     SET_DEFAULT_ROOM,
-    CREATE_ROOM_SUCCESS,
     CREATE_ROOM,
-    CREATE_ROOM_FAILED
+    CREATE_ROOM_SUCCESS,
+    CREATE_ROOM_FAILED,
+    UPDATE_ROOM,
+    UPDATE_ROOM_SUCCESS,
+    UPDATE_ROOM_FAILED,
+    DELETE_ROOM,
+    DELETE_ROOM_SUCCESS,
+    DELETE_ROOM_FAILED
 } from './constants';
 
 export const getRoomList = (user) => ({
@@ -40,3 +46,30 @@ export const createRoomFailed = (err) => ({
     type: CREATE_ROOM_FAILED,
     payload: err
 })
+
+export const updateRoom = (user,room_id,room_info) => ({
+    type: UPDATE_ROOM,
+    payload: {user,room_id,room_info}
+})
+export const updateRoomSuccess = (room_info) => ({
+    type: UPDATE_ROOM_SUCCESS,
+    payload: room_info
+})
+export const updateRoomFailed = (err) => ({
+    type: UPDATE_ROOM_FAILED,
+    payload: err
+})
+
+export const deleteRoom = (user,room_id) => ({
+    type: DELETE_ROOM,
+    payload: {user,room_id}
+})
+export const deleteRoomSuccess = (info) => ({
+    type: DELETE_ROOM_SUCCESS,
+    payload: info
+})
+export const deleteRoomFailed = (err) => ({
+    type: DELETE_ROOM_FAILED,
+    payload: err
+})
+

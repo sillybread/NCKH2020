@@ -1,11 +1,15 @@
+import HueBar from 'components/HueBar';
+import MySlice from 'components/MySlice';
 import React, { useEffect, useState, useRef } from 'react'
-import Axios from 'axios'
-import MySlice from 'components/MySlice.js'
-import HueBar from 'components/HueBar.js'
-import {BASE_URL} from 'constants/apiConfig.js'
+// import MySlice from 'components/MySlice.js'
+// import HueBar from 'components/HueBar.js'
 import './matrix.css'
 
-const helper = {
+class Helper{
+    constructor(){
+        this.xRuler = document.createElement('p')
+        this.yRuler = document.createElement('p')
+    }
     setProps(props){
         this.data = props.data;
         this.min = props.min;
@@ -14,17 +18,18 @@ const helper = {
         this.height = this.data.length;
         this.onClick = props.onClick;
         this.config = props.config;
-    },
+    }
+    setAxis(axis){
+        this.axis = axis
+    }
     createElement(tagName, attribute = {}){
         let e = document.createElement(tagName);
         Object.assign(e, attribute);
         return e;
-    },
+    }
     createEmptyElement(){
         return this.createElement('p')
-    },
-    xRuler: document.createElement('p'),
-    yRuler: document.createElement('p'),
+    }
     makeRow(rowNumber, container){
         const { data: DATA, min: MIN, max: MAX, width: WIDTH} = this;
 
@@ -44,7 +49,7 @@ const helper = {
             );
         }
         container.appendChild(row);
-    },
+    }
     makeTable(container){
         const table = this.createElement('table', {
             className: 'text-center',
@@ -59,7 +64,7 @@ const helper = {
         container.appendChild(this.xRuler);
         container.appendChild(this.yRuler);
         this.xRuler.className = this.yRuler.className = "label";
-    },
+    }
     onMouseEnter(x, y){
         let router = {
             x: {
@@ -77,10 +82,10 @@ const helper = {
         }
         this.xRuler.innerHTML = `<strong>${router[this.axis].s}</strong>: ` + x;
         this.yRuler.innerHTML = `<strong>${router[this.axis].f}</strong>: ` + y;
-    },
+    }
     onMouseOut(x, y){
         delete [x, y];
-    },
+    }
     handleRuler(container, event){
         this.xRuler.style = this.yRuler.style = 'display;';
         let fkRect = container.getBoundingClientRect();
@@ -92,16 +97,70 @@ const helper = {
         this.yRuler.style = `background: #faa;
             left: ${container.offsetWidth}px;
             top: ${y}px;`;
-    },
+    }
     removeRuler(){
         this.xRuler.style.display = this.yRuler.style.display = 'none';
-    },
-    threeToTwo(inp, config, axis, level){
+    }
+    initData(sz){
+        return { values: new Array(sz.x).fill(0).map(
+            e => new Array(sz.y).fill(0).map(
+                e => new Array(sz.z).fill(0).map(
+                    e => 0
+            ))),
+            min: 0,
+            max: 0
+        }
+    }
+}
+
+const TwoDimensionalChart = (props) => {
+    const [container, setContainer] = useState(document.createElement('p'));
+    const helper = new Helper();
+
+    useEffect(()=>{
+        helper.setProps(props);
+        helper.setAxis(props.axis);
+        helper.makeTable(container);
+        let parent = container.parentElement || container;
+        let sm = (parent.offsetWidth<parent.offsetHeight)?parent.offsetWidth:parent.offsetHeight;
+        const {width: WIDTH, height: HEIGHT} = helper
+        Object.assign(container.style,{
+            width: `${sm/HEIGHT*WIDTH}px`,
+            height: `${sm}px`
+        });
+    },[container, props])
+
+    return(
+        <div
+            ref={
+                e=>setContainer(e)
+            }
+            className = "matrixContainer"
+            onMouseOver={(event) => helper.handleRuler(container, event)}
+            onMouseOut={()=>helper.removeRuler()}
+        />
+    )
+}
+
+TwoDimensionalChart.defaultProps = {
+    data: [[]], axis: 'x', min: 0, max: 0,
+    onClick: (x, y, hue, temp)=>{console.log(x, y, hue, temp)},
+}
+
+const MatrixView = (props) =>{
+    const [dat, setData] = useState([[]]);
+    const [axis, setAxis] = useState('x');
+    const [sLv, setLevel] = useState(0);
+    const markCell = useRef(console.log);
+    const min = props.data.min;
+    const max = props.data.max;
+
+    const threeToTwo = (inp, config, axis, level) => {
         let route = {
             x:{
-                fast: 'z',
-                slow: 'y',
-                map: (a, i, f, s) => a[i][s][f]
+                fast: 'y',
+                slow: 'z',
+                map: (a, i, f, s) => a[i][f][s]
             },
             y:{
                 fast: 'x',
@@ -128,74 +187,18 @@ const helper = {
             ret.push(flatRet);
             flatRet = [];
         }
-        this.DATA = ret;
-        this.axis = axis;
         return ret;
-    },
-    initData(sz){
-        return { values: new Array(sz.x).fill(0).map(
-            e => new Array(sz.y).fill(0).map(
-                e => new Array(sz.z).fill(0).map(
-                    e => 0
-            ))),
-            min: 0,
-            max: 0
-        }
     }
-}
-
-const TwoDimensionalChart = (props) => {
-    const [container, setContainer] = useState(helper.createEmptyElement());
-    useEffect(()=>{
-        helper.setProps(props);
-        helper.makeTable(container);
-        let parent = container.parentElement || container;
-        let sm = (parent.offsetWidth<parent.offsetHeight)?parent.offsetWidth:parent.offsetHeight;
-        const {width: WIDTH, height: HEIGHT} = helper
-        Object.assign(container.style,{
-            width: `${sm/HEIGHT*WIDTH}px`,
-            height: `${sm}px`
-        });
-    },[container, props])
-
-    return(
-        <>
-            <div
-                ref={
-                    e=>setContainer(e)
-                }
-                className = "matrixContainer"
-                onMouseOver={(event) => helper.handleRuler(container, event)}
-                onMouseOut={()=>helper.removeRuler()}
-            />
-        </>
-    )
-}
-
-TwoDimensionalChart.defaultProps = {
-    onClick: (x, y, hue, temp)=>{console.log(x, y, hue, temp)},
-}
-
-const MatrixChart = (props) =>{
-    const [dat, setData] = useState([[]]);
-    const [axis, setAxis] = useState('x');
-    const [sLv, setLevel] = useState(0);
-    const markCell = useRef(console.log);
-    const min = props.data.min;
-    const max = props.data.max;
 
     useEffect(()=>{
-        let d = helper.threeToTwo(props.data.values, props.config, axis, sLv);
-        setData(d);
-    },[props, axis, sLv])
+        setData(threeToTwo(props.data.values, props.config, axis, sLv));
+    },[props, sLv])
 
     return(
         <>
             <div style={{width:'inherit', height:300}}>
-                {//<TwoDimensionalChart data={dat} min={min} max={max} onClick={(x,y,h,t)=>{
-                 //   markCell.current(Math.trunc(h));
-                 //}} />
-                }
+                <TwoDimensionalChart data={dat} axis={axis} min={min} max={max} onClick={(x,y,h,t)=>{
+                    markCell.current(Math.trunc(h));}} />
             </div>
             <br/><br/>
             <HueBar min={min} max={max} width="100%" height={10} markCell={markCell}/>
@@ -209,37 +212,15 @@ const MatrixChart = (props) =>{
     )
 }
 
-MatrixChart.defaultProps = {
+MatrixView.defaultProps = {
     data: {
-        values: [[[]]],
-        min: 0,
-        max: 0
+        values: [[[]]], min: 0, max: 0
     },
     config: {
         size: {
-            x: 0,
-            y: 0,
-            z: 0
-        },
-        door: {
-            show: !0,
-            direction: "A"
-        },
-        "axis-labels": {
-            "axis-x": {
-                show: !1,
-                list: []
-            },
-            "axis-y": {
-                show: !1,
-                list: []
-            },
-            "axis-z": {
-                show: !1,
-                list: []
-            }
+            x: 0, y: 0, z: 0
         }
     }
 }
 
-export default MatrixChart;
+export default MatrixView;

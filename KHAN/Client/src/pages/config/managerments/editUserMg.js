@@ -16,6 +16,10 @@ const EditRoleUser=(props)=>{
             icon: 'uil uil-user-check mr-1',
             title: 'Lưu thay đổi',
         }
+    const converNametoRole = {
+        'chỉ xem': 'Viewer',
+        'chỉnh sửa' :'Manager'
+    }
 
     return (
     <Modal isOpen={props.isOpen} toggle={props.toggleOpen}>
@@ -35,18 +39,18 @@ const EditRoleUser=(props)=>{
                     classNamePrefix = "react-select"
                     defaultValue = {
                         {
-                            value: props.role,
-                            label: (props.role ==='chỉ xem')?'Chỉ xem':"Chỉnh sửa"
+                            value: converNametoRole[props.role],
+                            label: (props.role ==='chỉ xem')?'chỉ xem':"chỉnh sửa"
                         }
                     }
                     options = {
                         [{
-                            value: 'viewer',
-                            label: 'Chỉ xem'
+                            value: 'Viewer',
+                            label: 'chỉ xem'
                         },
                         {
-                            value: 'manager',
-                            label: 'Chỉnh sửa'
+                            value: 'Manager',
+                            label: 'chỉnh sửa'
                         },]
                     } > 
                 </Select>

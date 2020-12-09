@@ -32,28 +32,28 @@ const SensorMap = () => {
                 colorScale: {
                     ranges: [
                         {
-                            from: -1,
-                            to: 0,
+                            from: 0,
+                            to: 1,
                             name: 'Trống',
                             color: '#fafafa',
                         },
 
                         {
-                            from: 0,
-                            to: 1,
+                            from: 2,
+                            to: 3,
                             name: 'Đang chạy',
                             color: '#00A100',
                         },
                         {
-                            from: 1,
-                            to: 2,
+                            from: 4,
+                            to: 5,
                             name: 'Đang tắt',
                             color: '#FFAA00',
                         },
 
                         {
-                            from: 2,
-                            to: 3,
+                            from: 6,
+                            to: 7,
                             name: 'Cần thiết',
                             color: '#DC0404',
                         },
@@ -105,64 +105,64 @@ const SensorMap = () => {
         {
             name: '0',
             data: generateData(20, {
-                min: -1,
-                max: 3,
+                min: 0,
+                max: 7,
             }),
         },
         {
             name: '1',
             data: generateData(20, {
-                min: -1,
-                max: 3,
+                min: 0,
+                max: 7,
             }),
         },
         {
             name: '2',
             data: generateData(20, {
-                min: -1,
-                max: 3,
+                min: 0,
+                max: 7,
             }),
         },
         {
             name: '3',
             data: generateData(20, {
-                min: -1,
-                max: 3,
+                min: 0,
+                max: 7,
             }),
         },
         {
             name: '4',
             data: generateData(20, {
-                min: -1,
-                max: 3,
+                min: 0,
+                max: 7,
             }),
         },
         {
             name: '5',
             data: generateData(20, {
-                min: -1,
-                max: 3,
+                min: 0,
+                max: 7,
             }),
         },
         {
             name: '6',
             data: generateData(20, {
-                min: -1,
-                max: 3,
+                min: 0,
+                max: 7,
             }),
         },
         {
             name: '7',
             data: generateData(20, {
-                min: -1,
-                max: 3,
+                min: 0,
+                max: 7,
             }),
         },
         {
             name: '8',
             data: generateData(20, {
-                min: -1,
-                max: 3,
+                min: 0,
+                max: 7,
             }),
         },
     ];

@@ -31,7 +31,7 @@ function * getNotificationList({payload: {token}}){
     }
 }
 
-function * deleteNotification({payload: token, notification_id}){
+function * deleteNotification({payload: {token, notification_id}}){
     const res = yield requestApi({
         method: 'delete',
         headers: {
@@ -43,13 +43,13 @@ function * deleteNotification({payload: token, notification_id}){
         }
     })
     if (res.status === 'success'){
-        put(deleteNotificationSuccess(res.result));
+        yield put(deleteNotificationSuccess(notification_id));
     } else {
-        put(deleteNotificationFailed(res.result));
+        yield put(deleteNotificationFailed(res.result));
     }
 }
 
-function * deleteAllNotification({payload: token}){
+function * deleteAllNotification({payload: {token}}){
     const res = yield requestApi({
         method: 'delete',
         headers: {
@@ -58,9 +58,9 @@ function * deleteAllNotification({payload: token}){
         url: 'api/notification/all'
     })
     if (res.status === 'success'){
-        put(deleteAllNotificationSuccess(res.result));
+       yield put(deleteAllNotificationSuccess(res.result));
     } else {
-        put(deleteAllNotificationFailed(res.result));
+        yield  put(deleteAllNotificationFailed(res.result));
     }
 }
 

@@ -8,7 +8,8 @@ import {
     DELETE_ALL_NOTIFICATION,
     DELETE_ALL_NOTIFICATION_SUCCESS,
     DELETE_ALL_NOTIFICATION_FAILED,
-    UPDATE_NOTIFICATION
+    UPDATE_NOTIFICATION,
+    PUSH_NOTIFICATION
 } from './constants';
 
 const INIT_STATE = {
@@ -35,6 +36,7 @@ const Notification = (state = INIT_STATE, action) => {
         case DELETE_NOTIFICATION_SUCCESS:
             return {
                 ...state,
+                list: state.list.filter((noti) =>(noti._id != action.payload.notification_id))
             }
         case DELETE_NOTIFICATION_FAILED:
             return {
@@ -46,7 +48,7 @@ const Notification = (state = INIT_STATE, action) => {
             }
         case DELETE_ALL_NOTIFICATION_SUCCESS:
             return {
-                ...state,
+                ...state,list:[]
             }
         case DELETE_ALL_NOTIFICATION_FAILED:
             return {
@@ -66,6 +68,12 @@ const Notification = (state = INIT_STATE, action) => {
                 //Not found
             }
             return newState;
+        case PUSH_NOTIFICATION:
+            let newList = [...state.list];
+            newList.unshift(action.payload.notification)
+            return {
+                ...state,list: newList
+            }
         default:
             return {
                 ...state,

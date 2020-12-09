@@ -144,6 +144,7 @@ class perfectChart {
         this.controls = n;
         this.renderer = renderer;
         this.axesHelper = axesHelper;
+        this.container.innerHTML = "";
         this.container.appendChild( renderer.domElement);
     }
     makeDoor() {

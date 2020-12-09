@@ -1,5 +1,5 @@
 import { getRoomCookieDefault, setRoomCookieDefault } from "helpers/roomUtils";
-import { getRoomList,setDefaultRoom,getCurrentDataSuccess ,getCurrentRoomInfo, getSensorData, getAreaDataSuccess} from "redux/actions";
+import { getRoomList,setDefaultRoom,getCurrentDataSuccess ,getCurrentRoomInfo, getSensorData, getAreaDataSuccess, pushNotification, updateNotification} from "redux/actions";
 
 
 const MySocket = (socket,dispatch,state) => {
@@ -31,12 +31,19 @@ const MySocket = (socket,dispatch,state) => {
         //console.log('Socket io Client',data);
         
     })
-    /*
+    
     socket.on('notification', function(data){
-        console.log('Socket io Client',data);
+        if(data.message =='add'){
+            dispatch(pushNotification(data.data));
+        }
+        if(data.message =='update'){
+            dispatch(updateNotification(data.data._id,data.data));
+        }
+        console.log('Socket io Client Notification',data);
     });
 
 
+    /*
     socket.on('access', function(data){
         console.log('Socket io Client',data);
         if(data.message =='add'){
