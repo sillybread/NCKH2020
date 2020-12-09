@@ -1,3 +1,94 @@
+/* const FakeData = [
+  {
+    id: "118",
+    value: -11.88,
+    x: 0,
+    y: 0,
+    z: 0,
+  },
+  {
+    id: "112",
+    value: -11.11,
+    x: 53,
+    y: 0,
+    z: 0,
+  },
+  {
+    id: "107",
+    value: -6.33,
+    x: 0,
+    y: 22,
+    z: 0,
+  },
+  {
+    id: "101",
+    value: -12.00,
+    x: 53,
+    y: 22,
+    z: 0,
+  },
+  {
+    id: "116",
+    value: -8.33,
+    x: 0,
+    y: 0,
+    z: 25,
+  },
+  {
+    id: "110",
+    value: -6.07,
+    x: 53,
+    y: 0,
+    z: 25,
+  },
+  {
+    id: "109",
+    value: -9.61,
+    x: 0,
+    y: 22,
+    z: 25,
+  },
+  {
+    id: "103",
+    value: -9.77,
+    x: 53,
+    y: 22,
+    z: 25,
+  }
+  /* {
+    id: "119",
+    value: -16.36,
+    x: 26,
+    y: 11,
+    z: 12,
+  },
+  {
+    id: "120",
+    value: -16.54,
+    x: 13,
+    y: 0,
+    z: 0,
+  }, 
+  {
+    id: "121",
+    value: -16.32,
+    x: 37,
+    y: 22,
+    z: 18,
+  }, 
+];
+
+const WareHouseConfig = {
+  id: "room00001",
+  name: "Phòng A1",
+  description: "Phòng thí nghiệm chuyên sâu 1",
+  size: {
+    x: 540,
+    y: 230,
+    z: 260,
+  },
+  sensorDensity: 10,
+}; */
 const interpolation = require("./interpolation").Interpolation;
 
 const NoiSuyBaChieu = (data, config) => {
@@ -17,7 +108,6 @@ const NoiSuyBaChieu = (data, config) => {
       }
     }
   }
-  if (!data && data.length === 0) return result;
   data.map((item) => {
     result[item.x][item.y][item.z] = item.value;
   });

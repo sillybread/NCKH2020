@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     CardHeader,
     Card,
@@ -23,6 +23,7 @@ import AddUser from './addUser';
 import EditRoleUser from './editUserMg';
 import ConfirmDialog from 'components/ConfirmDialog';
 import { get } from 'sortablejs';
+import { useSelector } from 'react-redux';
 
 
 const GetTool = (props)=>{
@@ -82,14 +83,14 @@ const UserDetail = ({ image, name, role}) => {
 };
 
 
-const Member = ({ image, name, role, className }) => {
+const Member = ({accepted ,image, name, role, className }) => {
     return (
     
         <Media className="mt-1 border-top pt-3">
             <img src={image} className={`avatar rounded mr-3 ${className}`} alt={name} />
             <Media body>
                 <h6 className="mt-1 mb-0 font-size-15">{name}</h6>
-                <h6 className="text-muted font-weight-normal mt-1 mb-3">{role}</h6>
+                <h6 className="text-muted font-weight-normal mt-1 mb-3">{role}{(!accepted)&& ' - Đã gửi lời mời'}</h6>
             </Media>
             <GetTool name={name} role={role} image={image}></GetTool>
         </Media>
@@ -99,7 +100,12 @@ const Member = ({ image, name, role, className }) => {
 
 const Members = () => {
     const [modalnew,setmodalnew] = React.useState(false);
-    
+    const currentRoom = useSelector(state => state.CurrentRoom);
+    const getRoleName = {
+       Owner: 'chủ kho lạnh',
+       Manager: 'chỉnh sửa',
+       Viewer: 'chỉ xem'
+    }
 
     return (
         <>
@@ -112,11 +118,12 @@ const Members = () => {
                     Thêm người mới
                 </Button>
             </CardHeader>
-            <CardBody >        
-                <Member image={avatarImg7} name="Shreyu N"  role="chủ kho lạnh" />
-                <Member image={avatarImg9} name="Greeva Y" role="chỉnh sửa" />
-                <Member image={avatarImg4} name="Nik G" role="chỉnh sửa" />
-                <Member image={avatarImg1} name="Hardik G" role="chỉ xem" />
+            <CardBody > 
+                {
+                    (currentRoom && currentRoom.access )&& currentRoom.access.map(ac =>(
+                        <Member accepted={ac.accepted} image={ac.user.avatar} name={ac.user.fullname}  role={getRoleName[ac.role]} />
+                    ))
+                }     
             </CardBody>
             
         </Card>

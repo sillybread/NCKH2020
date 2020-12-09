@@ -82,7 +82,7 @@ const AreaConfig = (props)=>{
                         <CardBody>
                         <Row>
                             <Col md={6}>
-                                <TChart  config={config} data={data} slice={slice}/>
+                                {(data && data.lenght >0 && config) && <TChart  config={config} data={data} slice={slice}/>}
                             </Col>
                             <Col md={6}>
                                 <Card className='shadow-none p-0'>

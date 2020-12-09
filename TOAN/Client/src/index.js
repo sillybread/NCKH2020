@@ -9,7 +9,7 @@ import { configureStore } from './redux/store';
 
 ReactDOM.render(
     <Provider store={configureStore()}>
-        <ToastProvider placement ='bottom-right' autoDismissTimeout={3000}>
+        <ToastProvider placement ='bottom-right' autoDismissTimeout={5000}>
             <App />
         </ToastProvider> 
     </Provider>,

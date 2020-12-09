@@ -35,6 +35,7 @@ const CurrentRoom = (state = INIT_STATE, action) =>{
         case GET_CURR_ROOM_INFO_FAILED:
             return {
                 ...state,
+                info: null,
                 error: action.payload
             }
         case GET_CURR_ROOM_AREA:
@@ -49,6 +50,7 @@ const CurrentRoom = (state = INIT_STATE, action) =>{
         case GET_CURR_ROOM_AREA_FAILED:
             return {
                 ...state,
+                area: null,
                 error: action.payload
             }
         case GET_CURR_ROOM_ACCESS:
@@ -63,6 +65,7 @@ const CurrentRoom = (state = INIT_STATE, action) =>{
         case GET_CURR_ROOM_ACCESS_FAILED:
             return {
                 ...state,
+                access: null,
                 error: action.payload
             }
         case GET_CURR_ROOM_ACTIVATE:
@@ -77,6 +80,7 @@ const CurrentRoom = (state = INIT_STATE, action) =>{
         case GET_CURR_ROOM_ACTIVATE_FAILED:
             return {
                 ...state,
+                activate: null,
                 error: action.payload
             }
         case GET_CURR_ROOM_SENSOR_MAP:
@@ -91,6 +95,7 @@ const CurrentRoom = (state = INIT_STATE, action) =>{
         case GET_CURR_ROOM_SENSOR_MAP_FAILED:
             return {
                 ...state,
+                sensorMap: null,
                 error: action.payload
             }
         case GET_CURR_ROOM_SENSOR_LIST:
@@ -105,6 +110,7 @@ const CurrentRoom = (state = INIT_STATE, action) =>{
         case GET_CURR_ROOM_SENSOR_LIST_FAILED:
             return {
                 ...state,
+                sensorList: null,
                 error: action.payload
             }
         default:

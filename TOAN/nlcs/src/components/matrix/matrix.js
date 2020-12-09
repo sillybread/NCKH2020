@@ -178,6 +178,7 @@ const MatrixView = (props) =>{
         let iFast = size[route[axis].fast];
         let iSlow = size[route[axis].slow];
         let iImmutable = size[axis]-level-1;
+        console.log(`debug => facing ${axis}, fast is ${route[axis].fast}, slow is ${route[axis].slow}, immutable is ${iImmutable}`);
         for (let s=0;s<iSlow;s++){
             for(let f=0;f<iFast;f++){
                 flatRet.push(

@@ -1,10 +1,11 @@
 import { getRoomCookieDefault, setRoomCookieDefault } from "helpers/roomUtils";
-import { getRoomList,setDefaultRoom,getCurrentDataSuccess ,getCurrentRoomInfo, getSensorData, getAreaDataSuccess} from "redux/actions";
+import { showNotification } from "helpers/webNotification";
+import { getRoomList,setDefaultRoom,getCurrentDataSuccess ,getCurrentRoomInfo, getSensorData, getAreaDataSuccess, pushNotification, updateNotification} from "redux/actions";
 
 
-const MySocket = (socket,dispatch,state) => {
+const MySocket = (socket,dispatch,state,addToast) => {
     socket.on('connect', function(){
-        console.log('Socket io Client',"connect");
+        //console.log('Socket io Client',"connect");
         socket.emit('login',state.user.accessToken);
     });
     
@@ -16,10 +17,10 @@ const MySocket = (socket,dispatch,state) => {
                 dispatch(getCurrentDataSuccess(data))
             }
                 
-            console.log('Socket io Client',data);
+            //console.log('Socket io Client',data);
     });
     socket.on('log', function(data){
-        console.log('Socket io Client',data);
+        //console.log('Socket io Client',data);
     });
 
     socket.on('data_area',function(data){
@@ -28,19 +29,43 @@ const MySocket = (socket,dispatch,state) => {
             if(df.room._id === data.room)
                 dispatch(getAreaDataSuccess(data));
 
-        //console.log('Socket io Client',data);
+        ////console.log('Socket io Client',data);
         
     })
-    /*
+    
     socket.on('notification', function(data){
-        console.log('Socket io Client',data);
+        if(data.message =='add'){
+            dispatch(pushNotification(data.data));
+
+            if (Notification.permission == "granted"){
+                showNotification('Quản lý nhiệt độ kho lạnh',data.data.content);
+            }else{
+                addToast(data.data.content, {
+                    appearance: 'warning',
+                    autoDismiss: true,
+                });
+            }
+        }
+        if(data.message =='update'){
+            dispatch(updateNotification(data.data._id,data.data));
+        }
+        //console.log('Socket io Client Notification',data);
     });
 
 
+  
     socket.on('access', function(data){
-        console.log('Socket io Client',data);
+        //console.log('Socket io Client',data);
         if(data.message =='add'){
-            socket.emit('join-room', 'room'+data.data.access.room);  
+            socket.emit('join-room', 'room'+data.data.access.room);
+            if (Notification.permission == "granted"){
+                showNotification('Quản lý nhiệt độ kho lạnh',data.data.content);
+            }else{
+                addToast(data.data.content, {
+                    appearance: 'warning',
+                    autoDismiss: true,
+                });
+            }
         }
         if(data.message =='edit'){
             //do something
@@ -50,40 +75,40 @@ const MySocket = (socket,dispatch,state) => {
         }
         
     });
-
+      /*
 
 
     socket.on('area', function(data){
         if(data.message == 'add'){
-            console.log('Socket io Client',data);  
+            //console.log('Socket io Client',data);  
         }
         if(data.message == 'edit'){
-            console.log('Socket io Client',data);  
+            //console.log('Socket io Client',data);  
         }
         if(data.message == 'delete'){
-            console.log('Socket io Client',data);  
+            //console.log('Socket io Client',data);  
         }
         if(data.message == 'add-monitor'){
-            console.log('Socket io Client',data);  
+            //console.log('Socket io Client',data);  
         }
         if(data.message == 'edit-monitor'){
-            console.log('Socket io Client',data);  
+            //console.log('Socket io Client',data);  
         }
         if(data.message == 'switch-monitor'){
-            console.log('Socket io Client',data);  
+            //console.log('Socket io Client',data);  
         }
         if(data.message == 'delete-monitor'){
-            console.log('Socket io Client',data);  
+            //console.log('Socket io Client',data);  
         }
     })
 
 
     socket.on('activate', function(data){
         if(data.message == 'add'){
-            console.log('Socket io Client',data); 
+            //console.log('Socket io Client',data); 
         }
         if(data.message == 'delete'){
-            console.log('Socket io Client',data);  
+            //console.log('Socket io Client',data);  
         }
     }); */
 
@@ -100,7 +125,7 @@ const MySocket = (socket,dispatch,state) => {
             socket.emit('leave-room', 'room'+data.data.room._id); 
         }
         if(data.message == 'edit'){
-            console.log('Socket io Client',data);
+            //console.log('Socket io Client',data);
             let defaultRoom = getRoomCookieDefault();
             dispatch(getRoomList(state.user));
             if(defaultRoom.room._id === data.data._id){
@@ -116,10 +141,10 @@ const MySocket = (socket,dispatch,state) => {
 
    /*  socket.on('structure', function(data){
         if(data.message == 'add'){
-            console.log('Socket io Client',data); 
+            //console.log('Socket io Client',data); 
         }
         if(data.message == 'update'){
-            console.log('Socket io Client',data);  
+            //console.log('Socket io Client',data);  
         }
     });
  */

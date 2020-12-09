@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {Container,UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import { Menu, X, Search, Settings, User, HelpCircle, Lock, LogOut,ChevronDown,Plus } from 'react-feather';
-import { showRightSidebar, getCurrentRoomInfo,setDefaultRoom, createRoom, getCurrentRoomArea, getCurrentRoomAccess, getCurrentRoomActivate, getCurrentRoomSensorMap, getCurrentRoomSensorList, getNotificationList} from '../redux/actions';
+import { showRightSidebar, getCurrentRoomInfo,setDefaultRoom, createRoom, getCurrentRoomArea, getCurrentRoomAccess, getCurrentRoomActivate, getCurrentRoomSensorMap, getCurrentRoomSensorList, getNotificationList, getCurrentDataFailed} from '../redux/actions';
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import LanguageDropdown from './LanguageDropdown';
@@ -61,6 +61,7 @@ const Topbar = (props) =>{
         const defaultRoom = props.defaultRoom;
         const token = auth.user.accessToken;
         if(defaultRoom !=null && defaultRoom.room._id != 'xxx'){
+            dispatch(getCurrentDataFailed(null));
             dispatch(getCurrentRoomInfo(defaultRoom.room._id,token));
             dispatch(getCurrentRoomArea(defaultRoom.room._id,token));
             dispatch(getCurrentRoomAccess(defaultRoom.room._id,token));

@@ -13,32 +13,8 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import {dateToString} from 'helpers/datetimeCover';
 import ConfirmDialog from 'components/ConfirmDialog';
 import AddApi from './addApi';
+import { useSelector } from 'react-redux';
 
-
-
-
-
-const apis= [
-    {
-        "api": {
-            "username": "tester@kholanhctu",
-        },
-        "_id": "5fc06f5fa91004001721b0a7",
-        "station_id": 8,
-        "station_name": "Kho lạnh CTU_01",
-        "createdAt": "2020-11-27T03:15:43.586Z"
-    },
-    {
-        "api": {
-            "username": "tester@kholanhctu",
-        },
-        "_id": "5fc06f5fa91004011721b0a7",
-        "station_id": 9,
-        "station_name": "Kho lạnh CTU_02",
-        "createdAt": "2020-11-27T03:15:43.586Z"
-    }
-
-]
 
 const APIDetail = (props) => {
     return (
@@ -67,6 +43,7 @@ const APIDetail = (props) => {
 
 const ApiService = () => {
     const [modalnew,setmodalnew] = React.useState(false);
+    const currentRoom = useSelector(state => state.CurrentRoom);
     
 
     return (
@@ -91,7 +68,7 @@ const ApiService = () => {
                             </Button>
                         </CardHeader>
                         <CardBody >
-                            {apis.map(api=>(<API api={api} />)
+                            {(currentRoom && currentRoom.activate) && currentRoom.activate.map(api=>(<API api={api} />)
                             )}   
                         </CardBody>
                         

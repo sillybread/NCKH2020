@@ -3,7 +3,8 @@ import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import classnames from 'classnames';
 import StatusChart from './StatusChart';
 import SChart3D from './SChart';
-import MatrixChart from './matrixView';
+import MatrixView from './matrixView';
+
 
 class TabsChart extends Component {
     constructor(props) {
@@ -66,7 +67,7 @@ class TabsChart extends Component {
                         <StatusChart />
                     </TabPane>
                     <TabPane tabId="2">
-                        <MatrixChart />
+                        <MatrixView />
                     </TabPane>
                     <TabPane tabId="3">
                         <SChart3D />

@@ -8,7 +8,8 @@ import {
     DELETE_ALL_NOTIFICATION,
     DELETE_ALL_NOTIFICATION_SUCCESS,
     DELETE_ALL_NOTIFICATION_FAILED,
-    UPDATE_NOTIFICATION
+    UPDATE_NOTIFICATION,
+    PUSH_NOTIFICATION
 } from './constants';
 
 export const getNotificationList = (token) => ({
@@ -40,7 +41,7 @@ export const deleteNotification = (token, notification_id) => ({
 export const deleteNotificationSuccess = (result) => ({
     type: DELETE_NOTIFICATION_SUCCESS,
     payload: {
-        result
+        notification_id: result
     },
 });
 export const deleteNotificationFailed = (result) => ({
@@ -74,4 +75,10 @@ export const updateNotification = (id, data) => ({
         id,
         data
     }
+});
+export const pushNotification = (notification) => ({
+    type: PUSH_NOTIFICATION,
+    payload: {
+        notification
+    },
 });
