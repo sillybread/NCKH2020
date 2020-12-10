@@ -17,6 +17,9 @@ import {
     GET_CURR_ROOM_SENSOR_LIST,
     GET_CURR_ROOM_SENSOR_LIST_SUCCESS,
     GET_CURR_ROOM_SENSOR_LIST_FAILED,
+    ADD_SENSOR,
+    ADD_SENSOR_SUCCESS,
+    ADD_SENSOR_FAILED,
 } from './constants';
 
 export const getCurrentRoomInfo = (room_id, token) => ({
@@ -123,3 +126,19 @@ export const getCurrentRoomSensorListFailed = (error) => ({
     type: GET_CURR_ROOM_SENSOR_LIST_FAILED,
     payload: error
 })
+
+export const addSensor = (sensor_id,location) => ({
+    type: ADD_SENSOR,
+    payload: {sensor_id,location}
+})
+
+export const addSensorSuccess = (structure) => ({
+    type: ADD_SENSOR_SUCCESS,
+    payload: {structure}
+})
+
+export const addSensorFailed = (err) => ({
+    type: ADD_SENSOR_FAILED,
+    payload: {err}
+})
+

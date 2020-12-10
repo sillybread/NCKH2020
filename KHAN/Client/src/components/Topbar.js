@@ -13,6 +13,7 @@ import profilePic from '../assets/images/users/avatar-7.jpg';
 import NewWareHouse from './newWareHouse';
 import {useDispatch, useSelector} from 'react-redux';
 import { getRoomCookieDefault, setRoomCookieDefault } from 'helpers/roomUtils';
+import { CREATE_ROOM_SUCCESS } from 'redux/constants';
 
 
 const ProfileMenus = [
@@ -49,7 +50,7 @@ const Topbar = (props) =>{
     const dispatch = useDispatch();
 
     const auth = useSelector(state => state.Auth);;
-    const createRoomSuccess = useSelector(state => state.RoomList.createRoomSuccess)
+    const action_name = useSelector(state => state.RoomList.action_name)
     const loading = useSelector(state => state.RoomList.loading)
     const error = useSelector(state => state.RoomList.error);
 
@@ -81,10 +82,10 @@ const Topbar = (props) =>{
         dispatch(getNotificationList(auth.user.accessToken));
     },[])
     useEffect(()=>{
-        if(createRoomSuccess==true){
+        if(action_name=== CREATE_ROOM_SUCCESS){
             setNewWareHouseModal(false);
         }
-    },[createRoomSuccess])
+    },[action_name])
 
 
     return (

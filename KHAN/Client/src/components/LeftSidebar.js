@@ -33,7 +33,7 @@ const UserProfile = (props) => {
         var socket = io.connect(BASE_URL);
         console.log('Socket io Client','run socket client');
         MySocket(socket,dispatch,state,addToast);
-    },[state.user.accessToken,roomList.defaultRoom])
+    },[state.user.accessToken])
 
     return (
         <React.Fragment>

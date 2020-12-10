@@ -95,7 +95,7 @@ function* deleteRoom({ payload: {user,room_id} }) {
     try {
         const response = yield call(requestApi,options);
         if (response.status==='success') {
-            yield put(deleteRoomSuccess(response.result.room));
+            yield put(deleteRoomSuccess(room_id));
         } else {
             yield put(deleteRoomFailed(response.result));
         }

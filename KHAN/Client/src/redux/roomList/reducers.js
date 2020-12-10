@@ -17,7 +17,6 @@ import {
 
 const INIT_STATE = {
     loading: false,
-    createRoomSuccess : false,
     defaultRoom: getRoomCookieDefault()
 
 }
@@ -83,64 +82,64 @@ const RoomList = (state = INIT_STATE, action) =>{
             return {
                 ...state,
                 loading: true,
-                createRoomSuccess: false,
+                action_name: CREATE_ROOM,
                 error:null
             }
         case CREATE_ROOM_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                createRoomSuccess: true,
+                action_name: CREATE_ROOM_SUCCESS,
                 error: null
             }
         case CREATE_ROOM_FAILED:
             return {
                 ...state,
                 loading: false,
-                createRoomSuccess: false,
+                action_name: CREATE_ROOM_FAILED,
                 error: action.payload
             }
         case UPDATE_ROOM:
             return {
                 ...state,
                 loading: true,
-                updateRoomSuccess: false,
+                action_name: UPDATE_ROOM,
                 error:null
             }
         case UPDATE_ROOM_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                updateRoomSuccess: true,
+                action_name: UPDATE_ROOM_SUCCESS,
                 error: null
             }
         case UPDATE_ROOM_FAILED:
             return {
                 ...state,
                 loading: false,
-                updateRoomSuccess: false,
+                action_name: DELETE_ROOM_FAILED,
                 error: action.payload
             }
         case DELETE_ROOM:
             return {
                 ...state,
                 loading: true,
-                deleteRoomSuccess: false,
+                action_name: DELETE_ROOM,
                 error:null
             }
         case DELETE_ROOM_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                deleteRoomSuccess: true,
-                error: null
+                action_name: DELETE_ROOM_SUCCESS,
+                error: null,
             }
         case DELETE_ROOM_FAILED:
             return {
                 ...state,
                 loading: false,
-                deleteRoomSuccess: false,
-                error: action.payload
+                action_name: DELETE_ROOM_FAILED,
+                error: action.payload.err
             }
             
         default:

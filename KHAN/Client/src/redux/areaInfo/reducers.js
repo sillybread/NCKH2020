@@ -28,6 +28,7 @@ const AreaInfo = (state = INIT_STATE, action) =>{
                 loading: false,
                 errorGetAreaInfo: action.payload
             }
+        
         default:
             return {...state}
     }

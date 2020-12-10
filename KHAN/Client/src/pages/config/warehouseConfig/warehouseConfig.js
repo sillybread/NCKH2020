@@ -10,6 +10,7 @@ import ConfirmDialog from 'components/ConfirmDialog';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteRoom, updateRoom } from 'redux/actions';
 import Loader from 'components/Loader';
+import { DELETE_ROOM_SUCCESS } from 'redux/constants';
 
 const WareHouseConfig=(props)=>{
     const [name,setName] = React.useState('');
@@ -25,6 +26,11 @@ const WareHouseConfig=(props)=>{
     const auth = useSelector(state => state.Auth);
     const loading = useSelector(state=> state.RoomList.loading);
 
+    const action_name = useSelector(state => state.RoomList.action_name);
+    useEffect(()=>{
+        if(action_name === DELETE_ROOM_SUCCESS)
+        setModalDelete(false);
+    },[action_name]);
 
 
     useEffect(()=>{
@@ -223,7 +229,6 @@ const WareHouseConfig=(props)=>{
                                 toggle={()=>{setModalDelete(!modalDelete)}} 
                                 confirm={()=>{
                                     dispatch(deleteRoom(auth.user,currentRoom.info._id));
-                                    setModalDelete(!modalDelete);
                                 }}>
                             </ConfirmDialog>
                         </AvForm>

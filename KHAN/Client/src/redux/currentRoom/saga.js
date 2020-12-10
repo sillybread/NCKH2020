@@ -7,6 +7,7 @@ import {
     GET_CURR_ROOM_ACTIVATE,
     GET_CURR_ROOM_SENSOR_MAP,
     GET_CURR_ROOM_SENSOR_LIST,
+    ADD_SENSOR,
 } from './constants';
 
 import {
@@ -105,6 +106,22 @@ function * getCurrentRoomSensorList({payload: {room_id, token}}){
     } catch (error){}
 }
 
+function * addSensor({payload: {sensor_id, location}}){
+   /*  try{
+        const res = yield aGet(token, 'api/room/structure', {room_id});
+        if (res.status==='success'){
+            yield put(getCurrentRoomSensorMapSuccess(res.result.structure));
+        } else {
+            yield put(getCurrentRoomSensorMapFailed(res.result));
+        }
+    } catch (error){} */
+}
+
+
+
+
+
+
 function * watchGetCurrentRoomInfo(){
     yield takeEvery(GET_CURR_ROOM_INFO, getCurrentRoomInfo);
 }
@@ -129,6 +146,10 @@ function * watchGetCurrentRoomSensorList(){
     yield takeEvery(GET_CURR_ROOM_SENSOR_LIST, getCurrentRoomSensorList);
 }
 
+function * watchAddSensor(){
+    yield takeEvery(ADD_SENSOR, addSensor);
+}
+
 
 function* CurrentRoomSaga(){
     yield all([
@@ -138,6 +159,7 @@ function* CurrentRoomSaga(){
         fork(watchGetCurrentRoomActivate),
         fork(watchGetCurrentRoomSensorMap),
         fork(watchGetCurrentRoomSensorList),
+        fork(watchAddSensor),
     ])
 }
 

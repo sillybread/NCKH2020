@@ -1,49 +1,92 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import classnames from 'classnames';
-import StatusChart from './StatusChart';
-import SChart3D from './SChart';
-import MatrixView from './matrixView';
+import AreasChart from './AreasChart';
+import BoxChart from './BoxChart';
+import MatrixChart from './MatrixChart';
+import { useSelector } from 'react-redux';
+import NoiSuyBaChieu from 'helpers/Interpolations/cubeInterpolation';
 
 
-class TabsChart extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { activeTab: '3' };
-        this.toggle = this.toggle.bind(this);
-    }
-
-    /**
-     * Toggle the tab
-     */
-    toggle = (tab) => {
-        if (this.state.activeTab !== tab) {
-            this.setState({
-                activeTab: tab,
-            });
+const TabsChart = (props) => {
+    const [activeTab,setActiveTab] = React.useState('3');
+    const toggle = (tab) => {
+        if (activeTab !== tab) {
+            setActiveTab(tab);
         }
     };
-    render() {
-        const tabContents = [
-            {
-                id: '1',
-                title: 'Khu vực',
-                disabled: false,
-            },
-            {
-                id: '2',
-                title: 'Mặt cắt 2D',
-                disabled: false,
-            },
-            {
-                id: '3',
-                title: 'Mô hình 3D',
-                disabled: false,
-            },
-        ];
+    const tabContents = [
+        {
+            id: '1',
+            title: 'Khu vực',
+            disabled: false,
+        },
+        {
+            id: '2',
+            title: 'Mặt cắt 2D',
+            disabled: false,
+        },
+        {
+            id: '3',
+            title: 'Mô hình 3D',
+            disabled: false,
+        },
+    ]; 
+
+    const [data,setData] = useState(null);
+    const [config,setConfig] = useState(null);
+
+    const currentRoom = useSelector(state => state.CurrentRoom);
+    const roomData = useSelector(state => state.RoomData);
+    
+
+    useEffect(()=>{
+        if(roomData && currentRoom && roomData.currentData && currentRoom.info && currentRoom.info.size){
+            if(roomData.currentData.data){
+                setData(NoiSuyBaChieu([...roomData.currentData.data],currentRoom.info));
+            }else{
+                setData(NoiSuyBaChieu([...roomData.currentData.datas],currentRoom.info));
+            }
+        }else{
+            setData(null);
+        }
+
+    },[roomData.currentData,currentRoom.info])
+
+    useEffect(()=>{
+        if(currentRoom && currentRoom.info && currentRoom.info.size){
+            const density = currentRoom.info.sensorDensity;
+            const xBlock = currentRoom.info.size.x / density -1;
+            const yBlock = currentRoom.info.size.y / density -1;
+            const zBlock = currentRoom.info.size.z / density -1;
+            setConfig({
+                "size": {
+                    "x": xBlock,
+                    "y": yBlock,
+                    "z": zBlock,
+                    "tilesize": 5
+                },
+                "door": currentRoom.info.door,
+                "axis-labels": {
+                "axis-x": {
+                    "show": true,
+                    "list": []
+                },
+                "axis-y": {
+                    "show": false,
+                    "list": []
+                },
+                "axis-z": {
+                    "show": false,
+                    "list": []
+                }
+                }
+            });
+        }
+    },[currentRoom.info])
 
         return (
-            <>
+            <React.Fragment>
                 <Nav className="nav nav-pills navtab-bg nav-justified">
                     {tabContents.map((tab, index) => {
                         return (
@@ -51,9 +94,9 @@ class TabsChart extends Component {
                                 <NavLink
                                     href="#"
                                     disabled={tab.disabled}
-                                    className={classnames({ active: this.state.activeTab === tab.id })}
+                                    className={classnames({ active: activeTab === tab.id })}
                                     onClick={() => {
-                                        this.toggle(tab.id);
+                                        toggle(tab.id);
                                     }}>
                                     <i className={classnames(tab.icon, 'd-sm-none', 'd-block', 'mr-1')}></i>
                                     {tab.title}
@@ -62,20 +105,26 @@ class TabsChart extends Component {
                         );
                     })}
                 </Nav>
-                <TabContent activeTab={this.state.activeTab} className="mr-3 mt-4">
+                <TabContent activeTab={activeTab} className="mr-3 mt-4">
                     <TabPane tabId="1">
-                        <StatusChart />
+             
+                        <AreasChart />
                     </TabPane>
                     <TabPane tabId="2">
-                        <MatrixView />
+                        <MatrixChart 
+                            data={data} 
+                            config={config} 
+        
+                        />
                     </TabPane>
                     <TabPane tabId="3">
-                        <SChart3D />
+                        <BoxChart 
+                            data={data} 
+                            config={config} 
+                        /> 
                     </TabPane>
                 </TabContent>
-            </>
+            </React.Fragment>
         );
-    }
 }
-
 export default TabsChart;

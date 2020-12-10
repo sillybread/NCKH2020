@@ -17,6 +17,9 @@ import {
     GET_CURR_ROOM_SENSOR_LIST,
     GET_CURR_ROOM_SENSOR_LIST_SUCCESS,
     GET_CURR_ROOM_SENSOR_LIST_FAILED,
+    ADD_SENSOR,
+    ADD_SENSOR_SUCCESS,
+    ADD_SENSOR_FAILED,
 } from './constants';
 
 const INIT_STATE = {};
@@ -112,6 +115,27 @@ const CurrentRoom = (state = INIT_STATE, action) =>{
                 ...state,
                 sensorList: null,
                 error: action.payload
+            }
+
+            
+        case ADD_SENSOR:
+            return {
+                ...state,
+                loading: true,
+                action_name: ADD_SENSOR
+            }
+        case ADD_SENSOR_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                sensorMap: action.payload.structure,
+                action_name: ADD_SENSOR_SUCCESS
+            }
+        case ADD_SENSOR_FAILED:
+            return {
+                ...state,
+                loading: false,
+                action_name: ADD_SENSOR_FAILED
             }
         default:
             return {...state}

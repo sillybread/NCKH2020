@@ -9,154 +9,55 @@ import sensor3img from 'assets/icons/Devices/CPU3.svg'
 
 
 //import {Wizard, Steps,Step} from 'react-albus';
-const sensors = [
-    {
-      "name": "Cảm biến nhiệt độ 101",
-      "isUsed": true,
-      "_id": "5fc06f5fa91004001721b0a8",
-      "data_id": 3078047,
-      "datatype_id": "101"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 102",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0a9",
-      "data_id": 3078048,
-      "datatype_id": "102"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 103",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0aa",
-      "data_id": 3078049,
-      "datatype_id": "103"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 104",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0ab",
-      "data_id": 3078050,
-      "datatype_id": "104"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 105",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0ac",
-      "data_id": 3078051,
-      "datatype_id": "105"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 106",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0ad",
-      "data_id": 3078052,
-      "datatype_id": "106"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 107",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0ae",
-      "data_id": 3078053,
-      "datatype_id": "107"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 112",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0af",
-      "data_id": 3078054,
-      "datatype_id": "112"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 108",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0b0",
-      "data_id": 3078055,
-      "datatype_id": "108"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 109",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0b1",
-      "data_id": 3078056,
-      "datatype_id": "109"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 110",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0b2",
-      "data_id": 3078057,
-      "datatype_id": "110"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 111",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0b3",
-      "data_id": 3078058,
-      "datatype_id": "111"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 114",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0b4",
-      "data_id": 3078059,
-      "datatype_id": "114"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 113",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0b5",
-      "data_id": 3078060,
-      "datatype_id": "113"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 115",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0b6",
-      "data_id": 3078061,
-      "datatype_id": "115"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 118",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0b7",
-      "data_id": 3078062,
-      "datatype_id": "118"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 117",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0b8",
-      "data_id": 3078063,
-      "datatype_id": "117"
-    },
-    {
-      "name": "Cảm biến nhiệt độ 116",
-      "isUsed": false,
-      "_id": "5fc06f5fa91004001721b0b9",
-      "data_id": 3078064,
-      "datatype_id": "116"
-    }
-  ]
-
-
 const ConfigSensor = (props) => {
+    const [defaultSensor,setDefaultSensor] = React.useState(null);
+    const [oldSensor,setOldSensor] = React.useState(null);
+    React.useEffect(()=>{
+        let item = props.structure.find((st)=>(
+            st.location.x === props.config.x &&
+            st.location.y === props.config.y &&
+            st.location.z === props.z
+          ));
+        if(item){
+          let temp = sensorItemInfo(
+            (props.sensors)&& props.sensors.find(sr=>sr._id === item.sensor._id)
+          )
+          setDefaultSensor(temp);
+          setOldSensor(temp);
+        }else{
+          setDefaultSensor(null);
+          setOldSensor(null);
+        }
+        
+    },[props.config])
 
+    const addSensorAction = ()=>{
 
+    }
+    const editSensorAction =() =>{
 
+    }
+    const deleteSensorAction = () =>{
+
+    }
+
+    const sensorItemInfo = (sensor) => {
+      return (sensor)&&{
+        id: sensor._id,
+        isUsed: (sensor.status ==='RUNNING'),
+        value: sensor.name +' '+ sensor.datatype_id, 
+        label:
+        <Media className='pt-1'>
+            <img src={(sensor.status !=='RUNNING')?sensorimg:sensor3img} className='avatar rounded mr-2' alt=""/>                        
+            <Media body>
+                <h6 className='mt-1 mb-0 font-size-15' >{sensor.name}</h6>
+                <h6 className="text-muted font-weight-normal mt-1">{sensor.datatype_id}</h6>
+            </Media>
+        </Media> 
+      }
+    }
     const geSensorsOption = (sensors =[])=>{
-        return sensors.map(sensor=>{
-            return  { value: sensor._id, 
-                    label:
-                    <Media className='pt-1'>
-                        <img src={(!sensor.isUsed)?sensorimg:sensor3img} className='avatar rounded mr-2' alt=""/>                        
-                        <Media body>
-                            <h6 className='mt-1 mb-0 font-size-15' >{sensor.name}</h6>
-                            <h6 className="text-muted font-weight-normal mt-1">{sensor.datatype_id}</h6>
-                        </Media>
-                    </Media> 
-                }
-            }
-        );
+        return (sensors) && sensors.map(sensor=>sensorItemInfo(sensor));
     }
     
         return (
@@ -182,7 +83,7 @@ const ConfigSensor = (props) => {
                 <AvGroup>
                     <div className="input-group">
                         <div class="input-group-prepend text-danger"><span class="input-group-text text-primary font-weight-bold">Z</span></div>
-                        <AvInput name="z" disabled value={(props.config.z ==0)?'0':props.config.z}/>
+                        <AvInput name="z" disabled value={(props.z ==0)?'0':props.z}/>
                     </div>
                 </AvGroup>
                 
@@ -193,7 +94,7 @@ const ConfigSensor = (props) => {
                 <AvGroup id='khoangchach'>
                     <div className="input-group">
                        
-                        <AvInput disabled name="dx" value={(props.config.x ==0)?'0':props.config.x*10} />
+                        <AvInput disabled name="dx" value={(props.config.x ==0)?'0 - '+(props.config.x+1)*props.d:props.config.x*props.d+' - '+ (props.config.x+1)*props.d} />
                         <InputGroupAddon addonType="append" >
                             cm
                         </InputGroupAddon>
@@ -201,7 +102,7 @@ const ConfigSensor = (props) => {
                 </AvGroup>
                 <AvGroup>
                     <div className="input-group">
-                        <AvInput disabled name="dy" value={(props.config.y ==0)?'0':props.config.y*10} />
+                        <AvInput disabled name="dy" value={(props.config.y ==0)?'0 - '+(props.config.y+1)*props.d:props.config.y*props.d+' - '+ (props.config.y+1)*props.d} />
                         <InputGroupAddon addonType="append" >
                             cm
                         </InputGroupAddon>
@@ -210,7 +111,7 @@ const ConfigSensor = (props) => {
                 <AvGroup>
                     <div className="input-group">
         
-                        <AvInput disabled name="dz" value={(props.config.z ==0)?'0':props.config.z*10} />
+                        <AvInput disabled name="dz" value={(props.z ==0)?'0 - '+(props.z+1)*props.d:props.z*props.d+' - '+ (props.z+1)*props.d} />
                         <InputGroupAddon addonType="append" >
                             cm
                         </InputGroupAddon>
@@ -227,7 +128,9 @@ const ConfigSensor = (props) => {
                 id='choncambien'
                 className="react-select"
                 classNamePrefix="react-select"
-                options = {geSensorsOption(sensors)}
+                value={defaultSensor}
+                onChange={(value) =>{setDefaultSensor(value)}}
+                options = {geSensorsOption(props.sensors)}
                 styles={{
                 control: base => ({
                     ...base,
@@ -246,26 +149,45 @@ const ConfigSensor = (props) => {
             </Row>
         </ModalBody>
         <ModalFooter className="text-right">
-    
-            <button disabled type="button" className ='btn btn-danger'>
-                <i className ='uil uil-trash-alt mr-1'> </i>
-                Gỡ cảm biên
-            </button>
-            <button disabled type="button" className ='btn btn-warning' >
-                <i className ='uil uil-wrench mr-1' > </i>
-                Đổi cảm biến
-            </button>
-            <button disabled type="button" className ='btn btn-success' >
-                <i className ='uil uil-plus mr-1 mr-1' > </i>
-                Thêm cảm biến
-            </button>
-   
+            {(oldSensor && oldSensor.id === defaultSensor.id)&&
+                <button 
+                type="button" 
+                className ='btn btn-danger'
+                onClick={deleteSensorAction}
+                >
+                  <i className ='uil uil-trash-alt mr-1'> </i>
+                  Gỡ cảm biên
+                </button>
+            }     
+            {
+              (oldSensor && defaultSensor && oldSensor.id !== defaultSensor.id) &&
+              <button 
+                type="button" 
+                className ='btn btn-warning' 
+                onClick={editSensorAction}
+              >
+                  <i className ='uil uil-wrench mr-1' > </i>
+                  Đổi cảm biến
+              </button>
+
+            }
+            {
+              (!oldSensor) &&  
+              <button 
+                type="button" 
+                onclick={addSensorAction}
+                className ='btn btn-success' 
+
+                >
+                  <i className ='uil uil-plus mr-1 mr-1' > </i>
+                  Thêm cảm biến
+              </button>
+            }
+
         </ModalFooter>
         </AvForm>
         </Modal>
     );
 };
-
-
 
 export default ConfigSensor;

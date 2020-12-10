@@ -17,7 +17,7 @@ const MySocket = (socket,dispatch,state,addToast) => {
                 dispatch(getCurrentDataSuccess(data))
             }
                 
-            console.log('Socket io Client',data);
+            //console.log('Socket io Client',data);
     });
     socket.on('log', function(data){
         console.log('Socket io Client',data);
@@ -49,7 +49,7 @@ const MySocket = (socket,dispatch,state,addToast) => {
         if(data.message =='update'){
             dispatch(updateNotification(data.data._id,data.data));
         }
-        console.log('Socket io Client Notification',data);
+        //console.log('Socket io Client Notification',data);
     });
 
 

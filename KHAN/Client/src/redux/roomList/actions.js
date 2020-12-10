@@ -64,12 +64,12 @@ export const deleteRoom = (user,room_id) => ({
     type: DELETE_ROOM,
     payload: {user,room_id}
 })
-export const deleteRoomSuccess = (info) => ({
+export const deleteRoomSuccess = (room_id) => ({
     type: DELETE_ROOM_SUCCESS,
-    payload: info
+    payload: {room_id}
 })
 export const deleteRoomFailed = (err) => ({
     type: DELETE_ROOM_FAILED,
-    payload: err
+    payload: {err}
 })
 
