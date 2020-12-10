@@ -28,6 +28,7 @@ const Notification = (state = INIT_STATE, action) => {
         case GET_NOTIFICATION_LIST_FAILED:
             return {
                 ...state,
+                list:[]
             }
         case DELETE_NOTIFICATION:
             return {
@@ -48,7 +49,8 @@ const Notification = (state = INIT_STATE, action) => {
             }
         case DELETE_ALL_NOTIFICATION_SUCCESS:
             return {
-                ...state,list:[]
+                ...state,
+                list:[]
             }
         case DELETE_ALL_NOTIFICATION_FAILED:
             return {
@@ -64,9 +66,7 @@ const Notification = (state = INIT_STATE, action) => {
                     ...newState.list[targetIndex],
                     ...action.payload.data
                 }
-            } else {
-                //Not found
-            }
+            } 
             return newState;
         case PUSH_NOTIFICATION:
             let newList = [...state.list];

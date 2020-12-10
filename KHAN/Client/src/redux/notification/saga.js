@@ -17,7 +17,7 @@ import {
 } from './actions';
 
 function * getNotificationList({payload: {token}}){
-    const res = yield requestApi({
+    const res = yield call (requestApi,{
         method: 'get',
         headers: {
             'x-access-token': token
@@ -32,7 +32,7 @@ function * getNotificationList({payload: {token}}){
 }
 
 function * deleteNotification({payload: {token, notification_id}}){
-    const res = yield requestApi({
+    const res = yield call (requestApi,{
         method: 'delete',
         headers: {
             'x-access-token': token
@@ -50,7 +50,7 @@ function * deleteNotification({payload: {token, notification_id}}){
 }
 
 function * deleteAllNotification({payload: {token}}){
-    const res = yield requestApi({
+    const res = yield call (requestApi,{
         method: 'delete',
         headers: {
             'x-access-token': token
