@@ -79,7 +79,6 @@ const RoomData = (state = INIT_STATE, action) => {
                 ...state,
                 loading:true,
                 error: null,
-                sensorData:null
             }
         case GET_SENSOR_DATA_SUCCESS:
             return {

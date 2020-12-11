@@ -14,6 +14,7 @@ import { useDispatch}  from 'react-redux';
 import { getNotificationList, getRoomList } from 'redux/actions';
 /* import MySocket from 'socket.controller'; */
 import { useToasts } from 'react-toast-notifications'
+import MySocket from 'socket.controller';
 const {BASE_URL} = require('constants/apiConfig');
 
 var io = require('socket.io-client');
@@ -30,7 +31,7 @@ const UserProfile = (props) => {
             dispatch(getNotificationList(props.user))
             var socket = io.connect(BASE_URL);
             console.log('Socket io Client','run socket client');
-            //MySocket(socket,dispatch,props.user,addToast);
+            MySocket(socket,dispatch,props.user,addToast);
         }
         
     },[props.user])

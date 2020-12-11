@@ -1,26 +1,33 @@
 import { getRoomCookieDefault, setRoomCookieDefault } from "helpers/roomUtils";
 import { showNotification } from "helpers/webNotification";
-/* import { getRoomList,setDefaultRoom,getCurrentDataSuccess ,getCurrentRoomInfo, getSensorData, getAreaDataSuccess, pushNotification, updateNotification} from "redux/actions"; */
+import { getAreaDataSuccess, getCubeDataSuccess, getCurrentDataSuccess, getSensorData, pushNotification, updateNotification } from "redux/actions";
 
-
-const MySocket = (socket,dispatch,state,addToast) => {
+const MySocket = (socket,dispatch,user,addToast) => {
     socket.on('connect', function(){
         console.log('Socket io Client',"connect");
-        socket.emit('login',state.user.accessToken);
+        socket.emit('login',user.accessToken);
     });
-    
+
+    socket.on('data_cube_room', function(data){
+        let df = getRoomCookieDefault()
+        if(df)
+            if(df.room._id === data.room){
+                dispatch(getCubeDataSuccess(data))
+            }   
+            console.log('Socket io Client Cube',data);
+    });
+
     socket.on('data_room', function(data){
         let df = getRoomCookieDefault()
         if(df)
             if(df.room._id === data.room){
-                dispatch(getSensorData(data.room,state.user.accessToken));
+                dispatch(getSensorData(user,data.room));
                 dispatch(getCurrentDataSuccess(data))
-            }
-                
-            //console.log('Socket io Client',data);
+            }   
+            console.log('Socket io Client Curent Data',data);
     });
     socket.on('log', function(data){
-        console.log('Socket io Client',data);
+        console.log('Socket io Client Log',data);
     });
 
     socket.on('data_area',function(data){
@@ -29,7 +36,7 @@ const MySocket = (socket,dispatch,state,addToast) => {
             if(df.room._id === data.room)
                 dispatch(getAreaDataSuccess(data));
 
-        //console.log('Socket io Client',data);
+        console.log('Socket io Client Area',data);
         
     })
     
@@ -70,7 +77,7 @@ const MySocket = (socket,dispatch,state,addToast) => {
         if(data.message =='edit'){
             //do something
         }
-        if(data.message =='delete' && data.data.access.user==state.user.user._id){
+        if(data.message =='delete' && data.data.access.user==user.user._id){
             socket.emit('leave-room', 'room'+data.data.access.room);  
         }
         
@@ -115,28 +122,28 @@ const MySocket = (socket,dispatch,state,addToast) => {
 
 
     socket.on('room', function(data){
-        if(data.message == 'delete'){
+     /*    if(data.message == 'delete'){
             let defaultRoom = getRoomCookieDefault();
             if(defaultRoom)
                 if(defaultRoom.room._id === data.data.room._id){
                     setRoomCookieDefault(null);
                 }
-            dispatch(getRoomList(state.user));
+            dispatch(getRoomList(user));
             socket.emit('leave-room', 'room'+data.data.room._id); 
         }
         if(data.message == 'edit'){
             console.log('Socket io Client',data);
             let defaultRoom = getRoomCookieDefault();
-            dispatch(getRoomList(state.user));
+            dispatch(getRoomList(user));
             if(defaultRoom.room._id === data.data._id){
                 setRoomCookieDefault({...defaultRoom,room:{
                     _id:    data.data._id,
                     name:   data.data.name
                 }});
                 dispatch(setDefaultRoom(getRoomCookieDefault()));
-                dispatch(getCurrentRoomInfo(data.data._id,state.user.accessToken));
+                dispatch(getCurrentRoomInfo(data.data._id,user.accessToken));
             }
-        }
+        } */
     });
 
    /*  socket.on('structure', function(data){
