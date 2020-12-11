@@ -77,7 +77,7 @@ const NotificationDropdown = (props) => {
                 
             </DropdownMenu>
         </Dropdown>
-        <UncontrolledTooltip placement="left" target="notiDropdown">{notifications.length} thông báo mới</UncontrolledTooltip>
+        <UncontrolledTooltip placement="left" target="notiDropdown">{(notifications) && notifications.length} thông báo mới</UncontrolledTooltip>
         <NotificationDetail 
             isOpen={notificationDefault.show} 
             toggle={toggleNotification}
@@ -170,5 +170,6 @@ const GetNotification = (props)=>{
     </p>
      </Link>);
 }
+
 
 export default NotificationDropdown;

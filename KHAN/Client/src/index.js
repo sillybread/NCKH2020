@@ -5,7 +5,8 @@ import { ToastProvider} from 'react-toast-notifications'
 //import * as serviceWorker from './serviceWorker';
 
 import { Provider } from 'react-redux';
-import { configureStore } from './redux/store';
+//import { configureStore } from './redux/store';
+import { configureStore } from './redux2/store';
 
 ReactDOM.render(
     <Provider store={configureStore()}>

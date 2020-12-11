@@ -21,37 +21,36 @@ var io = require('socket.io-client');
  * User Widget
  */
 const UserProfile = (props) => {
-    const state = useSelector(state => state.Auth);
-    const roomList = useSelector(state => state.RoomList);
     const dispatch = useDispatch();
     const { addToast } = useToasts();
 
     React.useEffect(()=>{
-        dispatch(getRoomList(state.user))
-    },[])
-    React.useEffect(()=>{
-        var socket = io.connect(BASE_URL);
-        console.log('Socket io Client','run socket client');
-        MySocket(socket,dispatch,state,addToast);
-    },[state.user.accessToken])
+        if(props.user.accessToken){
+            dispatch(getRoomList())
+            var socket = io.connect(BASE_URL);
+            console.log('Socket io Client','run socket client');
+            //MySocket(socket,dispatch,props.user,addToast);
+        }
+        
+    },[props.user.accessToken])
 
     return (
         <React.Fragment>
             <div className="media user-profile mt-2 mb-2">
                 <img
-                    src={state.user.user.avatar}
+                    src={props.user.user.avatar}
                     className="avatar-sm rounded-circle mr-2"
-                    alt={state.user.user.username}
+                    alt={props.user.user.username}
                 />
                 <img
-                    src={state.user.user.avatar}
+                    src={props.user.user.avatar}
                     className="avatar-xs rounded-circle mr-2"
-                    alt={state.user.user.username}
+                    alt={props.user.user.username}
                 />
 
                 <div className="media-body">
-                    <h6 className="pro-user-name mt-0 mb-0">{state.user.user.fullname}</h6>
-                    <span className="pro-user-desc">{state.user.user.username}</span>
+                    <h6 className="pro-user-name mt-0 mb-0">{props.user.user.fullname}</h6>
+                    <span className="pro-user-desc">{props.user.user.username}</span>
                 </div>
 
                 <UncontrolledDropdown className="align-self-center profile-dropdown-menu">
@@ -144,7 +143,7 @@ class LeftSidebar extends Component {
         return (
             <React.Fragment>
                 <div className="left-side-menu" ref={(node) => (this.menuNodeRef = node)}>
-                    <UserProfile />
+                    <UserProfile {...this.props} />
                     {!isCondensed && (
                         <PerfectScrollbar>
                             <SideNav />
