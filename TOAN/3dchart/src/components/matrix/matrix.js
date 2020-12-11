@@ -11,7 +11,7 @@ class Helper{
         this.yRuler = document.createElement('p')
     }
     colorMap = [
-        '#FAFAFA',
+        '#CCCCCC',
         '#00A100',
         '#FFAA00',
         '#DC0404'
@@ -37,16 +37,16 @@ class Helper{
         return this.createElement('p')
     }
     makeRow(rowNumber, container){
-        const { data: DATA, min: MIN, max: MAX, width: WIDTH} = this;
+        const { data: DATA, width: WIDTH} = this;
 
         let row = this.createElement('tr');
 
         for(let ix=0;ix<WIDTH;ix++){
-            let temp = DATA[rowNumber][ix];
-            let cl = this.colorMap[temp];
+            let type = DATA[rowNumber][ix];
+            let cl = this.colorMap[type];
             row.appendChild(
                 this.createElement('td', {
-                    onclick: () => this.onClick(ix,rowNumber,cl, temp),
+                    onclick: () => this.onClick(ix,rowNumber,cl, type),
                     onmouseenter: () => this.onMouseEnter(ix,rowNumber),
                     onmouseout: () => this.onMouseOut(ix,rowNumber),
                     style: `background: ${cl}`,
@@ -137,6 +137,13 @@ export const SensorMap = (props) => {
     },[container, props])
 
     return(
+        <>
+        <div style={{textAlign: "center"}}>
+            <div style={{display: "inline-block", margin: "6px", color: helper.colorMap[0]}} >Trống</div>
+            <div style={{display: "inline-block", margin: "6px", color: helper.colorMap[1]}} >Đang chạy</div>
+            <div style={{display: "inline-block", margin: "6px", color: helper.colorMap[2]}} >Đang tắt</div>
+            <div style={{display: "inline-block", margin: "6px", color: helper.colorMap[3]}} >Cần thiết</div>
+        </div>
         <div
             ref={
                 e=>setContainer(e)
@@ -145,6 +152,7 @@ export const SensorMap = (props) => {
             onMouseOver={(event) => helper.handleRuler(container, event)}
             onMouseOut={()=>helper.removeRuler()}
         />
+        </>
     )
 }
 
