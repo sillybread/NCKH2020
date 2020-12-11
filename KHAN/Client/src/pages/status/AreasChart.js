@@ -2,7 +2,7 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 import { useSelector } from 'react-redux';
-const {timeToString} = require('helpers/datetimeCover')
+const { timeToString } = require('helpers/datetimeCover')
 // StackedAreaChart
 
 const AreasChart = (props) => {
@@ -73,31 +73,31 @@ const AreasChart = (props) => {
     };
 
     const areaData = useSelector(state => state.RoomData.areaData);
-    const data = ()=>{
-        if(areaData){
-            if(areaData.length>0)
-            return areaData[0].areas.map((areaT,index)=>{
-                return {
-                    name: areaT.name,
-                    data: areaData.map(data=>({
-                        x:timeToString(data.time),
-                        y:(data.areas[index].average)?data.areas[index].average:data.areas[index].value
-                    })),
-                }
-            })
+    const data = () => {
+        if (areaData) {
+            if (areaData.length > 0)
+                return areaData[0].areas.map((areaT, index) => {
+                    return {
+                        name: areaT.name,
+                        data: areaData.map(data => ({
+                            x: timeToString(data.time),
+                            y: (data.areas[index].average) ? data.areas[index].average : data.areas[index].value
+                        })),
+                    }
+                })
         }
-        return []; 
+        return [];
     }
-    const [crData,setCrData] = React.useState(data());
-    React.useEffect(()=>{
+    const [crData, setCrData] = React.useState(data());
+    React.useEffect(() => {
         setCrData(data());
-    },[areaData])
+    }, [areaData])
 
     return (
         <Chart
             options={apexAreaChart2Opts}
             series={crData}
-            type="area"
+            type="line"
             className="apex-charts"
             height={450}
         />
