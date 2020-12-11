@@ -3,9 +3,10 @@ import Chart from 'react-apexcharts';
 import { DropdownMenu, DropdownToggle, UncontrolledButtonDropdown, DropdownItem, Row, Col, Card, CardBody, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import SensorItem from './sensorItem';
 import ConfigSensor from './configSensor';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import { getAreaData, getCubeData, getCurrentData, getSensorData } from 'redux/actions';
 const PremiumSlider = (Slider.createSliderWithTooltip)(Slider);
 
 const SensorMapController = (props) => {
@@ -48,8 +49,16 @@ const SensorMap = () => {
     const [_z_, setZ] = React.useState(0);
     const [aData, setData] = React.useState(EMPTY);
     const [filter, setFilter] = React.useState('ALL');
-    const currRoom = useSelector(state => state.CurrentRoom);
+
+    const CurrentRoomInfo = useSelector(state => state.RoomList.currentRoomInfo);
+    const user = useSelector(state =>state.Auth.user);
     const sensors = useSelector(state =>state.RoomData.sensorData);
+    const structure = useSelector(state =>state.RoomStructrure.structure);
+    const loading = useSelector(state =>state.RoomStructrure.loading);
+    const error = useSelector(state =>state.RoomStructrure.error);
+
+    const dispatch = useDispatch();
+
     const [modalConfig,setModalConfig] = React.useState({x:0, y:0, z:0,d:10, show:false});
     const [maxZ, setMaxZ] = React.useState(0);
     const Vietnamese_is_so_beautiful = {
@@ -131,9 +140,9 @@ const SensorMap = () => {
 
 
     React.useEffect(()=>{
-        if (currRoom.info) {
-            let {x, y, z} = currRoom.info.size;
-            const unit = currRoom.info.sensorDensity;
+        if (CurrentRoomInfo) {
+            let {x, y, z} = CurrentRoomInfo.size;
+            const unit = CurrentRoomInfo.sensorDensity;
             x = Math.trunc(x/unit);
             y = Math.trunc(y/unit);
             z = Math.trunc(z/unit);
@@ -146,7 +155,7 @@ const SensorMap = () => {
                 aBoard[y-1][0] = 2;
                 aBoard[y-1][x-1] = 2;
             }
-            const aSensor = (currRoom.sensorMap && currRoom.sensorMap.map.map)?currRoom.sensorMap.map : []
+            const aSensor = (structure && structure.map.map)?structure.map : []
             aSensor.forEach(e =>{
                 if (parseInt(e.location.z) === parseInt(_z_))
                     aBoard[e.location.y][e.location.x] = 1;
@@ -165,11 +174,22 @@ const SensorMap = () => {
             //console.log(aBoard);
         }
         
-    },[_z_, currRoom.info, currRoom.sensorMap]); 
+    },[_z_, CurrentRoomInfo, structure]); 
+
+    React.useEffect(()=>{
+        if(structure && CurrentRoomInfo && user){
+            dispatch(getAreaData(user,CurrentRoomInfo._id));
+            dispatch(getCurrentData(user,CurrentRoomInfo._id));
+            dispatch(getSensorData(user,CurrentRoomInfo._id));
+            dispatch(getCubeData(user,CurrentRoomInfo._id));
+            
+        }
+    },[structure])
 
     const EditInfoSensor = (id) =>{
-        if(currRoom && currRoom.sensorMap && currRoom.sensorMap.map.map){
-            let a = currRoom.sensorMap.map.find(st=>(st.sensor._id ===id));
+        if(CurrentRoomInfo && structure && structure.map.map){
+            let a = structure.map.find(st=>(st.sensor._id ===id));
+            console.log(a);
             if(a){
                 setZ(a.location.z);
                 setModalConfig(
@@ -185,6 +205,17 @@ const SensorMap = () => {
             
     }
 
+    const [submitting,setSubmitting] = React.useState(false);
+
+    React.useEffect(()=>{
+        if(submitting && loading && error ==null){
+            setModalConfig({...modalConfig,show: false});
+            setSubmitting(false);
+        }
+    },[loading,error,submitting])
+
+    
+
     return (
         <React.Fragment>
             <Row className="page-title align-items-center">
@@ -197,12 +228,13 @@ const SensorMap = () => {
                     <Card className="mb-5">
                         <CardBody>
                         <ConfigSensor  
-                            d={(currRoom&& currRoom.info)&& currRoom.info.sensorDensity} 
+                            d={(CurrentRoomInfo)&& CurrentRoomInfo.sensorDensity} 
                             z={_z_} 
                             config={modalConfig} 
                             toggle={()=>{setModalConfig({...modalConfig,show:!modalConfig.show})}}
-                            sensors={(sensors && sensors.data) && sensors.data}
-                            structure={(currRoom.sensorMap && currRoom.sensorMap.map.map)?currRoom.sensorMap.map : []}
+                            sensors={(sensors && sensors.datas) && sensors.datas}
+                            structure={(structure && structure.map.map)?structure.map : []}
+                            setSubmitting = {(value)=>{setSubmitting(value)}}
                             
                         />
                             <Chart
@@ -248,7 +280,7 @@ const SensorMap = () => {
                                 </div>
                             </Col>
                         </Row>
-                        {(sensors !=null) && (sensors.data !=null) && sensors.data.map((sensor,i) => {
+                        {(sensors !=null) && (sensors.datas !=null) && sensors.datas.map((sensor,i) => {
                             if (filter!=="ALL" && sensor.status!==filter) return;
                             return <SensorItem EditInfoSensor={EditInfoSensor} id={sensor._id} value={sensor.value} name={sensor.name} status={Vietnamese_is_so_beautiful[sensor.status]} key={i}/>;
                         })}

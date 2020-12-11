@@ -20,12 +20,12 @@ import {
 
 import {requestApi} from 'helpers/api'
 
-function* getAreaData({payload: {token, room_id}}){
+function* getAreaData({payload: {user, room_id}}){
     try{
         const res = yield call(requestApi,{
             method: 'get',
             headers: {
-                'x-access-token': token
+                'x-access-token': user.accessToken
             },
             url: 'api/room/data/area',
             params: {
@@ -37,15 +37,17 @@ function* getAreaData({payload: {token, room_id}}){
         } else {
             yield put(getAreaDataFailed(res.result))
         }
-    } catch (error){}
+    } catch (error){
+        yield put(getAreaDataFailed(error))
+    }
 }
 
-function* getCurrentData({payload:{token, room_id}}){
+function* getCurrentData({payload:{user, room_id}}){
     try{
         const res = yield call(requestApi,{
             method: 'get',
             headers: {
-                'x-access-token': token
+                'x-access-token': user.accessToken
             },
             url: 'api/room/data/current',
             params: {
@@ -57,14 +59,16 @@ function* getCurrentData({payload:{token, room_id}}){
         } else {
             yield put(getCurrentDataFailed(res.result))
         }
-    } catch (error){}
+    } catch (error){
+        yield put(getCurrentDataFailed(error))
+    }
 }
-function* getSensorData({payload: {token, room_id}}){
+function* getSensorData({payload: {user, room_id}}){
     try{
         const res = yield call(requestApi,{
             method: 'get',
             headers: {
-                'x-access-token': token
+                'x-access-token': user.accessToken
             },
             url: 'api/room/data/sensor',
             params: {
@@ -76,15 +80,17 @@ function* getSensorData({payload: {token, room_id}}){
         } else {
             yield put(getSensorDataFailed(res.result))
         }
-    } catch (error){}
+    } catch (error){
+        yield put(getSensorDataFailed(error))
+    }
 }
 
-function* getCubeData({payload: {token, room_id}}){
+function* getCubeData({payload: {user, room_id}}){
     try{
         const res = yield call(requestApi,{
             method: 'get',
             headers: {
-                'x-access-token': token
+                'x-access-token': user.accessToken
             },
             url: 'api/room/data/getCubeData',
             params: {
@@ -96,7 +102,9 @@ function* getCubeData({payload: {token, room_id}}){
         } else {
             yield put(getCubeDataFailed(res.result))
         }
-    } catch (error){}
+    } catch (error){
+        yield put(getCubeDataFailed(error))
+    }
 }
 
 

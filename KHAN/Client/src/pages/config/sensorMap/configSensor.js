@@ -6,39 +6,88 @@ import Select from 'react-select';
 import { Col, Modal, ModalHeader, ModalBody, ModalFooter, Row, Label, InputGroupAddon, Media} from 'reactstrap';
 import sensorimg from 'assets/icons/Devices/CPU1.svg'
 import sensor3img from 'assets/icons/Devices/CPU3.svg'
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteSensor, updateSensor,addSensor } from 'redux/actions';
 
 
 //import {Wizard, Steps,Step} from 'react-albus';
 const ConfigSensor = (props) => {
     const [defaultSensor,setDefaultSensor] = React.useState(null);
     const [oldSensor,setOldSensor] = React.useState(null);
+    
+
+    const dispatch = useDispatch();
+    const CurrentRoomInfo = useSelector(state =>state.RoomList.currentRoomInfo);
+    const user = useSelector(state => state.Auth.user);
+
+
     React.useEffect(()=>{
-        let item = props.structure.find((st)=>(
-            st.location.x === props.config.x &&
-            st.location.y === props.config.y &&
-            st.location.z === props.z
-          ));
-        if(item){
-          let temp = sensorItemInfo(
-            (props.sensors)&& props.sensors.find(sr=>sr._id === item.sensor._id)
-          )
-          setDefaultSensor(temp);
-          setOldSensor(temp);
+        if(props.config.show){
+            
+            let item = props.structure.find((st)=>(
+                st.location.x === props.config.x &&
+                st.location.y === props.config.y &&
+                st.location.z === props.z
+              ));
+              
+            if(item){
+              let temp = sensorItemInfo(
+                (props.sensors)&& props.sensors.find(sr=>(sr._id === item.sensor._id))
+              )
+              console.log(item,temp)
+              setDefaultSensor(temp);
+              setOldSensor(temp);
+            }else{
+              setDefaultSensor(null);
+              setOldSensor(null);
+            }
         }else{
-          setDefaultSensor(null);
-          setOldSensor(null);
+            setDefaultSensor(null);
+            setOldSensor(null);
         }
         
-    },[props.config])
+    },[props])
 
     const addSensorAction = ()=>{
-
+        if(defaultSensor){
+            if(!defaultSensor.isUsed){
+                dispatch(addSensor(user,CurrentRoomInfo._id,defaultSensor.id,{
+                    x:props.config.x,
+                    y:props.config.y,
+                    z:props.z
+                }))
+                props.setSubmitting(true);
+            }
+        }
     }
     const editSensorAction =() =>{
+        if(!oldSensor && defaultSensor && defaultSensor.isUsed){
+            dispatch(updateSensor(user,CurrentRoomInfo._id,defaultSensor.id,{
+                x:props.config.x,
+                y:props.config.y,
+                z:props.z
+            }))
+            props.setSubmitting(true);
+        }
+        else{
+
+            dispatch(deleteSensor(user,CurrentRoomInfo._id,oldSensor.id))
+
+            dispatch(addSensor(user,CurrentRoomInfo._id,defaultSensor.id,{
+                x:props.config.x,
+                y:props.config.y,
+                z:props.z
+            }))
+            props.setSubmitting(true);
+
+        }
 
     }
     const deleteSensorAction = () =>{
-
+        if(defaultSensor){
+            dispatch(deleteSensor(user,CurrentRoomInfo._id,defaultSensor.id))
+            props.setSubmitting(true);
+        }
     }
 
     const sensorItemInfo = (sensor) => {
@@ -160,7 +209,7 @@ const ConfigSensor = (props) => {
                 </button>
             }     
             {
-              (oldSensor && defaultSensor && oldSensor.id !== defaultSensor.id) &&
+              ((oldSensor && defaultSensor && oldSensor.id !== defaultSensor.id) || (!oldSensor && defaultSensor && defaultSensor.isUsed)) &&
               <button 
                 type="button" 
                 className ='btn btn-warning' 
@@ -172,10 +221,10 @@ const ConfigSensor = (props) => {
 
             }
             {
-              (!oldSensor) &&  
+              (!oldSensor &&  defaultSensor && !defaultSensor.isUsed) &&  
               <button 
                 type="button" 
-                onclick={addSensorAction}
+                onClick={addSensorAction}
                 className ='btn btn-success' 
 
                 >

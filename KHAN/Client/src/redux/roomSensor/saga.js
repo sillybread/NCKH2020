@@ -28,67 +28,19 @@ import {
 import {requestApi} from 'helpers/api';
 import { getAreaData, getCubeData, getCurrentData, getCurrentDataFailed, getSensorData } from 'redux/roomData/actions';
 
-function aGet(token, url, params){
+function aGet(user, url, params){
     return call(requestApi, {
         method: 'get',
         headers: {
-            'x-access-token': token,
+            'x-access-token': user.accessToken,
         },
         url,
         params
     });
 }
-
-function* getCurrentRoomInfo({payload: {room_id, token}}){
+function * getCurrentRoomSensorMap({payload: {room_id, user}}){
     try{
-        const res = yield aGet(token, 'api/room', {room_id});
-        if (res.status==='success'){
-            yield put(getCurrentRoomInfoSuccess(res.result.room));
-            yield all([
-                put(getAreaData(room_id, token)),
-                put(getCurrentData(room_id, token)),
-                put(getSensorData(room_id,token)),
-                put(getCubeData(room_id,token))
-            ]);
-        } else {
-            yield put(getCurrentRoomInfoFailed(res.result));
-        }
-    } catch (error){}
-}
-
-function * getCurrentRoomArea({payload: {room_id, token}}){
-    try{
-        const res = yield aGet(token, 'api/room/area/all', {room_id});
-        if (res.status==='success'){
-            yield put(getCurrentRoomAreaSuccess(res.result.areas));
-        } else {
-            yield put(getCurrentRoomAreaFailed(res.result));
-        }
-    } catch (error){}
-}
-function * getCurrentRoomAccess({payload: {room_id, token}}){
-    try{
-        const res = yield aGet(token, 'api/room/access', {room_id});
-        if (res.status==='success'){
-            yield put(getCurrentRoomAccessSuccess(res.result.accesses));
-        } else {
-            yield put(getCurrentRoomAccessFailed(res.result));
-        }
-    } catch (error){}
-}
-function * getCurrentRoomActivate({payload: {room_id, token}}){
-    try{
-        const res = yield aGet(token, 'api/room/activate/all', {room_id});
-        if (res.status==='success'){
-            yield put(getCurrentRoomActivateSuccess(res.result.activates));
-        } else {
-            yield put(getCurrentRoomActivateFailed(res.result));
-        }
-    } catch (error){}
-}
-function * getCurrentRoomSensorMap({payload: {room_id, token}}){
-    try{
-        const res = yield aGet(token, 'api/room/structure', {room_id});
+        const res = yield aGet(user, 'api/room/structure', {room_id});
         if (res.status==='success'){
             yield put(getCurrentRoomSensorMapSuccess(res.result.structure));
         } else {
@@ -96,16 +48,7 @@ function * getCurrentRoomSensorMap({payload: {room_id, token}}){
         }
     } catch (error){}
 }
-function * getCurrentRoomSensorList({payload: {room_id, token}}){
-    try{
-        const res = yield aGet(token, 'api/room/sensor/all', {room_id});
-        if (res.status==='success'){
-            yield put(getCurrentRoomSensorListSuccess(res.result.sensors));
-        } else {
-            yield put(getCurrentRoomSensorListFailed(res.result));
-        }
-    } catch (error){}
-}
+
 
 function * addSensor({payload: {sensor_id, location}}){
    /*  try{

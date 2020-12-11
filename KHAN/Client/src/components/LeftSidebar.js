@@ -10,9 +10,9 @@ import { UncontrolledDropdown, DropdownMenu, DropdownToggle, DropdownItem } from
 import * as FeatherIcon from 'react-feather';
 
 import AppMenu from './AppMenu';
-import {useSelector, useDispatch}  from 'react-redux';
-import { getRoomList } from 'redux/actions';
-import MySocket from 'socket.controller';
+import { useDispatch}  from 'react-redux';
+import { getNotificationList, getRoomList } from 'redux/actions';
+/* import MySocket from 'socket.controller'; */
 import { useToasts } from 'react-toast-notifications'
 const {BASE_URL} = require('constants/apiConfig');
 
@@ -25,14 +25,15 @@ const UserProfile = (props) => {
     const { addToast } = useToasts();
 
     React.useEffect(()=>{
-        if(props.user.accessToken){
-            dispatch(getRoomList())
+        if(props.user && props.user.accessToken){
+            dispatch(getRoomList(props.user))
+            dispatch(getNotificationList(props.user))
             var socket = io.connect(BASE_URL);
             console.log('Socket io Client','run socket client');
             //MySocket(socket,dispatch,props.user,addToast);
         }
         
-    },[props.user.accessToken])
+    },[props.user])
 
     return (
         <React.Fragment>
@@ -139,7 +140,6 @@ class LeftSidebar extends Component {
 
     render() {
         const isCondensed = this.props.isCondensed || false;
-
         return (
             <React.Fragment>
                 <div className="left-side-menu" ref={(node) => (this.menuNodeRef = node)}>

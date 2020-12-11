@@ -84,7 +84,7 @@ const NotificationDropdown = (props) => {
             content={notificationDefault.info}
             deleteAction={()=>{
                 toggleNotification();
-                dispatch(deleteNotification(auth.user.accessToken, notificationDefault.info._id));
+                dispatch(deleteNotification(auth.user, notificationDefault.info._id));
             }}
         ></NotificationDetail>
 
@@ -98,7 +98,7 @@ const Clear = ()=>{
     const auth = useSelector(state => state.Auth);
     return(
     <Link to='#' className="text-dark" onClick={()=>{
-        dispatch(deleteAllNotification(auth.user.accessToken));
+        dispatch(deleteAllNotification(auth.user));
 
         if (Notification.permission == "granted"){
             showNotification('Quản lý nhiệt độ kho lạnh','Đã xóa toàn bộ thông báo');

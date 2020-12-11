@@ -15,15 +15,11 @@ import {
     deleteAllNotificationFailed,
 } from './actions';
 
-import { getLoggedInUser } from 'helpers/authUtils';
-
-const currentUser = getLoggedInUser();
-
-function * getNotificationList(){
+function * getNotificationList({payload: {user}}){
     const res = yield call (requestApi,{
         method: 'get',
         headers: {
-            'x-access-token': (currentUser.accessToken)&& (currentUser.accessToken)
+            'x-access-token': user.accessToken
         },
         url: 'api/notification/all'
     });
@@ -34,11 +30,12 @@ function * getNotificationList(){
     }
 }
 
-function * deleteNotification({payload: {notification_id}}){
+function * deleteNotification({payload: {user,notification_id}}){
+
     const res = yield call (requestApi,{
         method: 'delete',
         headers: {
-            'x-access-token': token
+            'x-access-token':user.accessToken
         },
         url: 'api/notification',
         params: {
@@ -52,11 +49,11 @@ function * deleteNotification({payload: {notification_id}}){
     }
 }
 
-function * deleteAllNotification(){
+function * deleteAllNotification({payload: {user}}){
     const res = yield call (requestApi,{
         method: 'delete',
         headers: {
-            'x-access-token': token
+            'x-access-token': user.accessToken
         },
         url: 'api/notification/all'
     })

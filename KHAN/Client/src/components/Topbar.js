@@ -3,7 +3,19 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {Container,UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import { Menu, X, Search, Settings, User, HelpCircle, Lock, LogOut,ChevronDown,Plus } from 'react-feather';
-import { showRightSidebar, getCurrentRoomInfo,setDefaultRoom, createRoom, getCurrentRoomArea, getCurrentRoomAccess, getCurrentRoomActivate, getCurrentRoomSensorMap, getCurrentRoomSensorList, getNotificationList, getCurrentDataFailed} from '../redux/actions';
+import { showRightSidebar,
+    getCurrentRoomInfo,
+    createRoom,
+    getNotificationList,
+
+    setCurrentRoom,
+    getAreaData,
+    getCurrentData,
+    getSensorData,
+    getCubeData,
+    getRoomStructure,
+        
+} from '../redux/actions';
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import LanguageDropdown from './LanguageDropdown';
@@ -12,8 +24,7 @@ import logo from '../assets/images/logo.png';
 import profilePic from '../assets/images/users/avatar-7.jpg';
 import NewWareHouse from './newWareHouse';
 import {useDispatch, useSelector} from 'react-redux';
-import { getRoomCookieDefault, setRoomCookieDefault } from 'helpers/roomUtils';
-import { CREATE_ROOM_SUCCESS } from 'redux/constants';
+
 
 
 const ProfileMenus = [
@@ -48,45 +59,53 @@ const ProfileMenus = [
 const Topbar = (props) =>{
     const [newWareHouseModal, setNewWareHouseModal] = useState(false);
     const dispatch = useDispatch();
-
-    const auth = useSelector(state => state.Auth);;
     const action_name = useSelector(state => state.RoomList.action_name)
-    const loading = useSelector(state => state.RoomList.loading)
+    const loading = useSelector(state => state.RoomList.loading);
     const error = useSelector(state => state.RoomList.error);
+    const [isSubmitting,setIsSubmitting] = useState(false);
 
     const toggleModal = () => {
         setNewWareHouseModal(!newWareHouseModal)
     };
 
     useEffect(()=>{
-        const defaultRoom = props.defaultRoom;
-        const token = auth.user.accessToken;
-        if(defaultRoom !=null && defaultRoom.room._id != 'xxx'){
-            dispatch(getCurrentDataFailed(null));
-            dispatch(getCurrentRoomInfo(defaultRoom.room._id,token));
-            dispatch(getCurrentRoomArea(defaultRoom.room._id,token));
+        
+        if(props.currentRoom && props.user && props.currentRoom.room._id){
+            dispatch(getCurrentRoomInfo(props.user,props.currentRoom.room._id))
+
+            dispatch(getAreaData(props.user,props.currentRoom.room._id));
+            dispatch(getCurrentData(props.user,props.currentRoom.room._id));
+            dispatch(getSensorData(props.user,props.currentRoom.room._id));
+            dispatch(getCubeData(props.user,props.currentRoom.room._id));
+            
+            dispatch(getRoomStructure(props.user,props.currentRoom.room._id));
+            
+            /* dispatch(getCurrentRoomArea(defaultRoom.room._id,token));
             dispatch(getCurrentRoomAccess(defaultRoom.room._id,token));
             dispatch(getCurrentRoomActivate(defaultRoom.room._id,token));
             dispatch(getCurrentRoomSensorMap(defaultRoom.room._id,token));
-            dispatch(getCurrentRoomSensorList(defaultRoom.room._id,token));
+            dispatch(getCurrentRoomSensorList(defaultRoom.room._id,token)); */
         }
-        setRoomCookieDefault(props.defaultRoom);
-    },[props.defaultRoom])
-    const setCurrentRoom = (obj)=>{
-        dispatch(setDefaultRoom(obj));
+        if(props.user == null){
+            setCurrentRoom(null);
+        }
+    },[props.user,props.currentRoom]);
+
+    const setCurrent = (obj)=>{
+    dispatch(setCurrentRoom(obj));
     }
     const submitNewRoom = (room) =>{
-        dispatch(createRoom(auth.user, room));
+        dispatch(createRoom(props.user, room));
+        setIsSubmitting(true);
     }
     useEffect(()=>{
-        dispatch(getNotificationList(auth.user.accessToken));
-    },[])
-    useEffect(()=>{
-        if(action_name=== CREATE_ROOM_SUCCESS){
-            setNewWareHouseModal(false);
+        if(newWareHouseModal && isSubmitting){
+            if(!error && !loading){
+                setNewWareHouseModal(false);
+                setIsSubmitting(false);
+            }
         }
-    },[action_name])
-
+    },[loading,error,newWareHouseModal,isSubmitting])
 
     return (
         <React.Fragment>
@@ -117,14 +136,14 @@ const Topbar = (props) =>{
 
                     <UncontrolledButtonDropdown>
                         <DropdownToggle color="default" className="dropdown-toggle text-dark font-weight-bold mt-2" >
-                            {props.defaultRoom && props.defaultRoom.room.name}
+                            {props.currentRoom && props.currentRoom.room.name}
                             <i className="icon ml-1"><ChevronDown /></i>
                         </DropdownToggle>
                         <DropdownMenu right>
-                            {(props.myRoom.length>0)?<DropdownItem header>Kho của tôi</DropdownItem>:<></>}
+                            {(props.myRoom && props.myRoom.length>0)?<DropdownItem header>Kho của tôi</DropdownItem>:<></>}
                             {
                                 props.myRoom && props.myRoom.map((obj)=>(
-                                    <DropdownItem onClick={()=>{setCurrentRoom(obj)}}>
+                                    <DropdownItem onClick={()=>{setCurrent(obj)}}>
                                         <span>{obj.room.name}</span>
                                     </DropdownItem>
                                 ))
@@ -134,7 +153,7 @@ const Topbar = (props) =>{
 
                             {
                                 props.sharedRoom && props.sharedRoom.map((obj)=>(
-                                    <DropdownItem onClick={()=>{setCurrentRoom(obj)}}>
+                                    <DropdownItem onClick={()=>{setCurrent(obj)}}>
                                         <span>{obj.room.name}</span>
                                     </DropdownItem>
                                 ))
@@ -190,9 +209,10 @@ const Topbar = (props) =>{
 }
 
 Topbar.defaultProps = {
+    auth:null,
     myRoom: [],
     sharedRoom: [],
-    defaultRoom: {
+    currentRoom: {
         role:'Owner',
         room: {
             _id: undefined,
@@ -202,8 +222,9 @@ Topbar.defaultProps = {
 }
 
 const mapStateToProps = (state) =>{
-    const {myRoom, sharedRoom, defaultRoom} = state.RoomList;
-    return {myRoom, sharedRoom, defaultRoom};
+    const {myRoom, sharedRoom, currentRoom} = state.RoomList;
+    const {user} = state.Auth;
+    return { user , myRoom, sharedRoom, currentRoom};
 }
 
 export default connect(mapStateToProps, { showRightSidebar })(Topbar);

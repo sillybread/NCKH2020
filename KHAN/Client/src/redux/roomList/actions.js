@@ -4,8 +4,10 @@ import {
     GET_ROOM_LIST_FAILED,
 
     SET_CURR_ROOM,
-    SET_CURR_ROOM_SUCCESS,
-    SET_CURR_ROOM_FAILED,
+
+   GET_CURR_ROOM_INFO,
+   GET_CURR_ROOM_INFO_SUCCESS,
+   GET_CURR_ROOM_INFO_FAILED,
 
 
     CREATE_ROOM,
@@ -21,9 +23,9 @@ import {
     DELETE_ROOM_FAILED,
 } from './constants';
 
-export const getRoomList = () => ({
+export const getRoomList = (user) => ({
     type: GET_ROOM_LIST,
-    payload: {}
+    payload: {user}
 })
 
 export const getRoomListSuccess = (accesses) => ({
@@ -38,23 +40,28 @@ export const getRoomListFailed = (error) => ({
 
 
 
-export const setCurrentRoom = (room_id) => ({
-    type: SET_CURR_ROOM,
-    payload: {room_id}
+export const getCurrentRoomInfo = (user,room_id) => ({
+    type: GET_CURR_ROOM_INFO,
+    payload: {user,room_id}
 })
-export const setCurrentRoomSuccess = (room) => ({
-    type: SET_CURR_ROOM_SUCCESS,
+export const getCurrentRoomInfoSuccess = (room) => ({
+    type: GET_CURR_ROOM_INFO_SUCCESS,
     payload: {room}
 })
-export const setCurrentRoomFailed  = (error) => ({
-    type: SET_CURR_ROOM_FAILED,
+export const getCurrentRoomInfoFailed  = (error) => ({
+    type: GET_CURR_ROOM_INFO_FAILED,
     payload: {error}
 })
 
 
-export const createRoom = (room) => ({
-    type: CREATE_ROOM,
+export const setCurrentRoom = (room) => ({
+    type: SET_CURR_ROOM,
     payload: {room}
+})
+
+export const createRoom = (user,room) => ({
+    type: CREATE_ROOM,
+    payload: {user,room}
 })
 export const createRoomSuccess = (room) => ({
     type: CREATE_ROOM_SUCCESS,
@@ -66,9 +73,9 @@ export const createRoomFailed = (error) => ({
 })
 
 
-export const updateRoom = (room_id,room_info) => ({
+export const updateRoom = (user,room_id,room_info) => ({
     type: UPDATE_ROOM,
-    payload: {room_id,room_info}
+    payload: {user,room_id,room_info}
 })
 export const updateRoomSuccess = (room) => ({
     type: UPDATE_ROOM_SUCCESS,
@@ -80,9 +87,9 @@ export const updateRoomFailed = (error) => ({
 })
 
 
-export const deleteRoom = (room_id) => ({
+export const deleteRoom = (user,room_id) => ({
     type: DELETE_ROOM,
-    payload: {room_id}
+    payload: {user,room_id}
 })
 export const deleteRoomSuccess = (room_id) => ({
     type: DELETE_ROOM_SUCCESS,

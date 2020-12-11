@@ -15,7 +15,7 @@ function Status(props) {
                 <Col xs={12}>
                     <Card className="mb-5">
                         <CardBody>
-                            {/* <TabsChart /> */}
+                            <TabsChart />
                         </CardBody>
                     </Card>
                 </Col>

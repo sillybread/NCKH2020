@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 //import { Step, Steps, Wizard } from 'react-albus';
 import { CardBody, Col, Card, Button, Row, CustomInput, Label } from 'reactstrap';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
@@ -19,53 +19,51 @@ const WareHouseConfig=(props)=>{
     const [sensorDensity,setSensorDensity] = React.useState(10);
     const [door,setDoor] = React.useState({show:false,direction: "B"});
     const [modalDelete,setModalDelete]= React.useState(false);
-    const currentRoom = useSelector(state => state.CurrentRoom);
     const [edited,setEdited] = React.useState(false);
-    const [isEmptySensor,setEmptySensor] = React.useState(false);
+
+    const currentRoomInfo = useSelector(state => state.RoomList.currentRoomInfo);
+    const structure = useSelector(state => state.RoomStructrure.structure);
     const dispatch = useDispatch();
     const auth = useSelector(state => state.Auth);
     const loading = useSelector(state=> state.RoomList.loading);
-
-    const action_name = useSelector(state => state.RoomList.action_name);
-    useEffect(()=>{
-        if(action_name === DELETE_ROOM_SUCCESS)
-        setModalDelete(false);
-    },[action_name]);
-
+    const [deletting,setDeletting] = useState(false);
 
     useEffect(()=>{
-        if(currentRoom && currentRoom.sensorMap)
-            setEmptySensor(currentRoom.sensorMap.length ==0); 
-    },[currentRoom.sensorMap])
+        if(deletting && loading && modalDelete){
+            setModalDelete(false);
+            setDeletting(true);
+        }
+        
+    },[deletting,loading,modalDelete]);
+
 
     useEffect(()=>{
-        if(currentRoom && currentRoom.info){
-            setName(currentRoom.info.name);
-            setDescription(currentRoom.info.description);
-            setSize(currentRoom.info.size);
-            setSensorDensity(currentRoom.info.sensorDensity);
-            setDoor(currentRoom.info.door);
+        if(currentRoomInfo){
+            setName(currentRoomInfo.name);
+            setDescription(currentRoomInfo.description);
+            setSize(currentRoomInfo.size);
+            setSensorDensity(currentRoomInfo.sensorDensity);
+            setDoor(currentRoomInfo.door);
             setEdited(false);
         }
-    },[currentRoom.info])
+    },[currentRoomInfo])
     useEffect(()=>{
-        if(currentRoom && currentRoom.info){
-            setEdited(currentRoom.info.name != name ||
-                 currentRoom.info.description != description ||
-                  currentRoom.info.door.show != door.show  ||
-                  currentRoom.info.door.direction != door.direction  ||
-                   currentRoom.info.size.x != size.x ||
-                   currentRoom.info.size.y != size.y ||
-                   currentRoom.info.size.z != size.z ||
-                   currentRoom.info.sensorDensity != sensorDensity);
+        if(currentRoomInfo){
+            setEdited(currentRoomInfo.name != name ||
+                 currentRoomInfo.description != description ||
+                  currentRoomInfo.door.show != door.show  ||
+                  currentRoomInfo.door.direction != door.direction  ||
+                   currentRoomInfo.size.x != size.x ||
+                   currentRoomInfo.size.y != size.y ||
+                   currentRoomInfo.size.z != size.z ||
+                   currentRoomInfo.sensorDensity != sensorDensity);
         }       
-    },[currentRoom.info,name,description,door,size,sensorDensity])
+    },[currentRoomInfo,name,description,door,size,sensorDensity])
 
     return (
         <React.Fragment>
              
             <Row className="page-title align-items-center">
-            {loading && <Loader />}
             <Col xs={12}>
                     <h4 className="mb-1 mt-0">Thông tin cấu hình kho lạnh</h4>
             </ Col>
@@ -74,11 +72,11 @@ const WareHouseConfig=(props)=>{
                 <Col xs={12}>
                     <Card className="mb-5">
                         <CardBody>
-                       
+                        {loading && <Loader />}
                         <AvForm className="p-2"
                             onSubmit={()=>{
                                 setEdited(false);
-                                dispatch(updateRoom(auth.user,currentRoom.info._id,{name,description,size,sensorDensity,door}));
+                                dispatch(updateRoom(auth.user,currentRoomInfo._id,{name,description,size,sensorDensity,door}));
                             }
                         }
                         >
@@ -152,7 +150,7 @@ const WareHouseConfig=(props)=>{
                                 </Col>
                                 <Col md={6}>
                                     <AvField 
-                                        disabled={!isEmptySensor} 
+                                        disabled={ structure} 
                                         onChange={(prevValue,nextValue) =>{setSize(
                                             {
                                                 ...size, x: nextValue
@@ -166,7 +164,7 @@ const WareHouseConfig=(props)=>{
                                         value={size.x}
                                     />
                                     <AvField 
-                                        disabled={!isEmptySensor} 
+                                        disabled={ structure} 
                                         onChange={(prevValue,nextValue) =>{setSize(
                                             {
                                                 ...size, y: nextValue
@@ -181,7 +179,7 @@ const WareHouseConfig=(props)=>{
                                         value={size.y} 
                                     />
                                     <AvField 
-                                        disabled={!isEmptySensor} 
+                                        disabled={ structure} 
                                         onChange={(prevValue,nextValue) =>{setSize(
                                             {
                                                 ...size, z: nextValue
@@ -196,7 +194,7 @@ const WareHouseConfig=(props)=>{
                                         value={size.z} 
                                     />
                                     <AvField 
-                                        disabled={!isEmptySensor} 
+                                        disabled={!structure} 
                                         onChange={(prevValue,nextValue) =>{setSensorDensity(nextValue)}} 
                                         name="sensorDensity" 
                                         label="Khoảng cách cảm biến" 
@@ -223,12 +221,13 @@ const WareHouseConfig=(props)=>{
                             </Row>
                             <ConfirmDialog 
                                 title="Xác nhận xóa toàn bộ kho lạnh"
-                                content={(currentRoom && currentRoom.info && currentRoom.info.name)&& currentRoom.info.name} 
+                                content={(currentRoomInfo && currentRoomInfo.name)&& currentRoomInfo.name} 
                                 color='danger' 
                                 isOpen={modalDelete} 
                                 toggle={()=>{setModalDelete(!modalDelete)}} 
                                 confirm={()=>{
-                                    dispatch(deleteRoom(auth.user,currentRoom.info._id));
+                                    dispatch(deleteRoom(auth.user,currentRoomInfo._id));
+                                    setDeletting(true);
                                 }}>
                             </ConfirmDialog>
                         </AvForm>

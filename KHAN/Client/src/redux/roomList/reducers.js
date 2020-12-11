@@ -1,13 +1,11 @@
-import { getRoomCookieDefault } from 'helpers/roomUtils';
+import { getRoomCookieDefault,setRoomCookieDefault } from 'helpers/roomUtils';
+import { setCurrentRoom } from './actions';
 import {
     GET_ROOM_LIST,
     GET_ROOM_LIST_SUCCESS,
     GET_ROOM_LIST_FAILED,
 
     SET_CURR_ROOM,
-    SET_CURR_ROOM_SUCCESS,
-    SET_CURR_ROOM_FAILED,
-
 
     CREATE_ROOM,
     CREATE_ROOM_SUCCESS,
@@ -20,6 +18,9 @@ import {
     DELETE_ROOM,
     DELETE_ROOM_SUCCESS,
     DELETE_ROOM_FAILED,
+    GET_CURR_ROOM_INFO,
+    GET_CURR_ROOM_INFO_SUCCESS,
+    GET_CURR_ROOM_INFO_FAILED,
 } from './constants';
 
 
@@ -29,6 +30,7 @@ const INIT_STATE = {
     myRoom:[],
     sharedRoom:[],
     currentRoom: getRoomCookieDefault(),
+    currentRoomInfo:null
 }
 
 const RoomList = (state = INIT_STATE, action) =>{
@@ -49,6 +51,16 @@ const RoomList = (state = INIT_STATE, action) =>{
                 error:null,
                 myRoom: newMyRoom,
                 sharedRoom: newSharedRoom,
+                currentRoom: (getRoomCookieDefault()) ? getRoomCookieDefault() :
+                                (newMyRoom[0]) ? newMyRoom[0] : 
+                                    (newSharedRoom[0]) ? newSharedRoom[0] :
+                                        {
+                                            role:'Viewer',
+                                            room: {
+                                                _id: undefined,
+                                                name: "Chưa có kho lạnh nào"
+                                            }
+                                        }
             }
         
         case GET_ROOM_LIST_FAILED:
@@ -62,25 +74,34 @@ const RoomList = (state = INIT_STATE, action) =>{
             }
 
         case SET_CURR_ROOM:
+            setRoomCookieDefault(action.payload.room);
+            return {
+                ...state,
+                loading: true,
+                error: null,
+                currentRoom: action.payload.room
+            }
+        case GET_CURR_ROOM_INFO:
             return {
                 ...state,
                 loading: true,
                 error: null,
             }
-        case SET_CURR_ROOM_SUCCESS:
+        case GET_CURR_ROOM_INFO_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 error: null,
-                currentRoom: action.payload.room
+                currentRoomInfo: action.payload.room
             }
-        case SET_CURR_ROOM_FAILED:
+        case GET_CURR_ROOM_INFO_FAILED:
+            setRoomCookieDefault(null);
             return {
                 ...state,
                 ...state,
                 loading: false,
                 error: action.payload.error,
-                currentRoom: null,
+                currentRoomInfo: null,
             }
 
         case CREATE_ROOM:
@@ -90,19 +111,22 @@ const RoomList = (state = INIT_STATE, action) =>{
                 error:null
             }
         case CREATE_ROOM_SUCCESS:
-            let room = {
-                "role": "Owner",
-                "room": {
-                "_id": action.payload.room._id,
-                "name": action.payload.name,
-                }
+            let newRoom = {
+                role: "Owner",
+                    room: {
+                        _id: action.payload.room._id,
+                        name: action.payload.room.name,
+                    }
             }
-            let newListMyRoom = [...state.myRoom].push(room);
+            let newListMyRoom = [...state.myRoom];
+            newListMyRoom.push(newRoom);
+            setRoomCookieDefault(newRoom);
             return {
                 ...state,
                 loading: false,
                 error: null,
-                myRoom: newListMyRoom
+                myRoom: newListMyRoom,
+                currentRoom: newRoom
             }
         case CREATE_ROOM_FAILED:
             return {
@@ -119,11 +143,35 @@ const RoomList = (state = INIT_STATE, action) =>{
                 error:null
             }
         case UPDATE_ROOM_SUCCESS:
+            let tempUpdateRoom = {
+                role: state.currentRoom.role,
+                room:{
+                    ...state.currentRoom.room,
+                    name: action.payload.room.name
+                }
+            }
+            let newSharedRoomU =null;
+            let newMyRoomU = null;
+            if(tempUpdateRoom.role === 'Owner'){
+                newMyRoomU = [...state.myRoom]
+                newMyRoomU = newMyRoomU.map(it => {
+                    return (it.room._id === tempUpdateRoom.room._id) ? tempUpdateRoom : it
+                });
+            }else{
+                newSharedRoomU = [...state.sharedRoom]
+                newSharedRoomU = newSharedRoomU.map(it => {
+                    return (it.room._id === tempUpdateRoom.room._id) ?tempUpdateRoom: it
+                });
+            }
+            setRoomCookieDefault(tempUpdateRoom);
             return {
                 ...state,
                 loading: false,
-                error: null
-                
+                error: null,
+                currentRoomInfo: action.payload.room,
+                currentRoom: tempUpdateRoom,
+                myRoom: (newMyRoomU)? newMyRoomU : state.myRoom, 
+                sharedRoom: (newSharedRoomU)? newSharedRoomU : state.sharedRoom,
             }
         case UPDATE_ROOM_FAILED:
             return {
@@ -141,11 +189,22 @@ const RoomList = (state = INIT_STATE, action) =>{
         case DELETE_ROOM_SUCCESS:
             let tempShareRoom = [...state.sharedRoom].filter(r => (r.room._id !== action.payload.room_id));
             let tempMyRoom = [...state.myRoom].filter(r => (r.room._id !== action.payload.room_id));
+            let tempCurrent = (tempMyRoom[0]) ? tempMyRoom[0] : 
+                (tempShareRoom[0]) ? tempShareRoom[0] :
+                    {
+                        role:'Viewer',
+                        room: {
+                            _id: undefined,
+                            name: "Chưa có kho lạnh nào"
+                        }
+                    }
+            setRoomCookieDefault(null);
             return {
                 ...state,
                 loading: false,
                 sharedRoom: tempShareRoom,
                 myRoom: tempMyRoom,
+                currentRoom: tempCurrent,
                 error: null,
             }
         case DELETE_ROOM_FAILED:

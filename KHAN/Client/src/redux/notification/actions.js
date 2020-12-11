@@ -16,9 +16,9 @@ import {
 } from './constants';
 
 
-export const getNotificationList = () => ({
+export const getNotificationList = (user) => ({
     type: GET_NOTIFICATION_LIST,
-    payload: {},
+    payload: {user},
 });
 export const getNotificationListSuccess = (list) => ({
     type: GET_NOTIFICATION_LIST_SUCCESS,
@@ -34,16 +34,17 @@ export const getNotificationListFailed = (error) => ({
 });
 
 
-export const deleteNotification = (notification_id) => ({
+export const deleteNotification = (user,notification_id) => ({
     type: DELETE_NOTIFICATION,
     payload: {
+        user,
         notification_id
     },
 });
-export const deleteNotificationSuccess = (result) => ({
+export const deleteNotificationSuccess = (notification_id) => ({
     type: DELETE_NOTIFICATION_SUCCESS,
     payload: {
-        result
+        notification_id
     },
 });
 export const deleteNotificationFailed = (error) => ({
@@ -54,10 +55,11 @@ export const deleteNotificationFailed = (error) => ({
 });
 
 
-export const deleteAllNotification = () => ({
+export const deleteAllNotification = (user) => ({
     type: DELETE_ALL_NOTIFICATION,
-    payload: {},
+    payload: {user},
 });
+
 export const deleteAllNotificationSuccess = (result) => ({
     type: DELETE_ALL_NOTIFICATION_SUCCESS,
     payload: {

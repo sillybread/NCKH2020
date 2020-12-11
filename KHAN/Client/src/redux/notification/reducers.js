@@ -48,7 +48,7 @@ const Notification = (state = INIT_STATE, action) => {
         case DELETE_NOTIFICATION_SUCCESS:
             return {
                 ...state,
-                list: state.list.filter((noti) =>(noti._id != action.payload.notification_id)),
+                list: [...state.list].filter((noti) =>(noti._id != action.payload.notification_id)),
                 loading: false,
                 error: null
             }

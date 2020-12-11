@@ -128,8 +128,8 @@ class AppMenu extends Component {
                         {this.props.menu && this.props.menu.menuItems &&  (
                             <ul className="metismenu" id="menu-bar">
                                 {this.props.menu.menuItems.map((item, i) => {
-                                    if(this.props.RoomList.defaultRoom)
-                                        if(item.roles.includes(this.props.RoomList.defaultRoom.role))
+                                    if(this.props.RoomList.currentRoom)
+                                        if(item.roles.includes(this.props.RoomList.currentRoom.role))
                                     return (
                                         <React.Fragment key={item.id}>
                                             {item.header && !isHorizontal && (

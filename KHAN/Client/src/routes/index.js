@@ -32,8 +32,8 @@ const About = React.lazy(() => import('../pages/about'));
 // handle auth and authorization
 const PrivateRoute = ({ component: Component, roles, ...rest }) => {
     const currentRole = useSelector(state => { 
-        if(state.RoomList.defaultRoom)
-            return state.RoomList.defaultRoom.role
+        if(state.RoomList.currentRoom)
+            return state.RoomList.currentRoom.role
         else
             return null;
         });

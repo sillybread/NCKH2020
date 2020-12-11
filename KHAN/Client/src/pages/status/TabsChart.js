@@ -5,7 +5,6 @@ import AreasChart from './AreasChart';
 import BoxChart from './BoxChart';
 import MatrixChart from './MatrixChart';
 import { useSelector } from 'react-redux';
-import NoiSuyBaChieu from 'helpers/Interpolations/cubeInterpolation';
 
 
 const TabsChart = (props) => {
@@ -33,32 +32,24 @@ const TabsChart = (props) => {
         },
     ]; 
 
-    const [data,setData] = useState(null);
     const [config,setConfig] = useState(null);
-
-    const currentRoom = useSelector(state => state.CurrentRoom);
-    const roomData = useSelector(state => state.RoomData);
-    
-
+    const [data,setData] = useState(null);
+    const currentRoomInfo = useSelector(state => state.RoomList.currentRoomInfo);
+    const cubeData = useSelector(state => state.RoomData.cubeData);
     useEffect(()=>{
-        if(roomData && currentRoom && roomData.currentData && currentRoom.info && currentRoom.info.size){
-            if(roomData.currentData.data){
-                setData(NoiSuyBaChieu([...roomData.currentData.data],currentRoom.info));
-            }else{
-                setData(NoiSuyBaChieu([...roomData.currentData.datas],currentRoom.info));
-            }
+        if(cubeData && cubeData.cubeData){
+            setData(cubeData.cubeData);
         }else{
             setData(null);
         }
-
-    },[roomData.currentData,currentRoom.info])
-
+    },[cubeData])
+    
     useEffect(()=>{
-        if(currentRoom && currentRoom.info && currentRoom.info.size){
-            const density = currentRoom.info.sensorDensity;
-            const xBlock = currentRoom.info.size.x / density -1;
-            const yBlock = currentRoom.info.size.y / density -1;
-            const zBlock = currentRoom.info.size.z / density -1;
+        if(currentRoomInfo){
+            const density = currentRoomInfo.sensorDensity;
+            const xBlock = currentRoomInfo.size.x / density -1;
+            const yBlock = currentRoomInfo.size.y / density -1;
+            const zBlock = currentRoomInfo.size.z / density -1;
             setConfig({
                 "size": {
                     "x": xBlock,
@@ -66,7 +57,7 @@ const TabsChart = (props) => {
                     "z": zBlock,
                     "tilesize": 5
                 },
-                "door": currentRoom.info.door,
+                "door": currentRoomInfo.door,
                 "axis-labels": {
                 "axis-x": {
                     "show": true,
@@ -83,7 +74,7 @@ const TabsChart = (props) => {
                 }
             });
         }
-    },[currentRoom.info])
+    },[currentRoomInfo])
 
         return (
             <React.Fragment>
@@ -107,7 +98,6 @@ const TabsChart = (props) => {
                 </Nav>
                 <TabContent activeTab={activeTab} className="mr-3 mt-4">
                     <TabPane tabId="1">
-             
                         <AreasChart />
                     </TabPane>
                     <TabPane tabId="2">

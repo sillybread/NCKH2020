@@ -13,9 +13,9 @@ import {
     registerUserFailed,
     forgetPasswordSuccess,
     forgetPasswordFailed,
+    setCurrentRoom
 } from 'redux/actions';
 
-import { setRoomCookieDefault } from 'helpers/roomUtils';
 
 /**
  * Sets the session
@@ -61,8 +61,8 @@ function* login({ payload: { username, password } }) {
  */
 function* logout({ payload: { history } }) {
     try {
-        setSession(null);
-        setRoomCookieDefault(null);
+        setSession(null)
+        yield put(setCurrentRoom(null));
         yield call(() => {
             history.push('/account/login');
         });
