@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { getAreaData, getCubeData, getCurrentData, getSensorData } from 'redux/actions';
+import { ViewConfigSensorMap } from './matrixConfigSensor/matrix';
 const PremiumSlider = (Slider.createSliderWithTooltip)(Slider);
 
 const SensorMapController = (props) => {
@@ -14,7 +15,8 @@ const SensorMapController = (props) => {
     const max = props.max ? props.max : 10;
 
     return  (
-        <InputGroup className="col-12 mb-3 row">
+        <div className="mt-3 block p-3">
+        <InputGroup className="col-12 mb-3 mt-5 row p-0 mr-0 ml-0">
             <InputGroupAddon addonType="prepend">Tọa độ Z</InputGroupAddon>
             <div className='form-control col-11 pt-2'>
                 <PremiumSlider
@@ -38,6 +40,7 @@ const SensorMapController = (props) => {
                 }}
             />
         </InputGroup>
+        </div>
     )
 }
 SensorMapController.defaultProps = {
@@ -68,77 +71,6 @@ const SensorMap = () => {
         OFF: "Đang tắt"
     };
 
-    const apexAreaChart2Opts = {
-        plotOptions: {
-            heatmap: {
-                shadeIntensity: 0.5,
-                radius: 0,
-                useFillColorAsStroke: false,
-                colorScale: {
-                    ranges: [
-                        {
-                            from: 0,
-                            to: 0.99,
-                            name: 'Trống',
-                            color: '#7f8c8d',
-                        },
-
-                        {
-                            from: 1,
-                            to: 1.99,
-                            name: 'Đã thêm',
-                            color: '#00A100',
-                        },
-                        {
-                            from: 2,
-                            to: 2.99,
-                            name: 'Cần thiết',
-                            color: '#DC0404',
-                        },
-                    ],
-                },
-            },
-        },
-        dataLabels: {
-            enabled: false,
-        },
-        stroke: {
-            width: 1
-        },
-        chart: {
-            animations: {
-                enabled: false,
-                easing: 'easeinout',
-                speed: 1,
-                animateGradually: {
-                    enabled: false,
-                    delay: 0
-                },
-                dynamicAnimation: {
-                    enabled: false,
-                    speed: 1
-                }
-            },
-            events: {
-                dataPointSelection: (event, chartContext, config) => {
-                    setModalConfig({
-                        ...modalConfig,
-                        x:config.dataPointIndex,
-                        y:config.seriesIndex,
-                        show: true,
-                    });
-                },
-            },
-            toolbar: {
-                show: false,
-            },
-        },
-        tooltip: {
-            enabled: false,
-        },
-    };
-
-
     React.useEffect(()=>{
         if (CurrentRoomInfo) {
             let {x, y, z} = CurrentRoomInfo.size;
@@ -150,31 +82,22 @@ const SensorMap = () => {
 
             const aBoard = new Array(y).fill(0).map(e => new Array(x).fill(0));
             if (parseInt(_z_) === 0 || parseInt(_z_) === z-1){
-                aBoard[0][0] = 2;
-                aBoard[0][x-1] = 2;
-                aBoard[y-1][0] = 2;
-                aBoard[y-1][x-1] = 2;
+                aBoard[0][0] = 3;
+                aBoard[0][x-1] = 3;
+                aBoard[y-1][0] = 3;
+                aBoard[y-1][x-1] = 3;
             }
             const aSensor = (structure && structure.map.map)?structure.map : []
             aSensor.forEach(e =>{
                 if (parseInt(e.location.z) === parseInt(_z_))
                     aBoard[e.location.y][e.location.x] = 1;
             })
-            setData(((aInput) => {
-                const aRet = [];
-                for (let idx=0; idx < aInput.length; idx++){
-                    const data = [];
-                    for (let jdx=0; jdx < aInput[idx].length; jdx++){
-                        data.push([jdx, aInput[idx][jdx]]);
-                    }
-                    aRet.push({ name: idx, data});
-                }
-                return aRet;
-            })(aBoard));
-            //console.log(aBoard);
+
+            setData(aBoard);
+            
         }
         
-    },[_z_, CurrentRoomInfo, structure]); 
+    },[_z_, CurrentRoomInfo, structure]);
 
     React.useEffect(()=>{
         if(structure && CurrentRoomInfo && user){
@@ -225,7 +148,7 @@ const SensorMap = () => {
             </Row>
             <Row>
                 <Col xs={12}>
-                    <Card className="mb-5">
+                    <Card className="mb-3">
                         <CardBody>
                         <ConfigSensor  
                             d={(CurrentRoomInfo)&& CurrentRoomInfo.sensorDensity} 
@@ -237,13 +160,27 @@ const SensorMap = () => {
                             setSubmitting = {(value)=>{setSubmitting(value)}}
                             
                         />
-                            <Chart
+                            {/* <Chart
                                 options={apexAreaChart2Opts}
                                 series={aData}
                                 type="heatmap"
                                 className="heatmap-charts"
                                 height={BASE}
-                            />
+                            /> */}
+                         <div style={{width:'inherit', height:450}} className="p-3">
+                            <ViewConfigSensorMap 
+                                data={aData}
+                                onClick={(x, y, hue, temp)=>{
+                                    setModalConfig({
+                                        ...modalConfig,
+                                        x:x,
+                                        y:y,
+                                        show: true,
+                                    });
+                                }}
+                                />
+                        </div>
+                        
                         <SensorMapController 
                             min={0} 
                             max={maxZ} 
