@@ -2,73 +2,78 @@ import {
     GET_NOTIFICATION_LIST,
     GET_NOTIFICATION_LIST_SUCCESS,
     GET_NOTIFICATION_LIST_FAILED,
+
     DELETE_NOTIFICATION,
     DELETE_NOTIFICATION_SUCCESS,
     DELETE_NOTIFICATION_FAILED,
+
     DELETE_ALL_NOTIFICATION,
     DELETE_ALL_NOTIFICATION_SUCCESS,
     DELETE_ALL_NOTIFICATION_FAILED,
+    
     UPDATE_NOTIFICATION,
     PUSH_NOTIFICATION
 } from './constants';
 
-export const getNotificationList = (token) => ({
+
+export const getNotificationList = (user) => ({
     type: GET_NOTIFICATION_LIST,
-    payload: {
-        token
-    },
+    payload: {user},
 });
-export const getNotificationListSuccess = (result) => ({
+export const getNotificationListSuccess = (list) => ({
     type: GET_NOTIFICATION_LIST_SUCCESS,
     payload: {
-        result
+        list
     },
 });
-export const getNotificationListFailed = (result) => ({
+export const getNotificationListFailed = (error) => ({
     type: GET_NOTIFICATION_LIST_FAILED,
     payload: {
-        result
+        error
     },
 });
 
-export const deleteNotification = (token, notification_id) => ({
+
+export const deleteNotification = (user,notification_id) => ({
     type: DELETE_NOTIFICATION,
     payload: {
-        token,
+        user,
         notification_id
     },
 });
-export const deleteNotificationSuccess = (result) => ({
+export const deleteNotificationSuccess = (notification_id) => ({
     type: DELETE_NOTIFICATION_SUCCESS,
     payload: {
-        notification_id: result
+        notification_id
     },
 });
-export const deleteNotificationFailed = (result) => ({
+export const deleteNotificationFailed = (error) => ({
     type: DELETE_NOTIFICATION_FAILED,
     payload: {
-        result
+        error
     },
 });
 
-export const deleteAllNotification = (token) => ({
+
+export const deleteAllNotification = (user) => ({
     type: DELETE_ALL_NOTIFICATION,
-    payload: {
-        token
-    },
+    payload: {user},
 });
+
 export const deleteAllNotificationSuccess = (result) => ({
     type: DELETE_ALL_NOTIFICATION_SUCCESS,
     payload: {
         result
     },
 });
-export const deleteAllNotificationFailed = (result) => ({
+export const deleteAllNotificationFailed = (error) => ({
     type: DELETE_ALL_NOTIFICATION_FAILED,
     payload: {
-        result
+        error
     },
 });
+
+
 export const updateNotification = (id, data) => ({
     type: UPDATE_NOTIFICATION,
     payload: {

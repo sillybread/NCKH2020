@@ -7,7 +7,6 @@ import Loader from 'components/Loader';
 
 
 const EditRoleUser=(props)=>{
-    const [loading,setLoading] = React.useState(false);
 
     const state = 
         {
@@ -24,7 +23,7 @@ const EditRoleUser=(props)=>{
     return (
     <Modal isOpen={props.isOpen} toggle={props.toggleOpen}>
     <AvForm>
-    {loading && <Loader />}
+    {props.loading && <Loader />}
     <ModalHeader >
         {state.Name}
     </ModalHeader>
@@ -58,7 +57,8 @@ const EditRoleUser=(props)=>{
             </AvGroup>       
     </ModalBody>
     <ModalFooter className='text-right'>
-        <Button color={state.color}  type="submit">
+        <Button color={state.color}  type="submit" >
+
             <i className={state.icon}> </i>
             {state.title}
         </Button>

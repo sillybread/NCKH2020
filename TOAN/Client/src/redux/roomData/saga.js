@@ -2,6 +2,7 @@ import { all, call, fork, takeEvery, put } from 'redux-saga/effects';
 
 import {
     GET_AREA_DATA,
+    GET_CUBE_DATA,
     GET_CURRENT_DATA,
     GET_SENSOR_DATA,
 } from './constants';
@@ -13,16 +14,18 @@ import {
     getCurrentDataFailed,
     getSensorDataSuccess,
     getSensorDataFailed,
+    getCubeDataSuccess,
+    getCubeDataFailed,
 } from './actions';
 
 import {requestApi} from 'helpers/api'
 
-function* getAreaData({payload: {token, room_id}}){
+function* getAreaData({payload: {user, room_id}}){
     try{
         const res = yield call(requestApi,{
             method: 'get',
             headers: {
-                'x-access-token': token
+                'x-access-token': user.accessToken
             },
             url: 'api/room/data/area',
             params: {
@@ -34,15 +37,17 @@ function* getAreaData({payload: {token, room_id}}){
         } else {
             yield put(getAreaDataFailed(res.result))
         }
-    } catch (error){}
+    } catch (error){
+        yield put(getAreaDataFailed(error))
+    }
 }
 
-function* getCurrentData({payload:{token, room_id}}){
+function* getCurrentData({payload:{user, room_id}}){
     try{
         const res = yield call(requestApi,{
             method: 'get',
             headers: {
-                'x-access-token': token
+                'x-access-token': user.accessToken
             },
             url: 'api/room/data/current',
             params: {
@@ -54,14 +59,16 @@ function* getCurrentData({payload:{token, room_id}}){
         } else {
             yield put(getCurrentDataFailed(res.result))
         }
-    } catch (error){}
+    } catch (error){
+        yield put(getCurrentDataFailed(error))
+    }
 }
-function* getSensorData({payload: {token, room_id}}){
+function* getSensorData({payload: {user, room_id}}){
     try{
         const res = yield call(requestApi,{
             method: 'get',
             headers: {
-                'x-access-token': token
+                'x-access-token': user.accessToken
             },
             url: 'api/room/data/sensor',
             params: {
@@ -73,8 +80,33 @@ function* getSensorData({payload: {token, room_id}}){
         } else {
             yield put(getSensorDataFailed(res.result))
         }
-    } catch (error){}
+    } catch (error){
+        yield put(getSensorDataFailed(error))
+    }
 }
+
+function* getCubeData({payload: {user, room_id}}){
+    try{
+        const res = yield call(requestApi,{
+            method: 'get',
+            headers: {
+                'x-access-token': user.accessToken
+            },
+            url: 'api/room/data/getCubeData',
+            params: {
+                room_id
+            }
+        });
+        if (res.status === "success"){
+            yield put(getCubeDataSuccess(res.result))
+        } else {
+            yield put(getCubeDataFailed(res.result))
+        }
+    } catch (error){
+        yield put(getCubeDataFailed(error))
+    }
+}
+
 
 function * watchGetAreaData(){
     yield takeEvery(GET_AREA_DATA, getAreaData);
@@ -88,11 +120,16 @@ function * watchGetSensorData(){
     yield takeEvery(GET_SENSOR_DATA, getSensorData);
 }
 
+function * watchGetCubeData(){
+    yield takeEvery(GET_CUBE_DATA, getCubeData);
+}
+
 function* RoomDataSaga(){
     yield all([
         fork(watchGetAreaData),
         fork(watchGetCurrentData),
         fork(watchGetSensorData),
+        fork(watchGetCubeData),
     ])
 }
 

@@ -3,43 +3,44 @@ import Chart from 'react-apexcharts';
 import { DropdownMenu, DropdownToggle, UncontrolledButtonDropdown, DropdownItem, Row, Col, Card, CardBody, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import SensorItem from './sensorItem';
 import ConfigSensor from './configSensor';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import { getAreaData, getCubeData, getCurrentData, getSensorData } from 'redux/actions';
+import { ViewConfigSensorMap } from './matrixConfigSensor/matrix';
 const PremiumSlider = (Slider.createSliderWithTooltip)(Slider);
 
 const SensorMapController = (props) => {
     const min = props.min ? props.min : 0;
     const max = props.max ? props.max : 10;
-    const [_val_, setValue] = React.useState(0);
-
-    React.useEffect(() => {
-        props.onChange(_val_);
-    }, [_val_]);
 
     return  (
-        <InputGroup className="col-12 mb-3 row">
+        <div className="mt-3 block p-3">
+        <InputGroup className="col-12 mb-3 mt-5 row p-0 mr-0 ml-0">
             <InputGroupAddon addonType="prepend">Tọa độ Z</InputGroupAddon>
             <div className='form-control col-11 pt-2'>
                 <PremiumSlider
+                    step={1}
+                    dots
                     className="mt-1"
                     min={min}
                     max={max}
-                    value={_val_}
-                    onChange={(v)=>{setValue(v)}}
+                    value={props.value}
+                    onChange={props.onChange}
                 />
             </div>
             <Input
                 className='col-1'
                 type="number"
-                value={_val_}
+                value={props.value}
                 onChange={(event) => {
                     let num = event.target.value;
                     let val = num >= min && num <= max ? num : num < min ? max : min;
-                    setValue(val);
+                    props.onChange(val);
                 }}
             />
         </InputGroup>
+        </div>
     )
 }
 SensorMapController.defaultProps = {
@@ -47,14 +48,21 @@ SensorMapController.defaultProps = {
 }
 const EMPTY = [[]];
 const SensorMap = () => {
-    const BASE = 450;
+    const [BASE,SET_BASE] = React.useState(450);
     const [_z_, setZ] = React.useState(0);
     const [aData, setData] = React.useState(EMPTY);
     const [filter, setFilter] = React.useState('ALL');
-    const currRoom = useSelector(state => state.CurrentRoom);
+
+    const CurrentRoomInfo = useSelector(state => state.RoomList.currentRoomInfo);
+    const user = useSelector(state =>state.Auth.user);
     const sensors = useSelector(state =>state.RoomData.sensorData);
-    const currData = useSelector(state =>state.RoomData.currentData);
-    const [modalConfig,setModalConfig] = React.useState({x:0, y:0, z:0, show:false});
+    const structure = useSelector(state =>state.RoomStructrure.structure);
+    const loading = useSelector(state =>state.RoomStructrure.loading);
+    const error = useSelector(state =>state.RoomStructrure.error);
+
+    const dispatch = useDispatch();
+
+    const [modalConfig,setModalConfig] = React.useState({x:0, y:0, z:0,d:10, show:false});
     const [maxZ, setMaxZ] = React.useState(0);
     const Vietnamese_is_so_beautiful = {
         ALL: "Tất cả",
@@ -63,123 +71,73 @@ const SensorMap = () => {
         OFF: "Đang tắt"
     };
 
-    const apexAreaChart2Opts = {
-        plotOptions: {
-            heatmap: {
-                shadeIntensity: 0.5,
-                radius: 0,
-                useFillColorAsStroke: false,
-                colorScale: {
-                    ranges: [
-                        {
-                            from: 0,
-                            to: 0.99,
-                            name: 'Trống',
-                            color: '#fafafa',
-                        },
+    React.useEffect(()=>{
+        if (CurrentRoomInfo) {
+            let {x, y, z} = CurrentRoomInfo.size;
+            const unit = CurrentRoomInfo.sensorDensity;
+            x = Math.trunc(x/unit);
+            y = Math.trunc(y/unit);
+            z = Math.trunc(z/unit);
+            setMaxZ(z-1);
 
-                        {
-                            from: 1,
-                            to: 1.99,
-                            name: 'Đang chạy',
-                            color: '#00A100',
-                        },
-                        {
-                            from: 2,
-                            to: 2.99,
-                            name: 'Đang tắt',
-                            color: '#FFAA00',
-                        },
+            const aBoard = new Array(y).fill(0).map(e => new Array(x).fill(0));
+            if (parseInt(_z_) === 0 || parseInt(_z_) === z-1){
+                aBoard[0][0] = 3;
+                aBoard[0][x-1] = 3;
+                aBoard[y-1][0] = 3;
+                aBoard[y-1][x-1] = 3;
+            }
+            const aSensor = (structure && structure.map.map)?structure.map : []
+            aSensor.forEach(e =>{
+                if (parseInt(e.location.z) === parseInt(_z_))
+                    aBoard[e.location.y][e.location.x] = 1;
+            })
 
-                        {
-                            from: 3,
-                            to: 3.99,
-                            name: 'Cần thiết',
-                            color: '#DC0404',
-                        },
-                    ],
-                },
-            },
-        },
-        dataLabels: {
-            enabled: false,
-        },
-        stroke: {
-            width: 1
-        },
-        chart: {
-            animations: {
-                enabled: false,
-                easing: 'easeinout',
-                speed: 1,
-                animateGradually: {
-                    enabled: false,
-                    delay: 0
-                },
-                dynamicAnimation: {
-                    enabled: false,
-                    speed: 1
-                }
-            },
-            events: {
-                dataPointSelection: (event, chartContext, config) => {
-                    showLocation(config);
-                },
-            },
-            toolbar: {
-                show: false,
-            },
-        },
-        tooltip: {
-            enabled: false,
-        },
-    };
-
-    const showLocation = function (context) {
-        //console.log(context.dataPointIndex,context.seriesIndex);
-        setModalConfig({
-            x:context.dataPointIndex,
-            y:context.seriesIndex,
-            z: modalConfig.z,
-            show: true,
-        });
-    };
+            setData(aBoard);
+            
+        }
+        
+    },[_z_, CurrentRoomInfo, structure]);
 
     React.useEffect(()=>{
-        if (!currRoom.info || !sensors || !currData) return;
-        let {x, y, z} = currRoom.info.size;
-        const unit = currRoom.info.sensorDensity;
-        x = Math.trunc(x/unit);
-        y = Math.trunc(y/unit);
-        z = Math.trunc(z/unit);
-        setMaxZ(z-1);
-
-        const aBoard = new Array(y).fill(0).map(e => new Array(x).fill(0));
-        if (parseInt(_z_) === 0 || parseInt(_z_) === z-1){
-            aBoard[0][0] = 3;
-            aBoard[0][x-1] = 3;
-            aBoard[y-1][0] = 3;
-            aBoard[y-1][x-1] = 3;
+        if(structure && CurrentRoomInfo && user){
+            dispatch(getAreaData(user,CurrentRoomInfo._id));
+            dispatch(getCurrentData(user,CurrentRoomInfo._id));
+            dispatch(getSensorData(user,CurrentRoomInfo._id));
+            dispatch(getCubeData(user,CurrentRoomInfo._id));
+            
         }
-        const aSensor = currData.datas || [];
-        aSensor.forEach(e =>{
-            if (parseInt(e.z) === parseInt(_z_))
-                aBoard[e.y][e.x] = (e.status === "RUNNING")?1:0;
-        })
-        setData(((aInput) => {
-            const aRet = [];
-            for (let idx=0; idx < aInput.length; idx++){
-                const data = [];
-                for (let jdx=0; jdx < aInput[idx].length; jdx++){
-                    data.push([jdx, aInput[idx][jdx]]);
-                }
-                aRet.push({ name: idx, data});
+    },[structure])
+
+    const EditInfoSensor = (id) =>{
+        if(CurrentRoomInfo && structure && structure.map.map){
+            let a = structure.map.find(st=>(st.sensor._id ===id));
+            console.log(a);
+            if(a){
+                setZ(a.location.z);
+                setModalConfig(
+                    {...modalConfig,
+                        x:a.location.x,
+                        y:a.location.y,
+                        z:a.location.z,
+                        show:true
+                    }
+                )
             }
-            return aRet;
-        })(aBoard));
-        //console.log(aBoard);
-        setModalConfig({...modalConfig, z: _z_})
-    },[_z_, currRoom.info, sensors, currData]);
+        }
+            
+    }
+
+    const [submitting,setSubmitting] = React.useState(false);
+
+    React.useEffect(()=>{
+        if(submitting && loading && error ==null){
+            setModalConfig({...modalConfig,show: false});
+            setSubmitting(false);
+        }
+    },[loading,error,submitting])
+
+    
 
     return (
         <React.Fragment>
@@ -190,17 +148,45 @@ const SensorMap = () => {
             </Row>
             <Row>
                 <Col xs={12}>
-                    <Card className="mb-5">
+                    <Card className="mb-3">
                         <CardBody>
-                        <ConfigSensor config={modalConfig} toggle={()=>{setModalConfig({...modalConfig,show:!modalConfig.show})}}/>
-                            <Chart
+                        <ConfigSensor  
+                            d={(CurrentRoomInfo)&& CurrentRoomInfo.sensorDensity} 
+                            z={_z_} 
+                            config={modalConfig} 
+                            toggle={()=>{setModalConfig({...modalConfig,show:!modalConfig.show})}}
+                            sensors={(sensors && sensors.datas) && sensors.datas}
+                            structure={(structure && structure.map.map)?structure.map : []}
+                            setSubmitting = {(value)=>{setSubmitting(value)}}
+                            
+                        />
+                            {/* <Chart
                                 options={apexAreaChart2Opts}
                                 series={aData}
                                 type="heatmap"
                                 className="heatmap-charts"
                                 height={BASE}
+                            /> */}
+                         <div style={{width:'inherit', height:450}} className="p-3">
+                            <ViewConfigSensorMap 
+                                data={aData}
+                                onClick={(x, y, hue, temp)=>{
+                                    setModalConfig({
+                                        ...modalConfig,
+                                        x:x,
+                                        y:y,
+                                        show: true,
+                                    });
+                                }}
+                                />
+                        </div>
+                        
+                        <SensorMapController 
+                            min={0} 
+                            max={maxZ} 
+                            value={_z_}
+                            onChange={setZ}
                             />
-                        <SensorMapController min={0} max={maxZ} onChange={setZ}/>
                         </CardBody>
                     </Card>
                 </Col>
@@ -231,9 +217,9 @@ const SensorMap = () => {
                                 </div>
                             </Col>
                         </Row>
-                        {(sensors !=null) && (sensors.data !=null) && sensors.data.map((sensor,i) => {
+                        {(sensors !=null) && (sensors.datas !=null) && sensors.datas.map((sensor,i) => {
                             if (filter!=="ALL" && sensor.status!==filter) return;
-                            return <SensorItem id={sensor._id} value={sensor.value} name={sensor.name} status={Vietnamese_is_so_beautiful[sensor.status]} key={i}/>;
+                            return <SensorItem EditInfoSensor={EditInfoSensor} id={sensor._id} value={sensor.value} name={sensor.name} status={Vietnamese_is_so_beautiful[sensor.status]} key={i}/>;
                         })}
                         </CardBody>
                     </Card>

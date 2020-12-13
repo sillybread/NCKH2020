@@ -13,14 +13,13 @@ import {
     deleteNotificationFailed,
     deleteAllNotificationSuccess,
     deleteAllNotificationFailed,
-    updateNotification,
 } from './actions';
 
-function * getNotificationList({payload: {token}}){
-    const res = yield requestApi({
+function * getNotificationList({payload: {user}}){
+    const res = yield call (requestApi,{
         method: 'get',
         headers: {
-            'x-access-token': token
+            'x-access-token': user.accessToken
         },
         url: 'api/notification/all'
     });
@@ -31,11 +30,12 @@ function * getNotificationList({payload: {token}}){
     }
 }
 
-function * deleteNotification({payload: {token, notification_id}}){
-    const res = yield requestApi({
+function * deleteNotification({payload: {user,notification_id}}){
+
+    const res = yield call (requestApi,{
         method: 'delete',
         headers: {
-            'x-access-token': token
+            'x-access-token':user.accessToken
         },
         url: 'api/notification',
         params: {
@@ -49,18 +49,18 @@ function * deleteNotification({payload: {token, notification_id}}){
     }
 }
 
-function * deleteAllNotification({payload: {token}}){
-    const res = yield requestApi({
+function * deleteAllNotification({payload: {user}}){
+    const res = yield call (requestApi,{
         method: 'delete',
         headers: {
-            'x-access-token': token
+            'x-access-token': user.accessToken
         },
         url: 'api/notification/all'
     })
     if (res.status === 'success'){
-       yield put(deleteAllNotificationSuccess(res.result));
+       yield  put(deleteAllNotificationSuccess(res.result));
     } else {
-        yield  put(deleteAllNotificationFailed(res.result));
+        yield put(deleteAllNotificationFailed(res.result));
     }
 }
 

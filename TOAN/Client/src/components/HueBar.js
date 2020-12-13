@@ -8,19 +8,19 @@ class hueBarHelper{
     constructor(props){
         this.eBar = this.createElement('div');
         this.eMin = this.createElement('div',{
-            innerText: props.min,
+            innerText: Math.round(props.min*100)/100 +' °C',
             style: `float: left;`,
         });
         this.eBar.appendChild(this.eMin);
 
         this.eMax = this.createElement('div',{
-            innerText: props.max,
+            innerText: Math.round(props.max *100)/100 +' °C',
             style: `float: right;`,
         });
         this.eBar.appendChild(this.eMax);
 
         this.ePointer = this.createElement('div',{
-            innerHTML: "?",
+            innerHTML: Math.round((props.max+props.min)/2 *100)/100 +' °C',
             style: `margin: auto; width: 5em;`,
         });
         this.eBar.appendChild(this.ePointer);
@@ -33,8 +33,10 @@ class hueBarHelper{
         this.previousSelected = 0;
     }
     updateExtreme(min, max){
-        this.eMin.innerText = this.min = min;
-        this.eMax.innerText = this.max = max;
+        this.min = min;
+        this.max = max;
+        this.eMin.innerText = Math.round(min *100)/100 +' °C';
+        this.eMax.innerText = Math.round(max *100)/100 +' °C';
     }
     createElement(tagName, attribute = {}){
         let e = document.createElement(tagName);
@@ -76,7 +78,7 @@ class hueBarHelper{
         this.previousSelected = index;
 
         //update new temperature for middle label
-        this.ePointer.innerText = this.hue2temp(index);
+        this.ePointer.innerText = this.hue2temp(index) +' °C';
     }
     hue2temp(hue, min = this.min, max = this.max){
         return (max - hue / 240 * (max - min)).toFixed(2);

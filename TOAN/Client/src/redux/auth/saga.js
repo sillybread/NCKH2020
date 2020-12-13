@@ -13,11 +13,9 @@ import {
     registerUserFailed,
     forgetPasswordSuccess,
     forgetPasswordFailed,
-    getRoomList,
-    getRoomListSuccess,
-    getRoomListFailed,
+    setCurrentRoom
 } from 'redux/actions';
-import { setRoomCookieDefault } from 'helpers/roomUtils';
+
 
 /**
  * Sets the session
@@ -57,37 +55,14 @@ function* login({ payload: { username, password } }) {
     }
 }
 
-
-function* getFistData({ payload: {accessToken} }) { 
-    const options = {
-        method: 'get',
-        headers: { 
-            'Content-Type': 'application/json',
-            'x-access-token':  accessToken
-        },
-        url : 'api/room/access/all'
-    };
-    try {
-        const response = yield call(requestApi, options);
-        if (response.status==='success') {
-            yield console.log(response.result.accesses);
-        } else {
-            yield console.log(response.result);
-        }
-    } catch (error) {
-        yield console.error(error);
-    } 
-}
-
-
 /**
  * Logout the user
  * @param {*} param0
  */
 function* logout({ payload: { history } }) {
     try {
-        setSession(null);
-        setRoomCookieDefault(null);
+        setSession(null)
+        yield put(setCurrentRoom(null));
         yield call(() => {
             history.push('/account/login');
         });
@@ -143,11 +118,6 @@ function* forgetPassword({ payload: {email, username } }) {
 export function* watchLoginUser() {
     yield takeEvery(LOGIN_USER, login);
 }
-
-export function* watchGetFirstData() {
-    yield takeEvery(LOGIN_USER_SUCCESS, getFistData);
-}
-
 export function* watchLogoutUser() {
     yield takeEvery(LOGOUT_USER, logout);
 }
@@ -161,7 +131,11 @@ export function* watchForgetPassword() {
 }
 
 function* authSaga() {
-    yield all([fork(watchLoginUser), fork(watchLogoutUser), fork(watchRegisterUser), fork(watchForgetPassword),fork(watchGetFirstData)]);
+    yield all([ fork(watchLoginUser), 
+                fork(watchLogoutUser), 
+                fork(watchRegisterUser), 
+                fork(watchForgetPassword)
+            ]);
 }
 
 export default authSaga;

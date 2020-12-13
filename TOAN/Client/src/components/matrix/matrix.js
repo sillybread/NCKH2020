@@ -195,20 +195,18 @@ const MatrixView = (props) =>{
     },[props, sLv])
 
     return(
-        <>
+        <React.Fragment>
             <div style={{width:'inherit', height:300}}>
                 <TwoDimensionalChart data={dat} axis={axis} min={min} max={max} onClick={(x,y,h,t)=>{
                     markCell.current(Math.trunc(h));}} />
             </div>
             <br/><br/>
             <HueBar min={min} max={max} width="100%" height={10} markCell={markCell}/>
-            <div className="m-3">
-                <MySlice min={0} max={props.config.size[axis]-1}
-                    onChangeValue={(v)=>setLevel(v)}
-                    onChangeAxis={(ax)=>setAxis(ax)}
-                />
-            </div>
-        </>
+            <MySlice min={0} max={props.config.size[axis]-1}
+                onChangeValue={(v)=>setLevel(v)}
+                onChangeAxis={(ax)=>setAxis(ax)}
+            />
+        </React.Fragment>
     )
 }
 

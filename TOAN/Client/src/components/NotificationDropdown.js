@@ -77,14 +77,14 @@ const NotificationDropdown = (props) => {
                 
             </DropdownMenu>
         </Dropdown>
-        <UncontrolledTooltip placement="left" target="notiDropdown">{notifications.length} thông báo mới</UncontrolledTooltip>
+        <UncontrolledTooltip placement="left" target="notiDropdown">{(notifications) && notifications.length} thông báo mới</UncontrolledTooltip>
         <NotificationDetail 
             isOpen={notificationDefault.show} 
             toggle={toggleNotification}
             content={notificationDefault.info}
             deleteAction={()=>{
                 toggleNotification();
-                dispatch(deleteNotification(auth.user.accessToken, notificationDefault.info._id));
+                dispatch(deleteNotification(auth.user, notificationDefault.info._id));
             }}
         ></NotificationDetail>
 
@@ -98,7 +98,7 @@ const Clear = ()=>{
     const auth = useSelector(state => state.Auth);
     return(
     <Link to='#' className="text-dark" onClick={()=>{
-        dispatch(deleteAllNotification(auth.user.accessToken));
+        dispatch(deleteAllNotification(auth.user));
 
         if (Notification.permission == "granted"){
             showNotification('Quản lý nhiệt độ kho lạnh','Đã xóa toàn bộ thông báo');
@@ -170,5 +170,6 @@ const GetNotification = (props)=>{
     </p>
      </Link>);
 }
+
 
 export default NotificationDropdown;

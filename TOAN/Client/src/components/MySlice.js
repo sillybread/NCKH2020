@@ -22,7 +22,7 @@ export default function MySlice(props) {
     useEffect(()=>{
         changeAxis();
     }, [axis]);
-
+    
     return (
         <div className="mt-5 row">
             <Select

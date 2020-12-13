@@ -17,6 +17,7 @@ export default function NewWareHouse(props) {
     const [sensorDensity,setSensorDensity] = React.useState(10);
     const [door,setDoor] = React.useState({show:false,direction: "B"});
     
+    
     return(
         <Modal isOpen={props.isOpen} toggle={props.toggleOpen}>
             {props.loading && <Loader />}

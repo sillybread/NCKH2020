@@ -1,13 +1,13 @@
 import React from 'react';
-import { UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle, Media } from 'reactstrap';
+import { Media } from 'reactstrap';
 import imageCpu from 'assets/icons/Devices/CPU1.svg';
 import classNames from 'classnames';
 const SensorItem = (props) => {
     const colorStatus = () => {
         switch (props.status) {
-            case 'RUNNING':
+            case 'Đang chạy':
                 return 'badge badge-soft-success';
-            case 'OFF':
+            case 'Đang tắt':
                 return 'badge badge-soft-warning';
             default:
                 return 'badge badge-soft-primary';
@@ -23,19 +23,11 @@ const SensorItem = (props) => {
             </Media>
             <Media body></Media>
             <span className={classNames(colorStatus(), 'py-1 px-1 align-self-center mr-2')}>{props.status}</span>
-            <UncontrolledDropdown className="align-self-center float-right">
-                <DropdownToggle tag="button" className="btn btn-link p-0 dropdown-toggle text-muted">
+            {<div className="align-self-center float-right">
+                <button tag="button" className="btn btn-link p-0 dropdown-toggle text-muted" onClick={()=>{props.EditInfoSensor(props.id)}}>
                     <i className="uil uil-ellipsis-v"></i>
-                </DropdownToggle>
-                <DropdownMenu right>
-                    <DropdownItem>
-                        <i className="uil uil-exclamation-circle mr-2"></i>Thông tin
-                    </DropdownItem>
-                    <DropdownItem>
-                        <i className="uil uil-edit-alt mr-2"></i>Sửa
-                    </DropdownItem>
-                </DropdownMenu>
-            </UncontrolledDropdown>
+                </button>
+            </div>}
         </Media>
     );
 };
