@@ -1,138 +1,119 @@
+import f from "redux/appMenu/utils";
 import {
-    GET_ACTIVATES,
-    GET_ACTIVATES_SUCCESS,
-    GET_ACTIVATES_FAILED,
+  GET_ACTIVATES,
+  GET_ACTIVATES_SUCCESS,
+  GET_ACTIVATES_FAILED,
+  GET_STATIONS,
+  GET_STATIONS_SUCCESS,
+  GET_STATIONS_FAILED,
+  ADD_ACTIVATE,
+  ADD_ACTIVATE_SUCCESS,
+  ADD_ACTIVATE_FAILED,
+  DELETE_ACTIVATE,
+  DELETE_ACTIVATE_SUCCESS,
+  DELETE_ACTIVATE_FAILED,
+} from "./constants";
 
-    GET_STATIONS,
-    GET_STATIONS_SUCCESS,
-    GET_STATIONS_FAILED,
+const INIT_STATE = {
+  loading: false,
+  error: null,
+  activates: [],
+  stations: null,
+};
 
-    ADD_ACTIVATE,
-    ADD_ACTIVATE_SUCCESS,
-    ADD_ACTIVATE_FAILED,
+const RoomActivate = (state = INIT_STATE, action) => {
+  switch (action.type) {
+    case GET_ACTIVATES:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+        activates: [],
+      };
+    case GET_ACTIVATES_FAILED:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
+        activates: [],
+      };
+    case GET_ACTIVATES_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        activates: action.payload.activates,
+      };
 
-    DELETE_ACTIVATE,
-    DELETE_ACTIVATE_SUCCESS,
-    DELETE_ACTIVATE_FAILED,
-} from './constants';
+    case ADD_ACTIVATE:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
 
-const INIT_STATE = {};
+    case ADD_ACTIVATE_FAILED:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
+      };
+    case ADD_ACTIVATE_SUCCESS:
+      let newActivates = [...state.activates];
+      newActivates.push(action.payload.activate);
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        activates: newActivates,
+        stations: null,
+      };
 
-const CurrentRoom = (state = INIT_STATE, action) =>{
-    switch (action.type) {
-        case GET_CURR_ROOM_INFO:
-            return {
-                ...state,
-            }
-        case GET_CURR_ROOM_INFO_SUCCESS:
-            return {
-                ...state,
-                info: action.payload
-            }
-        case GET_CURR_ROOM_INFO_FAILED:
-            return {
-                ...state,
-                info: null,
-                error: action.payload
-            }
-        case GET_CURR_ROOM_AREA:
-            return {
-                ...state,
-            }
-        case GET_CURR_ROOM_AREA_SUCCESS:
-            return {
-                ...state,
-                area: action.payload
-            }
-        case GET_CURR_ROOM_AREA_FAILED:
-            return {
-                ...state,
-                area: null,
-                error: action.payload
-            }
-        case GET_CURR_ROOM_ACCESS:
-            return {
-                ...state,
-            }
-        case GET_CURR_ROOM_ACCESS_SUCCESS:
-            return {
-                ...state,
-                access: action.payload
-            }
-        case GET_CURR_ROOM_ACCESS_FAILED:
-            return {
-                ...state,
-                access: null,
-                error: action.payload
-            }
-        case GET_CURR_ROOM_ACTIVATE:
-            return {
-                ...state,
-            }
-        case GET_CURR_ROOM_ACTIVATE_SUCCESS:
-            return {
-                ...state,
-                activate: action.payload
-            }
-        case GET_CURR_ROOM_ACTIVATE_FAILED:
-            return {
-                ...state,
-                activate: null,
-                error: action.payload
-            }
-        case GET_CURR_ROOM_SENSOR_MAP:
-            return {
-                ...state,
-            }
-        case GET_CURR_ROOM_SENSOR_MAP_SUCCESS:
-            return {
-                ...state,
-                sensorMap: action.payload
-            }
-        case GET_CURR_ROOM_SENSOR_MAP_FAILED:
-            return {
-                ...state,
-                sensorMap: null,
-                error: action.payload
-            }
-        case GET_CURR_ROOM_SENSOR_LIST:
-            return {
-                ...state,
-            }
-        case GET_CURR_ROOM_SENSOR_LIST_SUCCESS:
-            return {
-                ...state,
-                sensorList: action.payload
-            }
-        case GET_CURR_ROOM_SENSOR_LIST_FAILED:
-            return {
-                ...state,
-                sensorList: null,
-                error: action.payload
-            }
+    case GET_STATIONS:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+        stations: null,
+      };
+    case GET_STATIONS_FAILED:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
+        stations: null,
+      };
+    case GET_STATIONS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        stations: action.payload.stations,
+      };
 
-            
-        case ADD_SENSOR:
-            return {
-                ...state,
-                loading: true,
-                action_name: ADD_SENSOR
-            }
-        case ADD_SENSOR_SUCCESS:
-            return {
-                ...state,
-                loading: false,
-                sensorMap: action.payload.structure,
-                action_name: ADD_SENSOR_SUCCESS
-            }
-        case ADD_SENSOR_FAILED:
-            return {
-                ...state,
-                loading: false,
-                action_name: ADD_SENSOR_FAILED
-            }
-        default:
-            return {...state}
-    }
-}
-export default CurrentRoom;
+    case DELETE_ACTIVATE:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case DELETE_ACTIVATE_FAILED:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
+      };
+    case DELETE_ACTIVATE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        activates: [...state.activates].filter(
+          (at) => at._id != action.payload.activate_id
+        ),
+      };
+    default:
+      return { ...state };
+  }
+};
+export default RoomActivate;
