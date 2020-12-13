@@ -8,6 +8,7 @@ import roomListSaga from './roomList/saga'
 import notificationListSaga from './notification/saga'
 import roomDataSaga from './roomData/saga'
 import roomStructrureSaga from './roomStructrure/saga'
+import roomAccessSaga from './roomAccess/saga';
 
 export default function* rootSaga(getState) {
     yield all([
@@ -17,6 +18,7 @@ export default function* rootSaga(getState) {
         roomListSaga(),
         notificationListSaga(),
         roomDataSaga(),
-        roomStructrureSaga()
+        roomStructrureSaga(),
+        roomAccessSaga(),
     ]);
 }

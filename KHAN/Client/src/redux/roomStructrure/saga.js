@@ -27,7 +27,9 @@ function * getCurrentRoomSensorMap({payload: {room_id, user}}){
         } else {
             yield put(getRoomStructureFailed(res.result));
         }
-    } catch (error){}
+    } catch (error){
+        yield put(getRoomStructureFailed(error))
+    }
 }
 
 function * updateSensor({payload: {user,room_id,sensor_id,location}}){
@@ -47,7 +49,7 @@ function * updateSensor({payload: {user,room_id,sensor_id,location}}){
             yield put(updateSensorFailed(res.result));
         }
     } catch (error){
-        updateSensorFailed(error)
+        yield put(updateSensorFailed(error))
     }
 }
 
@@ -68,7 +70,7 @@ function * addSensor({payload: {user,room_id,sensor_id,location}}){
             yield put(addSensorFailed(res.result));
         }
     } catch (error){
-        addSensorFailed(error)
+        yield put(addSensorFailed(error))
     }
 }
 
@@ -89,7 +91,7 @@ function * deleteSensor({payload: {user,room_id,sensor_id}}){
             yield put(deleteSensorFailed(res.result));
         }
     } catch (error){
-        deleteSensorFailed(error)
+        yield put(deleteSensorFailed(error))
     }
 }
 

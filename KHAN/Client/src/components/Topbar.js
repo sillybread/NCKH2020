@@ -14,6 +14,7 @@ import { showRightSidebar,
     getSensorData,
     getCubeData,
     getRoomStructure,
+    getUserAccess,
         
 } from '../redux/actions';
 import NotificationDropdown from './NotificationDropdown';
@@ -79,6 +80,7 @@ const Topbar = (props) =>{
             dispatch(getCubeData(props.user,props.currentRoom.room._id));
             
             dispatch(getRoomStructure(props.user,props.currentRoom.room._id));
+            dispatch(getUserAccess(props.user,props.currentRoom.room._id));
             
             /* dispatch(getCurrentRoomArea(defaultRoom.room._id,token));
             dispatch(getCurrentRoomAccess(defaultRoom.room._id,token));

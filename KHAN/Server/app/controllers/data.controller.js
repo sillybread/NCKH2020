@@ -364,7 +364,7 @@ const FakeData = (rows,io,index)=>{
         }
         setTimeout(()=>{
             FakeData(rows,io,newIndex);
-        },30000); 
+        },10000); 
         
     });
 }
@@ -422,8 +422,8 @@ const sendDataToRoom = (io)=>{
                     if(areas!=null && areas.length>0 && data.length>0){
                         //console.log(data,room,areas);
                         areaThemp = interpolationArea.Get(data,room,areas);
-
-
+                        console.log(areaThemp);
+                        
                         io.to('room'+room._id).emit('data_area',{room:room._id,areas:areaThemp ,time: realtimeData.data_createdDate});
                         
                         areaThemp.map(area=>{

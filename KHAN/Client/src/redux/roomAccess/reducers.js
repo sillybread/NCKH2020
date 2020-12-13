@@ -20,9 +20,13 @@ import {
     GET_USER_ACCESS_FAILED,
 } from './constants';
 
-const INIT_STATE = {};
+const INIT_STATE = {
+    loading: false,
+    error: null,
+    accesses: []
+};
 
-const CurrentRoom = (state = INIT_STATE, action) =>{
+const RoomAccess = (state = INIT_STATE, action) =>{
     switch (action.type) {
         case GET_USER_ACCESS :
             return {
@@ -31,7 +35,7 @@ const CurrentRoom = (state = INIT_STATE, action) =>{
                 error: null,
                 accesses: []
             }
-        case GET_USER_ACCESS_SUCCESS :
+        case GET_USER_ACCESS_SUCCESS:
             return {
                 ...state,
                 loading: false,
@@ -52,11 +56,13 @@ const CurrentRoom = (state = INIT_STATE, action) =>{
                 error: null,
             }
         case ADD_ACCESS_SUCCESS :
+            let newAccesses = [...state.accesses];
+            newAccesses.push(action.payload.access)
             return {
                 ...state,
                 loading: false,
                 error: null,
-                accesses: [...state.accesses].push(action.payload.access);
+                accesses: newAccesses
             }
         case ADD_ACCESS_FAILED :
             return {
@@ -64,8 +70,66 @@ const CurrentRoom = (state = INIT_STATE, action) =>{
                 loading: false,
                 error: action.payload.error,
             }
+        case UPDATE_ACCESS :
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            }
+        case UPDATE_ACCESS_SUCCESS :
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                accesses: [...state.accesses].map(ac => (ac._id === action.payload.access._id)?action.payload.acces:ac)
+            }
+        case UPDATE_ACCESS_FAILED :
+            return {
+                ...state,
+                loading: false,
+                error: action.payload.error,
+            }
+        case REPLY_ACCESS :
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            }
+        case REPLY_ACCESS_SUCCESS :
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                accesses: [...state.accesses].push(action.payload.acces)
+            }
+        case REPLY_ACCESS_FAILED :
+            return {
+                ...state,
+                loading: false,
+                error: action.payload.error,
+            }
+        case DELETE_ACCESS :
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            }
+        case DELETE_ACCESS_SUCCESS :
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                accesses: [...state.accesses].filter(ac => (ac._id != action.payload.acces._id))
+            }
+        case DELETE_ACCESS_FAILED :
+            return {
+                ...state,
+                loading: false,
+                error: action.payload.error,
+            }
+
         default:
             return {...state}
     }
 }
-export default CurrentRoom;
+export default RoomAccess;

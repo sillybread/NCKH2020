@@ -1,166 +1,148 @@
 import { all, call, fork, takeEvery, put } from 'redux-saga/effects';
 
-import {
-    GET_CURR_ROOM_INFO,
-    GET_CURR_ROOM_AREA,
-    GET_CURR_ROOM_ACCESS,
-    GET_CURR_ROOM_ACTIVATE,
-    GET_CURR_ROOM_SENSOR_MAP,
-    GET_CURR_ROOM_SENSOR_LIST,
-} from './constants';
+import { ADD_ACCESS, DELETE_ACCESS, GET_USER_ACCESS, REPLY_ACCESS, UPDATE_ACCESS } from './constants';
 
-import {
-    getCurrentRoomInfoSuccess,
-    getCurrentRoomInfoFailed,
-    getCurrentRoomAreaSuccess,
-    getCurrentRoomAreaFailed,
-    getCurrentRoomAccessSuccess,
-    getCurrentRoomAccessFailed,
-    getCurrentRoomActivateSuccess,
-    getCurrentRoomActivateFailed,
-    getCurrentRoomSensorMapSuccess,
-    getCurrentRoomSensorMapFailed,
-    getCurrentRoomSensorListSuccess,
-    getCurrentRoomSensorListFailed,
-} from './actions';
+import { AddAccessFailed, AddAccessSuccess, deleteAccessFailed, deleteAccessSuccess, getUserAccessFailed, getUserAccessSuccess, replyAccessFailed, replyAccessSuccess, updateAccessFailed, updateAccessSuccess } from './actions';
 
 import {requestApi} from 'helpers/api';
-import { getAreaData, getCubeData, getCurrentData, getCurrentDataFailed, getSensorData } from 'redux/roomData/actions';
 
-function aGet(token, url, params){
-    return call(requestApi, {
-        method: 'get',
-        headers: {
-            'x-access-token': token,
-        },
-        url,
-        params
-    });
-}
 
-function* getCurrentRoomInfo({payload: {room_id, token}}){
+function * getUserAccessApi ({payload: {user,room_id}}){
     try{
-        const res = yield aGet(token, 'api/room', {room_id});
+        const res = yield call(requestApi, {
+            method: 'get',
+            headers: {
+                'x-access-token': user.accessToken,
+            },
+            url:'api/room/access/',
+            params:{user,room_id}
+        });
+
         if (res.status==='success'){
-            yield put(getCurrentRoomInfoSuccess(res.result.room));
-            yield all([
-                put(getAreaData(room_id, token)),
-                put(getCurrentData(room_id, token)),
-                put(getSensorData(room_id,token)),
-                put(getCubeData(room_id,token))
-            ]);
+            yield put(getUserAccessSuccess(res.result.accesses));
         } else {
-            yield put(getCurrentRoomInfoFailed(res.result));
+            yield put(getUserAccessFailed(res.result));
         }
-    } catch (error){}
+    } catch (error){
+        yield put(getUserAccessFailed(error))
+    }
 }
 
-function * getCurrentRoomArea({payload: {room_id, token}}){
+function * addAccessApi ({payload: {user,room_id,user_id,role}}){
     try{
-        const res = yield aGet(token, 'api/room/area/all', {room_id});
+        const res = yield call(requestApi, {
+            method: 'post',
+            headers: {
+                'x-access-token': user.accessToken,
+            },
+            url:'api/room/access/add',
+            data:{room_id,user_id,role}
+        });
+
         if (res.status==='success'){
-            yield put(getCurrentRoomAreaSuccess(res.result.areas));
+            yield put(AddAccessSuccess(res.result.access));
         } else {
-            yield put(getCurrentRoomAreaFailed(res.result));
+            yield put(AddAccessFailed(res.result));
         }
-    } catch (error){}
+    } catch (error){
+        yield put(AddAccessFailed(error))
+    }
 }
-function * getCurrentRoomAccess({payload: {room_id, token}}){
+
+function * updateAccessApi ({payload: {user,room_id,access_id,role}}){
     try{
-        const res = yield aGet(token, 'api/room/access', {room_id});
+        const res = yield call(requestApi, {
+            method: 'post',
+            headers: {
+                'x-access-token': user.accessToken,
+            },
+            url:'api/room/access/edit',
+            data:{room_id,access_id,role}
+        });
+
         if (res.status==='success'){
-            yield put(getCurrentRoomAccessSuccess(res.result.accesses));
+            yield put(updateAccessSuccess(res.result.access));
         } else {
-            yield put(getCurrentRoomAccessFailed(res.result));
+            yield put(updateAccessFailed(res.result));
         }
-    } catch (error){}
+    } catch (error){
+        yield put(updateAccessFailed(error))
+    }
 }
-function * getCurrentRoomActivate({payload: {room_id, token}}){
+
+
+function * replyAccessApi ({payload: {user,access_id,accepted}}){
     try{
-        const res = yield aGet(token, 'api/room/activate/all', {room_id});
+        const res = yield call(requestApi, {
+            method: 'post',
+            headers: {
+                'x-access-token': user.accessToken,
+            },
+            url:'api/room/access/reply',
+            data:{access_id,accepted}
+        });
+
         if (res.status==='success'){
-            yield put(getCurrentRoomActivateSuccess(res.result.activates));
+            yield put(replyAccessSuccess(res.result.access));
         } else {
-            yield put(getCurrentRoomActivateFailed(res.result));
+            yield put(replyAccessFailed(res.result));
         }
-    } catch (error){}
+    } catch (error){
+        yield put(replyAccessFailed(error))
+
+    }
 }
-function * getCurrentRoomSensorMap({payload: {room_id, token}}){
+
+function * deleteAccessApi ({payload: {user,room_id,access_id}}){
     try{
-        const res = yield aGet(token, 'api/room/structure', {room_id});
+        const res = yield call(requestApi, {
+            method: 'delete',
+            headers: {
+                'x-access-token': user.accessToken,
+            },
+            url:'api/room/access/',
+            data:{room_id,access_id}
+        });
+
         if (res.status==='success'){
-            yield put(getCurrentRoomSensorMapSuccess(res.result.structure));
+            yield put(deleteAccessSuccess(access_id));
         } else {
-            yield put(getCurrentRoomSensorMapFailed(res.result));
+            yield put(deleteAccessFailed(res.result));
         }
-    } catch (error){}
-}
-function * getCurrentRoomSensorList({payload: {room_id, token}}){
-    try{
-        const res = yield aGet(token, 'api/room/sensor/all', {room_id});
-        if (res.status==='success'){
-            yield put(getCurrentRoomSensorListSuccess(res.result.sensors));
-        } else {
-            yield put(getCurrentRoomSensorListFailed(res.result));
-        }
-    } catch (error){}
-}
+    } catch (error){
+        yield put(deleteAccessFailed(error))
 
-function * addSensor({payload: {sensor_id, location}}){
-   /*  try{
-        const res = yield aGet(token, 'api/room/structure', {room_id});
-        if (res.status==='success'){
-            yield put(getCurrentRoomSensorMapSuccess(res.result.structure));
-        } else {
-            yield put(getCurrentRoomSensorMapFailed(res.result));
-        }
-    } catch (error){} */
+    }
 }
 
 
 
-
-
-
-function * watchGetCurrentRoomInfo(){
-    yield takeEvery(GET_CURR_ROOM_INFO, getCurrentRoomInfo);
+function * watchGetUserAccess(){
+    yield takeEvery(GET_USER_ACCESS, getUserAccessApi);
+}
+function * watchAddAccess(){
+    yield takeEvery(ADD_ACCESS, addAccessApi);
 }
 
-function * watchGetCurrentRoomArea(){
-    yield takeEvery(GET_CURR_ROOM_AREA, getCurrentRoomArea);
+function * watchUpdateAccess(){
+    yield takeEvery(UPDATE_ACCESS, updateAccessApi);
+}
+function * watchReplyAccess(){
+    yield takeEvery(REPLY_ACCESS, replyAccessApi);
 }
 
-function * watchGetCurrentRoomAccess(){
-    yield takeEvery(GET_CURR_ROOM_ACCESS, getCurrentRoomAccess);
+function * watchDeleteAccess(){
+    yield takeEvery(DELETE_ACCESS, deleteAccessApi);
 }
 
-function * watchGetCurrentRoomActivate(){
-    yield takeEvery(GET_CURR_ROOM_ACTIVATE, getCurrentRoomActivate);
-}
-
-function * watchGetCurrentRoomSensorMap(){
-    yield takeEvery(GET_CURR_ROOM_SENSOR_MAP, getCurrentRoomSensorMap);
-}
-
-function * watchGetCurrentRoomSensorList(){
-    yield takeEvery(GET_CURR_ROOM_SENSOR_LIST, getCurrentRoomSensorList);
-}
-
-function * watchAddSensor(){
-    yield takeEvery(ADD_SENSOR, addSensor);
-}
-
-
-function* CurrentRoomSaga(){
+function* roomAccessSaga(){
     yield all([
-        fork(watchGetCurrentRoomInfo),
-        fork(watchGetCurrentRoomArea),
-        fork(watchGetCurrentRoomAccess),
-        fork(watchGetCurrentRoomActivate),
-        fork(watchGetCurrentRoomSensorMap),
-        fork(watchGetCurrentRoomSensorList),
-        fork(watchAddSensor),
+        fork(watchGetUserAccess),
+        fork(watchUpdateAccess),
+        fork(watchAddAccess),
+        fork(watchReplyAccess),
+        fork(watchDeleteAccess),
     ])
 }
 
-export default CurrentRoomSaga;
+export default roomAccessSaga;

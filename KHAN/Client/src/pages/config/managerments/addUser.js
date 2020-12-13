@@ -9,8 +9,8 @@ import { requestApi } from 'helpers/api';
 
 
 const AddUser=(props)=>{
-    const [loading,setLoading] = React.useState(false);
-    const currentRoom = useSelector(state => state.CurrentRoom);
+    const accesses = useSelector(state => state.RoomAccess.accesses);
+    const user = useSelector(state => state.Auth.user);
     const [users, setUsers] = React.useState([]);
     const [role, setRole] = React.useState(
         {
@@ -19,8 +19,6 @@ const AddUser=(props)=>{
         }
     );
     const [selectedUsers, setSelUsers] = React.useState([]);
-    const auth = useSelector(state => state.Auth)
-    const CurrentRoom = useSelector(state => state.CurrentRoom)
     const state = 
         {
             value: 'Mời',
@@ -35,7 +33,7 @@ const AddUser=(props)=>{
             requestApi({
                 method: 'GET',
                 headers:{
-                    'x-access-token': auth.user.accessToken
+                    'x-access-token': user.accessToken
                 },
                 url: 'api/user/find',
                 params: {
@@ -49,8 +47,8 @@ const AddUser=(props)=>{
 
     const getUserOption = (users =[])=>{
         let kt =[];
-        if(currentRoom && currentRoom.access)
-            kt = currentRoom.access.map(ac =>  (ac.user._id));
+        if(accesses)
+            kt = accesses.map(ac =>  (ac.user._id));
         return users.map(user=>{
             return  (!kt.includes(user._id)) &&{ 
                 id: user._id,
@@ -71,7 +69,7 @@ const AddUser=(props)=>{
 
     return (
         <Modal isOpen={props.isOpen} toggle={props.toggleOpen}>
-            {loading && <Loader />}
+            {props.loading && <Loader />}
             <AvForm>
             <ModalHeader >
                 {state.Name}
@@ -120,22 +118,7 @@ const AddUser=(props)=>{
             </Card>
             <ModalFooter>
                 <Button color={state.color} onClick={()=>{
-                    ///\console.log('VietNamVoDich', selectedUsers, role);
-                    selectedUsers.map(e => {
-                        (CurrentRoom.info._id) && requestApi({
-                            method: 'POST',
-                            headers: {
-                                'x-access-token': auth.user.accessToken
-                            },
-                            data:{
-                                room_id: CurrentRoom.info._id,
-                                user_id: e.id,
-                                role: role.value
-                            },
-                            url:'api/room/access/add'
-                        })
-                    });
-                    props.toggleOpen();
+                    props.submitAdd(selectedUsers,role.value);
                 }} type="submit">
                     <i className={state.icon}> </i>
                     {state.title}

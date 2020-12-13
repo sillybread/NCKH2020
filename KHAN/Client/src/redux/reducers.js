@@ -7,6 +7,7 @@ import RoomList from './roomList/reducers';
 import Notification from './notification/reducers';
 import RoomData from './roomData/reducers'
 import RoomStructrure from './roomStructrure/reducers'
+import RoomAccess from './roomAccess/reducers'
 
 export default combineReducers({
     Auth,
@@ -15,5 +16,6 @@ export default combineReducers({
     RoomList,
     RoomData,
     Notification,
-    RoomStructrure
+    RoomStructrure,
+    RoomAccess
 });

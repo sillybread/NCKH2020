@@ -6,3 +6,4 @@ export * from './roomList/constants';
 export * from './notification/constants';
 export * from './roomData/constants';
 export * from './roomStructrure/constants';
+export * from './roomAccess/constants';

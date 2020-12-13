@@ -17,13 +17,14 @@ import {
     DELETE_ACCESS,
     DELETE_ACCESS_SUCCESS,
     DELETE_ACCESS_FAILED,
+    GET_USER_ACCESS_FAILED,
 } from './constants';
 
-export const getUserAccess = () => ({
+export const getUserAccess = (user,room_id) => ({
     type: GET_USER_ACCESS,
     payload: {
-        room_id,
-        token
+        user,
+        room_id
     }
 })
 export const getUserAccessSuccess = (accesses) => ({
@@ -37,11 +38,10 @@ export const getUserAccessFailed = (error) => ({
 })
 
 
-export const AddAccess = (user_id,role) => ({
+export const AddAccess = (user,room_id,user_id,role) => ({
     type: ADD_ACCESS,
     payload: {
-        user_id,
-        role
+        user,room_id,user_id,role
     }
 })
 export const AddAccessSuccess = (access) => ({
@@ -55,11 +55,10 @@ export const AddAccessFailed = (error) => ({
 })
 
 
-export const updateAccess = (access_id,role) => ({
+export const updateAccess = (user,room_id,access_id,role) => ({
     type: UPDATE_ACCESS,
     payload: {
-        access_id,
-        role
+        user,room_id,access_id,role
     }
 })
 export const updateAccessSuccess = (access) => ({
@@ -73,11 +72,10 @@ export const updateAccessFailed = (error) => ({
 })
 
 
-export const replyAccess = (access_id,accepted) => ({
+export const replyAccess = (user,access_id,accepted) => ({
     type: REPLY_ACCESS,
     payload: {
-        access_id,
-        accepted
+        user,access_id,accepted
     }
 })
 export const replyAccessSuccess = (access) => ({
@@ -90,10 +88,10 @@ export const replyAccessFailed = (error) => ({
     payload: error
 })
 
-export const deleteAccess = (access_id) => ({
+export const deleteAccess = (user,room_id,access_id) => ({
     type: DELETE_ACCESS,
     payload: {
-        access_id
+        user,room_id,access_id
     }
 })
 export const deleteAccessSuccess = (result) => ({

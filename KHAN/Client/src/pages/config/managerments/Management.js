@@ -15,15 +15,11 @@ import {
 
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
-import avatarImg1 from 'assets/images/users/avatar-1.jpg';
-import avatarImg4 from 'assets/images/users/avatar-4.jpg';
-import avatarImg7 from 'assets/images/users/avatar-7.jpg';
-import avatarImg9 from 'assets/images/users/avatar-9.jpg';
 import AddUser from './addUser';
 import EditRoleUser from './editUserMg';
 import ConfirmDialog from 'components/ConfirmDialog';
-import { get } from 'sortablejs';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { AddAccess } from 'redux/actions';
 
 
 const GetTool = (props)=>{
@@ -100,11 +96,20 @@ const Member = ({accepted ,image, name, role, className }) => {
 
 const Members = () => {
     const [modalnew,setmodalnew] = React.useState(false);
-    const currentRoom = useSelector(state => state.CurrentRoom);
+    const accesses = useSelector(state => state.RoomAccess.accesses);
+    const auth = useSelector(state => state.Auth);
+    const currentRoomInfo = useSelector(state => state.RoomList.currentRoomInfo);
+    const dispatch = useDispatch();
+
     const getRoleName = {
        Owner: 'chủ kho lạnh',
        Manager: 'chỉnh sửa',
        Viewer: 'chỉ xem'
+    }
+    const submitAdd = (selectedUsers,role) =>{
+        selectedUsers.map(user =>{
+            dispatch(AddAccess(auth.user,currentRoomInfo._id,user.id,role));
+        })
     }
 
     return (
@@ -120,14 +125,18 @@ const Members = () => {
             </CardHeader>
             <CardBody > 
                 {
-                    (currentRoom && currentRoom.access )&& currentRoom.access.map(ac =>(
+                    (accesses)&& accesses.map(ac =>(
                         <Member accepted={ac.accepted} image={ac.user.avatar} name={ac.user.fullname}  role={getRoleName[ac.role]} />
                     ))
                 }     
             </CardBody>
             
         </Card>
-        <AddUser isOpen={modalnew} toggleOpen={()=>{setmodalnew(!modalnew)}}></AddUser>     
+        <AddUser 
+            isOpen={modalnew} 
+            toggleOpen={()=>{setmodalnew(!modalnew)}} 
+            submitAdd={submitAdd}
+        ></AddUser>     
         </>
     );
 };
