@@ -5,16 +5,16 @@ import './App.css';
 
 
 const Data = [
-    {
-      _id: '5fd3a8f43ce9b40017ac81e5',
-      datatype_id: '102',
-      data_id: 3078048,
-      x: 49,
-      y: 0,
-      z: 0,
-      value: -16.21999931,
-      status: 'RUNNING'
-    },
+    // {
+    //   _id: '5fd3a8f43ce9b40017ac81e5',
+    //   datatype_id: '102',
+    //   data_id: 3078048,
+    //   x: 49,
+    //   y: 0,
+    //   z: 0,
+    //   value: -16.21999931,
+    //   status: 'RUNNING'
+    // },
     {
       _id: '5fd3a8f43ce9b40017ac81e6',
       datatype_id: '103',
@@ -119,7 +119,9 @@ const Config = {
 export default function App() {
     return (
         <div style={{width:"100vw", height: "100vh"}}>
-            <SensorMap3D config={Config} data={Data}/>
+            <SensorMap3D config={Config}
+              //data={Data}
+            />
         </div>
     );
 }

@@ -8,6 +8,7 @@ import OrbitControls from 'orbit-controls-es6';
 class Helper {
     constructor(container){
         this.container = container;
+        this.tileSize = 20;
     }
 
     setConfig(config){
@@ -16,41 +17,29 @@ class Helper {
 
     setData(data){
         this.data = data;
-    }
-
-    reCalculationLimit(slice){
-        this.slice = slice;
-        let vOrigin = this.slice.origin;
-        let vDes = this.slice.destination;
-        !vOrigin && (vOrigin = {
-            x: 0,
-            y: 0,
-            z: 0
+        const item = ( x, y, z) => ({ datatype_id: '', x, y, z, status: 'IMPORTANT' });
+        const sz = this.config.size;
+        const dt = this.config.sensorDensity;
+        const X = sz.x/dt-1, Y = sz.y/dt-1, Z = sz.z/dt-1;
+        const conner = [0, 0, 0, 0, 0, 0, 0, 0]
+        data.forEach(e => {
+            if (e.x === 0 && e.y === 0 && e.z === 0) conner[0]+=1;
+            if (e.x === 0 && e.y === 0 && e.z === Z) conner[1]+=1;
+            if (e.x === 0 && e.y === Y && e.z === 0) conner[2]+=1;
+            if (e.x === 0 && e.y === Y && e.z === Z) conner[3]+=1;
+            if (e.x === X && e.y === 0 && e.z === 0) conner[4]+=1;
+            if (e.x === X && e.y === 0 && e.z === Z) conner[5]+=1;
+            if (e.x === X && e.y === Y && e.z === 0) conner[6]+=1;
+            if (e.x === X && e.y === Y && e.z === Z) conner[7]+=1;
+        })
+        conner.forEach((e, i) => {
+            if(e === 0)
+                this.data.push(item(
+                    (i<4)?0:X,
+                    (Math.trunc(i/2)%2===0)?0:Y,
+                    (i%2===0)?0:Z)
+                )
         });
-
-        let sz = this.config.size, x=sz.x, y=sz.y, z=sz.z;
-        !vDes && (vDes = {
-            x: x,
-            y: y,
-            z: z
-        });
-
-        const max = (a, b) => (a>b)?a:b;
-        const min = (a, b) => (a<b)?a:b;
-        this.limit = {
-            ix: x,
-            iy: y,
-            iz: z,
-            idx: Math.abs(vOrigin.x - vDes.x),
-            idy: Math.abs(vOrigin.y - vDes.y),
-            idz: Math.abs(vOrigin.z - vDes.z),
-            ix0: min(vOrigin.x, vDes.x),//origin
-            iy0: min(vOrigin.y, vDes.y),
-            iz0: min(vOrigin.z, vDes.z),
-            ix1: max(vOrigin.x, vDes.x)-1,//destination
-            iy1: max(vOrigin.y, vDes.y)-1,
-            iz1: max(vOrigin.z, vDes.z)-1
-        }
     }
 
     setTileColor(faceOrder, i, value){
@@ -67,7 +56,7 @@ class Helper {
         e.background = new THREE.Color(15663086);
         let t = new THREE.PerspectiveCamera(60,this.container.clientWidth / this.container.clientHeight);
         t.up.set(0, 0, 1);
-        t.position.set(350, 350, 350);
+        t.position.set(1350, 1350, 1350);
         let renderer = new THREE.WebGLRenderer();
         renderer.setSize(this.container.clientWidth, this.container.clientHeight);
         let controls = new OrbitControls(t, renderer.domElement);
@@ -75,13 +64,12 @@ class Helper {
         controls.dampingFactor = .05;
         controls.screenSpacePanning = false;
         controls.minDistance = 100;
-        controls.maxDistance = 900;
+        controls.maxDistance = 1900;
         controls.maxPolarAngle = Math.PI;
         controls.rotateSpeed = .5;
-        controls.target.set(0, 0, 0);
 
         //make axesHelper
-        let axesHelper = new THREE.AxesHelper(500);
+        let axesHelper = new THREE.AxesHelper(1500);
         e.add(axesHelper);
 
         let animate = function() {
@@ -104,10 +92,10 @@ class Helper {
         if (e.show && this.scene) {
             let t = this.config.size
               , i = {
-                x: t.x * 5 / sensorDensity,
-                y: t.y * 5 / sensorDensity,
-                z: t.z * 5 / sensorDensity,
-                e: 20 * 5
+                x: t.x * this.tileSize / sensorDensity,
+                y: t.y * this.tileSize / sensorDensity,
+                z: t.z * this.tileSize / sensorDensity,
+                e: 20 * this.tileSize
             }
               , n = {
                 A: {
@@ -145,9 +133,9 @@ class Helper {
             }[e.direction]
               , s = new THREE.Vector3(n.x1 - n.x0,n.y1 - n.y0,n.z1 - n.z0)
               , a = new THREE.Vector3(n.x0,n.y0,n.z0)
-              , r = 8 * 5
-              , o = 2 * 5
-              , c = 1 * 5
+              , r = 8 * this.tileSize
+              , o = 2 * this.tileSize
+              , c = 1 * this.tileSize
               , l = new THREE.ArrowHelper(s.normalize(),a,r,0,o,c);
             l.up.set(0, 0, 1);
             this.scene.add(l);
@@ -160,9 +148,9 @@ class Helper {
             linewidth: 2
         }), d = this.config.sensorDensity
           , t = this.config.size
-          , i = t.x * 5 / d
-          , n = t.y * 5 / d
-          , s = t.z * 5 / d
+          , i = t.x * this.tileSize / d
+          , n = t.y * this.tileSize / d
+          , s = t.z * this.tileSize / d
           , a = [];
         a.push(new THREE.Vector3(0,0,0));
         a.push(new THREE.Vector3(i,0,0));
@@ -186,43 +174,37 @@ class Helper {
         this.scene.add(c);
         let l = new THREE.Line(o,e);
         this.scene.add(l)
+        this.controls.target.set(i/2, n/2, s/2);
     }
-    writeNumber() {
-        let e = this
-        let t = this.config.size.tilesize;
-        let i = (i, n, s, a) => {
-            let r = function(e) {
-                let i = document.createElement("canvas")
-                  , n = i.getContext("2d");
-                i.width = i.height = 2 * t;
-                n.font = "Bold " + 2 * t + "px Roboto";
-                n.fillStyle = "#7F007F";
-                n.textAlign = "center";
-                n.fillText(e, t, 1.74591293182 * t);
-                let s = new THREE.Texture(i);
-                s.needsUpdate = !0;
-                let a = new THREE.SpriteMaterial({
-                    map: s
-                })
-                  , r = new THREE.Sprite(a);
-                r.scale.set(i.width, i.width, i.width);
-                return r;
-            }(String(i));
-            r.position.set((n - .5) * t, (s - .5) * t, (a - .5) * t);
-            e.scene.add(r);
-        }
-        let n = this.config["axis-labels"];
-        n["axis-x"].show && n["axis-x"].list.forEach((e) => i(e, e, 0, 0));
-        n["axis-y"].show && n["axis-y"].list.forEach((e) => i(e, 0, e, 0));
-        n["axis-z"].show && n["axis-z"].list.forEach((e) => i(e, 0, 0, e));
+    writeNumber(text = "", x = 0, y = 0, z = 0) {
+        let t = this.tileSize;
+        let element = document.createElement("canvas");
+        let context = element.getContext("2d");
+        element.height = 2 * t;
+        element.width = 4 * t;
+        context.font = "Bold " + 2 * t + "px Roboto";
+        context.fillStyle = "#7F007F";
+        context.textAlign = "center";
+        context.fillText(text, t*2, t*1.5);
+        let texture = new THREE.Texture(element);
+        texture.needsUpdate = !0;
+        let material = new THREE.SpriteMaterial({
+            map: texture
+        });
+        material.depthTest = false;
+        let r = new THREE.Sprite(material);
+        r.scale.set(t*2, t, t);
+        r.position.set((x+.5)*t, (y+.5)*t, (z+.5)*t);
+        this.scene.add(r);
     }
 
     makeCubes(){
         if (!this.data) return;
-        this.data.map(e => {
+        this.data.forEach(e => {
             this.scene.add(
                 this.cube(e.x, e.y, e.z, e.status)
-            )
+            );
+            if (e.datatype_id !== '') this.writeNumber(e.datatype_id,e.x, e.y, e.z)
         })
     }
 
@@ -233,12 +215,16 @@ class Helper {
             'ON': '#FFAA00',
             'IMPORTANT' : '#DC0404'
         }
-        const g = new THREE.BoxGeometry(5,5,5);
-        const m = new THREE.MeshBasicMaterial({color: colorMap[status]});
+        const g = new THREE.BoxGeometry(this.tileSize,this.tileSize,this.tileSize);
+        const m = new THREE.MeshBasicMaterial({
+            color: colorMap[status],
+            // transparent: true,
+            // opacity: 0.5
+        });
         const c = new THREE.Mesh(g, m);
-        c.position.x = 2.5 + x * 5;
-        c.position.y = 2.5 + y * 5;
-        c.position.z = 2.5 + z * 5;
+        c.position.x = x * this.tileSize + this.tileSize/2;
+        c.position.y = y * this.tileSize + this.tileSize/2;
+        c.position.z = z * this.tileSize + this.tileSize/2;
         return c;
     }
 }
@@ -258,7 +244,6 @@ const SensorMap3D = (props) => {
         chart.current.makeDoor();
         chart.current.makeWireFrame();
         chart.current.makeCubes();
-        //chart.current.writeNumber();
     },[props.config, props.data]);
 
     return (
@@ -268,5 +253,21 @@ const SensorMap3D = (props) => {
         }} ref={(self)=>{container.current = self}}/>
     );
 };
+
+SensorMap3D.defaultProps = {
+    config: {
+        size: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        door: {
+          show: false,
+          direction: 'A'
+        },
+        sensorDensity: 1
+    },
+    data: []
+}
 
 export default SensorMap3D;
