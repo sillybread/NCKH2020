@@ -55,7 +55,7 @@ const ConfigSensor = (props) => {
       setDefaultSensor(null);
       setOldSensor(null);
     }
-  }, [props]);
+  }, [props.config, props.structure, props.z, props.sensors.length]);
 
   const addSensorAction = () => {
     if (defaultSensor) {
