@@ -1,7 +1,6 @@
 const interpolation = require("./interpolation").Interpolation;
 
 exports.NoiSuyBaChieu = (data, config) => {
-  let tempArray = data.map((fd) => fd.value);
   const density = config.sensorDensity;
   const xBlock = config.size.x / density - 1;
   const yBlock = config.size.y / density - 1;
@@ -45,14 +44,7 @@ exports.NoiSuyBaChieu = (data, config) => {
     };
   }
 
-  let copyData = data.map((dt) => {
-    return {
-      x: dt.x,
-      y: dt.y,
-      z: dt.z,
-      value: dt.value,
-    };
-  });
+  let copyData = [...data];
 
   if (
     !copyData.find(
@@ -140,9 +132,9 @@ exports.NoiSuyBaChieu = (data, config) => {
     data.push({ x: xBlock, y: yBlock, z: zBlock, value: avg });
 
   data = data.filter((dt) => dt.value < 99 && dt.value > -99);
-
-  data.map((item) => {
+  let tempArray = data.map((item) => {
     result[item.x][item.y][item.z] = item.value;
+    return item.value;
   });
   //result[x][y][z]
 
