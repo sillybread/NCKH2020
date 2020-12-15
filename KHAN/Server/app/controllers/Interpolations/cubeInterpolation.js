@@ -55,51 +55,87 @@ exports.NoiSuyBaChieu = (data, config) => {
   });
 
   if (
-    !copyData.find((e) => e.x === 0 && e.y === 0 && e.z === 0) ||
-    e.value >= 99 ||
-    e.value <= -99
+    !copyData.find(
+      (e) =>
+        e.x === 0 && e.y === 0 && e.z === 0 && e.value < 99 && e.value > -99
+    )
   )
     data.push({ x: 0, y: 0, z: 0, value: avg });
   if (
-    !copyData.find((e) => e.x === 0 && e.y === 0 && e.z === zBlock) ||
-    e.value >= 99 ||
-    e.value <= -99
+    !copyData.find(
+      (e) =>
+        e.x === 0 &&
+        e.y === 0 &&
+        e.z === zBlock &&
+        e.value < 99 &&
+        e.value > -99
+    )
   )
     data.push({ x: 0, y: 0, z: zBlock, value: avg });
   if (
-    !copyData.find((e) => e.x === 0 && e.y === yBlock && e.z === 0) ||
-    e.value >= 99 ||
-    e.value <= -99
+    !copyData.find(
+      (e) =>
+        e.x === 0 &&
+        e.y === yBlock &&
+        e.z === 0 &&
+        e.value < 99 &&
+        e.value > -99
+    )
   )
     data.push({ x: 0, y: yBlock, z: 0, value: avg });
   if (
-    !copyData.find((e) => e.x === 0 && e.y === yBlock && e.z === zBlock) ||
-    e.value >= 99 ||
-    e.value <= -99
+    !copyData.find(
+      (e) =>
+        e.x === 0 &&
+        e.y === yBlock &&
+        e.z === zBlock &&
+        e.value < 99 &&
+        e.value > -99
+    )
   )
     data.push({ x: 0, y: yBlock, z: zBlock, value: avg });
   if (
-    !copyData.find((e) => e.x === xBlock && e.y === 0 && e.z === 0) ||
-    e.value >= 99 ||
-    e.value <= -99
+    !copyData.find(
+      (e) =>
+        e.x === xBlock &&
+        e.y === 0 &&
+        e.z === 0 &&
+        e.value < 99 &&
+        e.value > -99
+    )
   )
     data.push({ x: xBlock, y: 0, z: 0, value: avg });
   if (
-    !copyData.find((e) => e.x === xBlock && e.y === 0 && e.z === zBlock) ||
-    e.value >= 99 ||
-    e.value <= -99
+    !copyData.find(
+      (e) =>
+        e.x === xBlock &&
+        e.y === 0 &&
+        e.z === zBlock &&
+        e.value < 99 &&
+        e.value > -99
+    )
   )
     data.push({ x: xBlock, y: 0, z: zBlock, value: avg });
   if (
-    !copyData.find((e) => e.x === xBlock && e.y === yBlock && e.z === 0) ||
-    e.value >= 99 ||
-    e.value <= -99
+    !copyData.find(
+      (e) =>
+        e.x === xBlock &&
+        e.y === yBlock &&
+        e.z === 0 &&
+        e.value < 99 &&
+        e.value > -99
+    )
   )
     data.push({ x: xBlock, y: yBlock, z: 0, value: avg });
   if (
-    !copyData.find((e) => e.x === xBlock && e.y === yBlock && e.z === zBlock) ||
-    e.value >= 99 ||
-    e.value <= -99
+    !copyData.find(
+      (e) =>
+        e.x === xBlock &&
+        e.y === yBlock &&
+        e.z === zBlock &&
+        e.value < 99 &&
+        e.value > -99
+    )
   )
     data.push({ x: xBlock, y: yBlock, z: zBlock, value: avg });
 
