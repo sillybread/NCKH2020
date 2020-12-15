@@ -48,7 +48,7 @@ const AreasChart = (props) => {
       labels: {
         show: true,
         formatter: (value) => {
-          return value + "°C";
+          return Math.round(value * 100) / 100 + "°C";
         },
       },
     },

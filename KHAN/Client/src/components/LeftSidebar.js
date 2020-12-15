@@ -16,10 +16,19 @@ import * as FeatherIcon from "react-feather";
 
 import AppMenu from "./AppMenu";
 import { useDispatch } from "react-redux";
-import { getNotificationList, getRoomList } from "redux/actions";
+import {
+  getNotificationList,
+  getRoomList,
+  getAreaDataSuccess,
+  getCubeDataSuccess,
+  getCurrentDataSuccess,
+  getSensorData,
+  pushNotification,
+  updateNotification,
+} from "redux/actions";
+import { showNotification } from "helpers/webNotification";
 /* import MySocket from 'socket.controller'; */
 import { useToasts } from "react-toast-notifications";
-import MySocket from "socket.controller";
 const { BASE_URL } = require("constants/apiConfig");
 
 var io = require("socket.io-client");
@@ -29,16 +38,187 @@ var io = require("socket.io-client");
 const UserProfile = (props) => {
   const dispatch = useDispatch();
   const { addToast } = useToasts();
+  const webSocket = React.useRef(null);
 
   React.useEffect(() => {
     if (props.user && props.user.accessToken) {
       dispatch(getRoomList(props.user));
       dispatch(getNotificationList(props.user));
-      var socket = io.connect(BASE_URL);
-      console.log("Socket io Client", "run socket client");
-      MySocket(socket, dispatch, props.user, addToast);
+    } else {
+      console.log("Disconnect");
+      webSocket.current.disconnect();
+      webSocket.current = null;
     }
+    return () => {
+      console.log("Disconnect");
+      webSocket.current.disconnect();
+      webSocket.current = null;
+    };
   }, [props.user]);
+
+  const checkDispatch = (room_id, action) => {
+    if (props.currentRoomInfo && props.currentRoomInfo._id === room_id) {
+      dispatch(action);
+    }
+  };
+
+  React.useEffect(() => {
+    if (props.user.accessToken && props.currentRoomInfo) {
+      if (webSocket.current) webSocket.current.disconnect();
+      webSocket.current = io.connect(BASE_URL);
+      console.log("Connect");
+      const socket = webSocket.current;
+      console.log(
+        "Socket io Client",
+        "run socket client",
+        props.currentRoomInfo._id
+      );
+
+      socket.on("connect", function () {
+        console.log("Socket io Client", "connect");
+        socket.emit("login", props.user.accessToken);
+      });
+
+      socket.on("data_cube_room", function (data) {
+        checkDispatch(data.room, getCubeDataSuccess(data));
+        console.log("Socket io Client Cube", data);
+      });
+
+      socket.on("data_room", function (data) {
+        checkDispatch(data.room, getCurrentDataSuccess(data));
+        checkDispatch(data.room, getSensorData(props.user, data.room));
+        console.log("Socket io Client Curent Data", data);
+      });
+      socket.on("log", function (data) {
+        console.log("Socket io Client Log", data);
+      });
+
+      socket.on("data_area", function (data) {
+        checkDispatch(data.room, getAreaDataSuccess(data));
+        console.log("Socket io Client Area", data);
+      });
+
+      socket.on("notification", function (data) {
+        if (data.message == "add") {
+          dispatch(pushNotification(data.data));
+
+          if (Notification.permission == "granted") {
+            showNotification("Quản lý nhiệt độ kho lạnh", data.data.content);
+          } else {
+            addToast(data.data.content, {
+              appearance: "warning",
+              autoDismiss: true,
+            });
+          }
+        }
+        if (data.message == "update") {
+          dispatch(updateNotification(data.data._id, data.data));
+        }
+        //console.log('Socket io Client Notification',data);
+      });
+
+      socket.on("access", function (data) {
+        console.log("Socket io Client", data);
+        if (data.message == "add") {
+          socket.emit("join-room", "room" + data.data.access.room);
+          if (Notification.permission == "granted") {
+            showNotification("Quản lý nhiệt độ kho lạnh", data.data.content);
+          } else {
+            addToast(data.data.content, {
+              appearance: "warning",
+              autoDismiss: true,
+            });
+          }
+        }
+        if (data.message == "edit") {
+          //do something
+        }
+        if (
+          data.message == "delete" &&
+          data.data.access.user == props.user.user._id
+        ) {
+          socket.emit("leave-room", "room" + data.data.access.room);
+        }
+      });
+      /*
+    
+    
+        socket.on('area', function(data){
+            if(data.message == 'add'){
+                console.log('Socket io Client',data);  
+            }
+            if(data.message == 'edit'){
+                console.log('Socket io Client',data);  
+            }
+            if(data.message == 'delete'){
+                console.log('Socket io Client',data);  
+            }
+            if(data.message == 'add-monitor'){
+                console.log('Socket io Client',data);  
+            }
+            if(data.message == 'edit-monitor'){
+                console.log('Socket io Client',data);  
+            }
+            if(data.message == 'switch-monitor'){
+                console.log('Socket io Client',data);  
+            }
+            if(data.message == 'delete-monitor'){
+                console.log('Socket io Client',data);  
+            }
+        })
+    
+    
+        socket.on('activate', function(data){
+            if(data.message == 'add'){
+                console.log('Socket io Client',data); 
+            }
+            if(data.message == 'delete'){
+                console.log('Socket io Client',data);  
+            }
+        }); */
+
+      socket.on("room", function (data) {
+        /*    if(data.message == 'delete'){
+                let defaultRoom = getRoomCookieDefault();
+                if(defaultRoom)
+                    if(defaultRoom.room._id === data.data.room._id){
+                        setRoomCookieDefault(null);
+                    }
+                dispatch(getRoomList(user));
+                socket.emit('leave-room', 'room'+data.data.room._id); 
+            }
+            if(data.message == 'edit'){
+                console.log('Socket io Client',data);
+                let defaultRoom = getRoomCookieDefault();
+                dispatch(getRoomList(user));
+                if(defaultRoom.room._id === data.data._id){
+                    setRoomCookieDefault({...defaultRoom,room:{
+                        _id:    data.data._id,
+                        name:   data.data.name
+                    }});
+                    dispatch(setDefaultRoom(getRoomCookieDefault()));
+                    dispatch(getcurrenr.room(data.data._id,user.accessToken));
+                }
+            } */
+      });
+
+      /*  socket.on('structure', function(data){
+            if(data.message == 'add'){
+                console.log('Socket io Client',data); 
+            }
+            if(data.message == 'update'){
+                console.log('Socket io Client',data);  
+            }
+        });
+     */
+
+      socket.on("disconnect", function () {});
+    }
+
+    return () => {
+      if (webSocket.current) webSocket.current.disconnect();
+    };
+  }, [props.user.accessToken, props.currentRoomInfo]);
 
   return (
     <React.Fragment>
@@ -171,6 +351,7 @@ class LeftSidebar extends Component {
 }
 const mapStateToProps = (state) => {
   const { user, loading, error } = state.Auth;
-  return { user, loading, error };
+  const { currentRoomInfo } = state.RoomList;
+  return { user, loading, error, currentRoomInfo };
 };
 export default connect(mapStateToProps, {})(LeftSidebar);

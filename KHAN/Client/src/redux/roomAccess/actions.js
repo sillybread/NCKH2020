@@ -30,7 +30,7 @@ export const getUserAccessSuccess = (accesses) => ({
 
 export const getUserAccessFailed = (error) => ({
   type: GET_USER_ACCESS_FAILED,
-  payload: error,
+  payload: { error },
 });
 
 export const AddAccess = (user, room_id, user_id, role) => ({
@@ -49,7 +49,7 @@ export const AddAccessSuccess = (access) => ({
 
 export const AddAccessFailed = (error) => ({
   type: ADD_ACCESS_FAILED,
-  payload: error,
+  payload: { error },
 });
 
 export const updateAccess = (user, room_id, access_id, role) => ({
@@ -68,7 +68,7 @@ export const updateAccessSuccess = (access) => ({
 
 export const updateAccessFailed = (error) => ({
   type: UPDATE_ACCESS_FAILED,
-  payload: error,
+  payload: { error },
 });
 
 export const replyAccess = (user, access_id, accepted) => ({
@@ -86,7 +86,7 @@ export const replyAccessSuccess = (access) => ({
 
 export const replyAccessFailed = (error) => ({
   type: REPLY_ACCESS_FAILED,
-  payload: error,
+  payload: { error },
 });
 
 export const deleteAccess = (user, room_id, access_id) => ({
@@ -104,5 +104,5 @@ export const deleteAccessSuccess = (access_id) => ({
 
 export const deleteAccessFailed = (error) => ({
   type: DELETE_ACCESS_FAILED,
-  payload: error,
+  payload: { error },
 });

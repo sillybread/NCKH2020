@@ -34,6 +34,15 @@ import {
   getUserAccess,
   getActivates,
   getAreas,
+  getCurrentRoomInfoFailed,
+  getAreaDataFailed,
+  getCurrentDataFailed,
+  getSensorDataFailed,
+  getCubeDataFailed,
+  getRoomStructureFailed,
+  getUserAccessFailed,
+  getActivatesFailed,
+  getAreasFailed,
 } from "../redux/actions";
 import NotificationDropdown from "./NotificationDropdown";
 import ProfileDropdown from "./ProfileDropdown";
@@ -87,6 +96,18 @@ const Topbar = (props) => {
 
   useEffect(() => {
     if (props.currentRoom && props.user && props.currentRoom.room._id) {
+      dispatch(getAreaDataFailed(null));
+      dispatch(getCurrentDataFailed(null));
+      dispatch(getSensorDataFailed(null));
+      dispatch(getCubeDataFailed(null));
+
+      /* dispatch(getRoomStructureFailed(null));
+      dispatch(getUserAccessFailed(null));
+      dispatch(getActivatesFailed(null));
+      dispatch(getAreasFailed(null)); */
+
+      //
+
       dispatch(getCurrentRoomInfo(props.user, props.currentRoom.room._id));
 
       dispatch(getAreaData(props.user, props.currentRoom.room._id));

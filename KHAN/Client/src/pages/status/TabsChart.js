@@ -43,12 +43,25 @@ const TabsChart = (props) => {
   const error = useSelector((state) => state.RoomData.error);
 
   useEffect(() => {
-    if (cubeData && cubeData.cubeData) {
+    if (cubeData && cubeData.cubeData && currentRoomInfo) {
       setData(cubeData.cubeData);
+    } else if (currentRoomInfo && !cubeData) {
+      const dA = currentRoomInfo.sensorDensity;
+      const xA = currentRoomInfo.size.x / dA - 1;
+      const yA = currentRoomInfo.size.y / dA - 1;
+      const zA = currentRoomInfo.size.z / dA - 1;
+      let newData = new Array(xA).fill(
+        new Array(yA).fill(new Array(zA).fill(90))
+      );
+      setData({
+        values: newData,
+        min: 98,
+        max: 99,
+      });
     } else {
       setData(null);
     }
-  }, [cubeData]);
+  }, [cubeData, currentRoomInfo]);
 
   useEffect(() => {
     if (currentRoomInfo) {
@@ -56,18 +69,19 @@ const TabsChart = (props) => {
       const xBlock = currentRoomInfo.size.x / density - 1;
       const yBlock = currentRoomInfo.size.y / density - 1;
       const zBlock = currentRoomInfo.size.z / density - 1;
+      setData(null);
       setConfig({
         size: {
           x: xBlock,
           y: yBlock,
           z: zBlock,
-          tilesize: 5,
+          tilesize: 20,
         },
         door: currentRoomInfo.door,
         "axis-labels": {
           "axis-x": {
             show: true,
-            list: [],
+            list: [0],
           },
           "axis-y": {
             show: false,

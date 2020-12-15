@@ -39,6 +39,7 @@ const RoomArea = (state = INIT_STATE, action) => {
         ...state,
         loading: true,
         error: null,
+        currentArea: null,
       };
 
     case GET_AREAS_SUCCESS:

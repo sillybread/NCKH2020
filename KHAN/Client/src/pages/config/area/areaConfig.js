@@ -36,6 +36,7 @@ import {
   updateMonitor,
 } from "redux/actions";
 import ConfirmDialog from "components/ConfirmDialog";
+import HueBar from "components/HueBar";
 
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const Range = createSliderWithTooltip(Slider.Range);
@@ -89,10 +90,19 @@ const AreaConfig = (props) => {
   React.useEffect(() => {
     if (cubeData && cubeData.cubeData) {
       setData(cubeData.cubeData);
+    } else if (maxSize && CurrentRoomInfo) {
+      let newData = new Array(maxSize.x).fill(
+        new Array(maxSize.y).fill(new Array(maxSize.z).fill(90))
+      );
+      setData({
+        values: newData,
+        min: 98,
+        max: 99,
+      });
     } else {
       setData(null);
     }
-  }, [cubeData]);
+  }, [cubeData, maxSize]);
 
   React.useEffect(() => {
     if (currentArea) {
@@ -115,13 +125,14 @@ const AreaConfig = (props) => {
         y: CurrentRoomInfo.size.y / CurrentRoomInfo.sensorDensity - 1,
         z: CurrentRoomInfo.size.z / CurrentRoomInfo.sensorDensity - 1,
       };
+      setData(null);
       setMaxSize(currentSize);
       setConfig({
         size: {
           x: currentSize.x,
           y: currentSize.y,
           z: currentSize.z,
-          tilesize: 5,
+          tilesize: 20,
         },
         door: CurrentRoomInfo.door,
         "axis-labels": {
@@ -259,7 +270,24 @@ const AreaConfig = (props) => {
               <Row>
                 <Col md={6}>
                   {currentArea && data && config && slice && (
-                    <TChart config={config} data={data} slice={slice} />
+                    <>
+                      <TChart config={config} data={data} slice={slice} />
+                      <div className="p-x-4">
+                        {data.max != 99 ? (
+                          <HueBar
+                            min={data.min}
+                            max={data.max}
+                            width={"100%"}
+                            height={10}
+                          />
+                        ) : (
+                          <div className="text-center text-warning mt-2">
+                            <i className="uil uil-exclamation-octagon mr-1"></i>
+                            Chưa có dữ liệu nhiệt độ
+                          </div>
+                        )}
+                      </div>
+                    </>
                   )}
                 </Col>
                 <Col md={6}>
