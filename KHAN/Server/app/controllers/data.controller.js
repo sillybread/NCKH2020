@@ -120,17 +120,21 @@ exports.getAreaData = (req, res) => {
                 return;
               }
               if (areas != null && areas.length > 0 && data.length > 0) {
-                //console.log(data,room,areas);
-                areaThemp = interpolationArea.Get(data, room, areas);
-                areaThemp = areaThemp.map((area) => ({
-                  _id: area._id,
-                  name: area.name,
-                  value: area.average,
-                }));
-                result.Ok(res, {
-                  areas: areaThemp,
-                  time: realtimeData.data_createdDate,
-                });
+                let cubeDataCurrent = NoiSuyBaChieu([...data], room);
+                areaThemp = interpolationArea.Get(cubeDataCurrent, areas);
+                if (areaThemp) {
+                  areaThemp = areaThemp.map((area) => ({
+                    _id: area._id,
+                    name: area.name,
+                    value: area.average,
+                  }));
+                  result.Ok(res, {
+                    areas: areaThemp,
+                    time: realtimeData.data_createdDate,
+                  });
+                } else {
+                  result.NotFound(res, "Không có dữ liệu");
+                }
               } else {
                 result.NotFound(res, "Không có dữ liệu");
               }
@@ -496,8 +500,13 @@ const sendDataToRoom = (io) => {
                 console.log(err);
                 return;
               }
-              if (areas != null && areas.length > 0 && data.length > 0) {
-                areaThemp = interpolationArea.Get(data, room, areas);
+              if (
+                areas != null &&
+                areas.length > 0 &&
+                data.length > 0 &&
+                cubeDataCurrent
+              ) {
+                areaThemp = interpolationArea.Get(cubeDataCurrent, areas);
 
                 if (areaThemp) {
                   //Send Area Data-----------------------------------------------------------------------

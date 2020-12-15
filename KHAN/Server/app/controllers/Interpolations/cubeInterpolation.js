@@ -1,11 +1,11 @@
 const interpolation = require("./interpolation").Interpolation;
 
 exports.NoiSuyBaChieu = (data, config) => {
-  let tempArray= data.map(fd => fd.value);
+  let tempArray = data.map((fd) => fd.value);
   const density = config.sensorDensity;
-  const xBlock = config.size.x / density -1;
-  const yBlock = config.size.y / density -1;
-  const zBlock = config.size.z / density -1;
+  const xBlock = config.size.x / density - 1;
+  const yBlock = config.size.y / density - 1;
+  const zBlock = config.size.z / density - 1;
 
   let result = new Array();
   for (let x = 0; x <= xBlock; x++) {
@@ -17,29 +17,91 @@ exports.NoiSuyBaChieu = (data, config) => {
       }
     }
   }
-  if(data.length ===0) return result;
-  var total = 0;
-  for(var i = 0; i < data.length; i++) {
-      total += data[i].value;
+  if (data.length === 0) {
+    return {
+      values: new Array(xBlock).fill(
+        new Array(yBlock).fill(new Array(zBlock).fill(90))
+      ),
+      max: 99,
+      min: 98,
+    };
   }
-  var avg = total / data.length;
-  let copyData = data.map(dt=>{
+  var total = 0;
+  var count = 0;
+  for (var i = 0; i < data.length; i++) {
+    if (data[i].value < 99 && data[i].value > -99) {
+      total += data[i].value;
+      count = count + 1;
+    }
+  }
+  var avg = count > 0 ? total / count : 90;
+  if (avg === 90) {
+    return {
+      values: new Array(xBlock).fill(
+        new Array(yBlock).fill(new Array(zBlock).fill(90))
+      ),
+      max: 99,
+      min: 98,
+    };
+  }
+
+  let copyData = data.map((dt) => {
     return {
       x: dt.x,
       y: dt.y,
-      z: dt.z
-    }
+      z: dt.z,
+      value: dt.value,
+    };
   });
-  
-  if(!copyData.find(e=>(e.x === 0 && e.y === 0 && e.z === 0))) data.push({x:0,y:0,z:0, value:avg});
-  if(!copyData.find(e=>(e.x === 0 && e.y === 0 && e.z === zBlock))) data.push({x:0,y:0,z:zBlock, value:avg});
-  if(!copyData.find(e=>(e.x === 0 && e.y === yBlock && e.z === 0))) data.push({x:0,y:yBlock,z:0, value:avg});
-  if(!copyData.find(e=>(e.x === 0 && e.y === yBlock && e.z === zBlock))) data.push({x:0,y:yBlock,z:zBlock, value:avg});
-  if(!copyData.find(e=>(e.x === xBlock && e.y === 0 && e.z === 0))) data.push({x:xBlock,y:0,z:0, value:avg});
-  if(!copyData.find(e=>(e.x === xBlock && e.y === 0 && e.z === zBlock))) data.push({x:xBlock,y:0,z:zBlock, value:avg});
-  if(!copyData.find(e=>(e.x === xBlock && e.y === yBlock && e.z === 0))) data.push({x:xBlock,y:yBlock,z:0, value:avg});
-  if(!copyData.find(e=>(e.x === xBlock && e.y === yBlock && e.z === zBlock))) data.push({x:xBlock,y:yBlock,z:zBlock, value:avg});
 
+  if (
+    !copyData.find((e) => e.x === 0 && e.y === 0 && e.z === 0) ||
+    e.value >= 99 ||
+    e.value <= -99
+  )
+    data.push({ x: 0, y: 0, z: 0, value: avg });
+  if (
+    !copyData.find((e) => e.x === 0 && e.y === 0 && e.z === zBlock) ||
+    e.value >= 99 ||
+    e.value <= -99
+  )
+    data.push({ x: 0, y: 0, z: zBlock, value: avg });
+  if (
+    !copyData.find((e) => e.x === 0 && e.y === yBlock && e.z === 0) ||
+    e.value >= 99 ||
+    e.value <= -99
+  )
+    data.push({ x: 0, y: yBlock, z: 0, value: avg });
+  if (
+    !copyData.find((e) => e.x === 0 && e.y === yBlock && e.z === zBlock) ||
+    e.value >= 99 ||
+    e.value <= -99
+  )
+    data.push({ x: 0, y: yBlock, z: zBlock, value: avg });
+  if (
+    !copyData.find((e) => e.x === xBlock && e.y === 0 && e.z === 0) ||
+    e.value >= 99 ||
+    e.value <= -99
+  )
+    data.push({ x: xBlock, y: 0, z: 0, value: avg });
+  if (
+    !copyData.find((e) => e.x === xBlock && e.y === 0 && e.z === zBlock) ||
+    e.value >= 99 ||
+    e.value <= -99
+  )
+    data.push({ x: xBlock, y: 0, z: zBlock, value: avg });
+  if (
+    !copyData.find((e) => e.x === xBlock && e.y === yBlock && e.z === 0) ||
+    e.value >= 99 ||
+    e.value <= -99
+  )
+    data.push({ x: xBlock, y: yBlock, z: 0, value: avg });
+  if (
+    !copyData.find((e) => e.x === xBlock && e.y === yBlock && e.z === zBlock) ||
+    e.value >= 99 ||
+    e.value <= -99
+  )
+    data.push({ x: xBlock, y: yBlock, z: zBlock, value: avg });
 
   data.map((item) => {
     result[item.x][item.y][item.z] = item.value;
@@ -98,7 +160,6 @@ exports.NoiSuyBaChieu = (data, config) => {
       x0 + "|" + y0 + "|" + z0 + "    |    " + x1 + "|" + y1 + "|" + z1
     );
     console.log(data.length);  */
-    
 
     let check = true;
     let item = null;
@@ -223,5 +284,11 @@ exports.NoiSuyBaChieu = (data, config) => {
       }
     }
   }
-  return {values: result,max:Math.max(...tempArray),min: Math.min(...tempArray)};
-}
+  let maxTemp = Math.max(...tempArray);
+  let minTemp = Math.min(...tempArray);
+  return {
+    values: result,
+    max: maxTemp,
+    min: minTemp === maxTemp ? minTemp - 1 : minTemp,
+  };
+};
