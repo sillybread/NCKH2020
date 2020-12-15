@@ -159,7 +159,12 @@ const Member = (props) => {
           )}
         </h6>
       </Media>
-      {props.access.role !== "Owner" && <GetTool {...props}></GetTool>}
+      {props.access.role !== "Owner" &&
+        props.auth &&
+        props.auth.user &&
+        props.access.user._id !== props.auth.user.user._id && (
+          <GetTool {...props}></GetTool>
+        )}
     </Media>
   );
 };
@@ -206,7 +211,7 @@ const Members = () => {
           </Button>
         </CardHeader>
         <CardBody>
-          {accesses && accesses.map((ac) => <Member access={ac} />)}
+          {accesses && accesses.map((ac) => <Member access={ac} auth={auth} />)}
         </CardBody>
       </Card>
       <AddUser

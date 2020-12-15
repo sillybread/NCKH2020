@@ -321,7 +321,7 @@ const AreaConfig = (props) => {
                               </DropdownItem>
                             ))}
 
-                          <DropdownItem divider />
+                          {areas && areas[0] && <DropdownItem divider />}
                           <DropdownItem
                             className="text-success"
                             onClick={toggleNewModal}

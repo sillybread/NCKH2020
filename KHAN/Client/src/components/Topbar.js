@@ -101,10 +101,10 @@ const Topbar = (props) => {
       dispatch(getSensorDataFailed(null));
       dispatch(getCubeDataFailed(null));
 
-      /* dispatch(getRoomStructureFailed(null));
+      dispatch(getRoomStructureFailed(null));
       dispatch(getUserAccessFailed(null));
       dispatch(getActivatesFailed(null));
-      dispatch(getAreasFailed(null)); */
+      dispatch(getAreasFailed(null));
 
       //
 
@@ -124,11 +124,11 @@ const Topbar = (props) => {
       setCurrentRoom(null);
     }
     return () => {
-      dispatch(getAreaDataFailed(null));
+      /* dispatch(getAreaDataFailed(null));
       dispatch(getCurrentDataFailed(null));
       dispatch(getSensorDataFailed(null));
       dispatch(getCubeDataFailed(null));
-      dispatch(getCurrentRoomInfoFailed(null));
+      dispatch(getCurrentRoomInfoFailed(null)); */
     };
   }, [props.user, props.currentRoom]);
 
@@ -218,7 +218,8 @@ const Topbar = (props) => {
                     <span>{obj.room.name}</span>
                   </DropdownItem>
                 ))}
-              <DropdownItem divider />
+              {((props.sharedRoom && props.sharedRoom[0]) ||
+                (props.myRoom && props.myRoom[0])) && <DropdownItem divider />}
               <DropdownItem className="text-success" onClick={toggleModal}>
                 <i className="icon ml-1">
                   <Plus />
@@ -237,7 +238,7 @@ const Topbar = (props) => {
             loading={loading}
           />
           <ul className="navbar-nav flex-row ml-auto d-flex list-unstyled topnav-menu float-right mb-0">
-            <li className="d-none d-sm-block">
+            {/* <li className="d-none d-sm-block">
               <div className="app-search">
                 <form>
                   <div className="input-group">
@@ -252,7 +253,7 @@ const Topbar = (props) => {
               </div>
             </li>
 
-            <LanguageDropdown tag="li" />
+            <LanguageDropdown tag="li" /> */}
             <NotificationDropdown />
 
             {/* <li className="notification-list">

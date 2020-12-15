@@ -36,6 +36,7 @@ const WareHouseConfig = (props) => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.Auth);
   const loading = useSelector((state) => state.RoomList.loading);
+  const currentRoom = useSelector((state) => state.RoomList.currentRoom);
   const [deletting, setDeletting] = useState(false);
 
   useEffect(() => {
@@ -254,6 +255,9 @@ const WareHouseConfig = (props) => {
                     <ul className="list-inline wizard mt-5 mb-0">
                       <li className="next list-inline-item float-right">
                         <Button
+                          disabled={
+                            currentRoom && currentRoom.role === "Manager"
+                          }
                           className="mr-3"
                           color="outline-danger"
                           onClick={() => {

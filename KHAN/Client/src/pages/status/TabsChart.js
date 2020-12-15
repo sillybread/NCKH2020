@@ -69,7 +69,7 @@ const TabsChart = (props) => {
       const xBlock = currentRoomInfo.size.x / density - 1;
       const yBlock = currentRoomInfo.size.y / density - 1;
       const zBlock = currentRoomInfo.size.z / density - 1;
-      setData(null);
+      //setData(null);
       setConfig({
         size: {
           x: xBlock,

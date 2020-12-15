@@ -43,6 +43,7 @@ import {
   updateAccessSuccess,
   AddAccessSuccess,
   deleteAccessSuccess,
+  getAreas,
 } from "redux/actions";
 import { showNotification } from "helpers/webNotification";
 /* import MySocket from 'socket.controller'; */
@@ -66,15 +67,11 @@ const UserProfile = (props) => {
       console.log("Disconnect");
       if (webSocket.current) webSocket.current.disconnect();
       webSocket.current = null;
-      dispatch(getRoomListFailed(null));
-      dispatch(getNotificationListFailed(null));
     }
     return () => {
       console.log("Disconnect");
       if (webSocket.current) webSocket.current.disconnect();
       webSocket.current = null;
-      dispatch(getRoomListFailed(null));
-      dispatch(getNotificationListFailed(null));
     };
   }, [props.user]);
 
@@ -216,12 +213,16 @@ const UserProfile = (props) => {
           );
         }
         if (data.message == "edit") {
-          if (props.currentArea && props.currentArea._id === data.data.area._id)
+          if (
+            props.currentArea &&
+            props.currentArea._id === data.data.area._id
+          ) {
             checkAnoUserAction(
               data.data.room._id,
               data.data.actionBy,
               updateAreaSuccess(data.data.area)
             );
+          }
         }
         if (data.message == "delete") {
           checkAnoUserAction(
@@ -336,7 +337,7 @@ const UserProfile = (props) => {
     return () => {
       if (webSocket.current) webSocket.current.disconnect();
     };
-  }, [props.user.accessToken, props.currentRoom_id]);
+  }, [props.user.accessToken, props.currentRoom_id, props.currentArea]);
 
   return (
     <React.Fragment>

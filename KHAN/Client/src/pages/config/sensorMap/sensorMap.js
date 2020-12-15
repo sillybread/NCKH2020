@@ -11,7 +11,13 @@ import {
   InputGroup,
   InputGroupAddon,
   Input,
+  Nav,
+  NavItem,
+  NavLink,
+  TabContent,
+  TabPane,
 } from "reactstrap";
+import classnames from "classnames";
 import SensorItem from "./sensorItem";
 import ConfigSensor from "./configSensor";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +30,8 @@ import {
   getSensorData,
 } from "redux/actions";
 import { ViewConfigSensorMap } from "./matrixConfigSensor/matrix";
+import SensorMap3D from "./SensorMap3D";
+
 const PremiumSlider = Slider.createSliderWithTooltip(Slider);
 
 const SensorMapController = (props) => {
@@ -74,11 +82,30 @@ const SensorMap = () => {
   );
   const user = useSelector((state) => state.Auth.user);
   const sensors = useSelector((state) => state.RoomData.sensorData);
+  const currentData = useSelector((state) => state.RoomData.currentData);
   const structure = useSelector((state) => state.RoomStructrure.structure);
   const loading = useSelector((state) => state.RoomStructrure.loading);
   const error = useSelector((state) => state.RoomStructrure.error);
 
   const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = React.useState("1");
+  const toggle = (tab) => {
+    if (activeTab !== tab) {
+      setActiveTab(tab);
+    }
+  };
+  const tabContents = [
+    {
+      id: "1",
+      title: "Sơ đồ 3D",
+      disabled: false,
+    },
+    {
+      id: "2",
+      title: "Sơ đồ lớp",
+      disabled: false,
+    },
+  ];
 
   const [modalConfig, setModalConfig] = React.useState({
     x: 0,
@@ -188,33 +215,77 @@ const SensorMap = () => {
                 loading={loading}
                 setBackAction={setBackAction}
               />
-              {/* <Chart
-                                options={apexAreaChart2Opts}
-                                series={aData}
-                                type="heatmap"
-                                className="heatmap-charts"
-                                height={BASE}
-                            /> */}
-              <div style={{ width: "inherit", height: 450 }} className="p-3">
-                <ViewConfigSensorMap
-                  data={aData}
-                  onClick={(x, y, hue, temp) => {
-                    setModalConfig({
-                      ...modalConfig,
-                      x: x,
-                      y: y,
-                      show: true,
-                    });
-                  }}
-                />
-              </div>
+              <div>
+                <Nav className="nav nav-pills navtab-bg nav-justified">
+                  {tabContents.map((tab, index) => {
+                    return (
+                      <NavItem key={index}>
+                        <NavLink
+                          href="#"
+                          disabled={tab.disabled}
+                          className={classnames({
+                            active: activeTab === tab.id,
+                          })}
+                          onClick={() => {
+                            toggle(tab.id);
+                          }}
+                        >
+                          <i
+                            className={classnames(
+                              tab.icon,
+                              "d-sm-none",
+                              "d-block",
+                              "mr-1"
+                            )}
+                          ></i>
+                          {tab.title}
+                        </NavLink>
+                      </NavItem>
+                    );
+                  })}
+                </Nav>
+                <TabContent activeTab={activeTab} className="px-3 mt-2">
+                  <TabPane tabId="1">
+                    <div style={{ width: "inherit", height: "450px" }}>
+                      {CurrentRoomInfo && (
+                        <SensorMap3D
+                          config={CurrentRoomInfo}
+                          data={
+                            currentData && currentData.datas
+                              ? currentData.datas
+                              : []
+                          }
+                        />
+                      )}
+                    </div>
+                  </TabPane>
+                  <TabPane tabId="2">
+                    <div
+                      style={{ width: "inherit", height: 450 }}
+                      className="p-3"
+                    >
+                      <ViewConfigSensorMap
+                        data={aData}
+                        onClick={(x, y, hue, temp) => {
+                          setModalConfig({
+                            ...modalConfig,
+                            x: x,
+                            y: y,
+                            show: true,
+                          });
+                        }}
+                      />
+                    </div>
 
-              <SensorMapController
-                min={0}
-                max={maxZ}
-                value={_z_}
-                onChange={setZ}
-              />
+                    <SensorMapController
+                      min={0}
+                      max={maxZ}
+                      value={_z_}
+                      onChange={setZ}
+                    />
+                  </TabPane>
+                </TabContent>
+              </div>
             </CardBody>
           </Card>
         </Col>
