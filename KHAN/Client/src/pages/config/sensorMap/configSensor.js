@@ -83,7 +83,6 @@ const ConfigSensor = (props) => {
       props.setSubmitting(true);
     } else {
       dispatch(deleteSensor(user, CurrentRoomInfo._id, oldSensor.id));
-
       dispatch(
         addSensor(user, CurrentRoomInfo._id, defaultSensor.id, {
           x: props.config.x,

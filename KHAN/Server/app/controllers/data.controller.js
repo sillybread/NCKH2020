@@ -107,7 +107,9 @@ exports.getAreaData = (req, res) => {
                 value: realtimeData.data_value,
                 status:
                   realtimeData.data_value > 99
-                    ? "OFF"
+                    ? st.sensor.isUsed
+                      ? "USSING"
+                      : "OFF"
                     : st.sensor.isUsed
                     ? "RUNNING"
                     : "ON",
@@ -180,7 +182,9 @@ exports.getCurrent = (req, res) => {
               value: realtimeData.data_value,
               status:
                 realtimeData.data_value > 99
-                  ? "OFF"
+                  ? st.sensor.isUsed
+                    ? "USSING"
+                    : "OFF"
                   : st.sensor.isUsed
                   ? "RUNNING"
                   : "ON",
@@ -233,8 +237,10 @@ exports.getSensorData = (req, res) => {
                   name: sensorX.name,
                   status:
                     realtimeData.data_value > 99
-                      ? "OFF"
-                      : sensorX.isUsed
+                      ? st.sensor.isUsed
+                        ? "USSING"
+                        : "OFF"
+                      : st.sensor.isUsed
                       ? "RUNNING"
                       : "ON",
                 });
@@ -417,8 +423,10 @@ const sendDataToRoom = (io) => {
                       name: sensorX.name,
                       status:
                         realtimeData.data_value > 99
-                          ? "OFF"
-                          : sensorX.isUsed
+                          ? st.sensor.isUsed
+                            ? "USSING"
+                            : "OFF"
+                          : st.sensor.isUsed
                           ? "RUNNING"
                           : "ON",
                     });
@@ -468,7 +476,9 @@ const sendDataToRoom = (io) => {
                 value: realtimeData.data_value,
                 status:
                   realtimeData.data_value > 99
-                    ? "OFF"
+                    ? st.sensor.isUsed
+                      ? "USSING"
+                      : "OFF"
                     : st.sensor.isUsed
                     ? "RUNNING"
                     : "ON",
