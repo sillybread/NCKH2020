@@ -1,5 +1,4 @@
 import React from "react";
-import Chart from "react-apexcharts";
 import {
   DropdownMenu,
   DropdownToggle,
@@ -94,6 +93,7 @@ const SensorMap = () => {
     RUNNING: "Đang chạy",
     ON: "Đang bật",
     OFF: "Đang tắt",
+    USSING: "Đã thêm vào kho",
   };
 
   React.useEffect(() => {
@@ -149,13 +149,18 @@ const SensorMap = () => {
   };
 
   const [submitting, setSubmitting] = React.useState(false);
+  const [backAction, setBackAction] = React.useState(null);
 
   React.useEffect(() => {
-    if (submitting && loading && error == null) {
+    if (submitting && !loading && error == null && modalConfig.show) {
       setModalConfig({ ...modalConfig, show: false });
+      if (backAction) {
+        dispatch(backAction);
+        setBackAction(null);
+      }
       setSubmitting(false);
     }
-  }, [loading, error, submitting]);
+  }, [loading, error, submitting, modalConfig.show]);
 
   return (
     <React.Fragment>
@@ -180,6 +185,8 @@ const SensorMap = () => {
                 setSubmitting={(value) => {
                   setSubmitting(value);
                 }}
+                loading={loading}
+                setBackAction={setBackAction}
               />
               {/* <Chart
                                 options={apexAreaChart2Opts}
@@ -243,6 +250,12 @@ const SensorMap = () => {
                           {Vietnamese_is_so_beautiful.RUNNING}
                         </DropdownItem>
                         <DropdownItem
+                          onClick={() => setFilter("OFF")}
+                          className="text-warning"
+                        >
+                          {Vietnamese_is_so_beautiful.USSING}
+                        </DropdownItem>
+                        <DropdownItem
                           onClick={() => setFilter("ON")}
                           className="text-primary"
                         >
@@ -250,7 +263,7 @@ const SensorMap = () => {
                         </DropdownItem>
                         <DropdownItem
                           onClick={() => setFilter("OFF")}
-                          className="text-warning"
+                          className="text-danger"
                         >
                           {Vietnamese_is_so_beautiful.OFF}
                         </DropdownItem>

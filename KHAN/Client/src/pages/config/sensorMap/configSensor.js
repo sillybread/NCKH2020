@@ -3,6 +3,7 @@ import AvGroup from "availity-reactstrap-validation/lib/AvGroup";
 import AvInput from "availity-reactstrap-validation/lib/AvInput";
 import React from "react";
 import Select from "react-select";
+import Loader from "components/Loader";
 import {
   Col,
   Modal,
@@ -72,6 +73,7 @@ const ConfigSensor = (props) => {
     }
   };
   const editSensorAction = () => {
+    console.log(oldSensor, defaultSensor);
     if (!oldSensor && defaultSensor && defaultSensor.isUsed) {
       dispatch(
         updateSensor(user, CurrentRoomInfo._id, defaultSensor.id, {
@@ -81,16 +83,33 @@ const ConfigSensor = (props) => {
         })
       );
       props.setSubmitting(true);
-    } else {
-      dispatch(deleteSensor(user, CurrentRoomInfo._id, oldSensor.id));
-      dispatch(
-        addSensor(user, CurrentRoomInfo._id, defaultSensor.id, {
+      return;
+    }
+    if (oldSensor && defaultSensor && !defaultSensor.isUsed) {
+      let old_id = oldSensor.id;
+      let new_id = defaultSensor.id;
+      dispatch(deleteSensor(user, CurrentRoomInfo._id, old_id));
+      props.setBackAction(
+        addSensor(user, CurrentRoomInfo._id, new_id, {
           x: props.config.x,
           y: props.config.y,
           z: props.z,
         })
       );
       props.setSubmitting(true);
+      return;
+    }
+    if (oldSensor && defaultSensor && defaultSensor.isUsed) {
+      dispatch(deleteSensor(user, CurrentRoomInfo._id, oldSensor.id));
+      props.setBackAction(
+        updateSensor(user, CurrentRoomInfo._id, defaultSensor.id, {
+          x: props.config.x,
+          y: props.config.y,
+          z: props.z,
+        })
+      );
+      props.setSubmitting(true);
+      return;
     }
   };
   const deleteSensorAction = () => {
@@ -104,12 +123,16 @@ const ConfigSensor = (props) => {
     return (
       sensor && {
         id: sensor._id,
-        isUsed: sensor.status === "RUNNING",
+        isUsed: sensor.status === "RUNNING" || sensor.status === "USSING",
         value: sensor.name + " " + sensor.datatype_id,
         label: (
           <Media className="pt-1">
             <img
-              src={sensor.status !== "RUNNING" ? sensorimg : sensor3img}
+              src={
+                sensor.status === "RUNNING" || sensor.status === "USSING"
+                  ? sensor3img
+                  : sensorimg
+              }
               className="avatar rounded mr-2"
               alt=""
             />
@@ -130,6 +153,7 @@ const ConfigSensor = (props) => {
 
   return (
     <Modal isOpen={props.config.show} toggle={props.toggle}>
+      {props.loading && <Loader />}
       <AvForm>
         <ModalHeader>Thông tin vị trí</ModalHeader>
         <ModalBody className="px-3">

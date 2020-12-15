@@ -134,7 +134,7 @@ exports.deleteAccess = (req, res) => {
           data: {
             actionBy: req.userId,
             room: { _id: req.body.room_id },
-            access: { _id: access_id },
+            access: { _id: access._id },
           },
         });
         result.Ok(res, "Xóa thành công");
@@ -161,7 +161,7 @@ exports.replyAccess = (req, res) => {
           access
             .save()
             .then((newAccess) => {
-              req.io.to("user" + access.user).emit("access", {
+              req.io.to("user" + access.user._id).emit("access", {
                 message: "add",
                 data: {
                   actionBy: req.userId,
@@ -198,7 +198,7 @@ exports.replyAccess = (req, res) => {
         data: {
           actionBy: req.userId,
           room: { _id: req.body.room_id },
-          access: { _id: access_id },
+          access: { _id: req.body.access_id },
         },
       });
       result.Ok(res, "Từ chối thành công");

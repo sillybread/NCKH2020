@@ -22,10 +22,27 @@ import {
   getAreaDataSuccess,
   getCubeDataSuccess,
   getCurrentDataSuccess,
-  getSensorData,
+  updateRoomSuccess,
   pushNotification,
   updateNotification,
   getSensorDataSuccess,
+  getRoomListFailed,
+  getNotificationListFailed,
+  deleteRoomSuccess,
+  addSensorSuccess,
+  deleteSensorSuccess,
+  updateSensorSuccess,
+  addAreaSuccess,
+  updateAreaSuccess,
+  deleteAreaSuccess,
+  addMonitorSuccess,
+  updateMonitorSuccess,
+  deleteMonitorSuccess,
+  addActivateSuccess,
+  deleteActivateSuccess,
+  updateAccessSuccess,
+  AddAccessSuccess,
+  deleteAccessSuccess,
 } from "redux/actions";
 import { showNotification } from "helpers/webNotification";
 /* import MySocket from 'socket.controller'; */
@@ -49,16 +66,26 @@ const UserProfile = (props) => {
       console.log("Disconnect");
       if (webSocket.current) webSocket.current.disconnect();
       webSocket.current = null;
+      dispatch(getRoomListFailed(null));
+      dispatch(getNotificationListFailed(null));
     }
     return () => {
       console.log("Disconnect");
       if (webSocket.current) webSocket.current.disconnect();
       webSocket.current = null;
+      dispatch(getRoomListFailed(null));
+      dispatch(getNotificationListFailed(null));
     };
   }, [props.user]);
 
   const checkDispatch = (room_id, action) => {
     if (props.currentRoom_id === room_id) {
+      dispatch(action);
+    }
+  };
+
+  const checkAnoUserAction = (room_id, actionBy, action) => {
+    if (props.currentRoom_id === room_id && actionBy != props.user.user._id) {
       dispatch(action);
     }
   };
@@ -123,49 +150,135 @@ const UserProfile = (props) => {
       socket.on("access", function (data) {
         console.log(data);
         if (data.message == "accepted") {
+          checkAnoUserAction(
+            data.data.room._id,
+            data.data.actionBy,
+            updateAccessSuccess(data.data.access)
+          );
         }
         if (data.message == "invite") {
+          checkAnoUserAction(
+            data.data.room._id,
+            data.data.actionBy,
+            AddAccessSuccess(data.data.access)
+          );
         }
         if (data.message == "add") {
+          if (
+            props.user &&
+            data.data.access.user &&
+            data.data.access.user._id === props.user.user._id
+          ) {
+            socket.emit("join-room", "room" + data.data.room._id);
+            dispatch(getRoomList(props.user));
+          }
         }
         if (data.message == "edit") {
+          if (
+            props.user &&
+            data.data.access.user &&
+            data.data.access.user._id !== props.user.user._id
+          ) {
+            checkAnoUserAction(
+              data.data.room._id,
+              data.data.actionBy,
+              updateAccessSuccess(data.data.access)
+            );
+          } else {
+            dispatch(getRoomList(props.user));
+          }
         }
         if (data.message == "delete") {
+          if (
+            props.user &&
+            data.data.access.user &&
+            data.data.access.user._id !== props.user.user._id
+          ) {
+            checkAnoUserAction(
+              data.data.room._id,
+              data.data.actionBy,
+              deleteAccessSuccess(data.data.access._id)
+            );
+          } else {
+            socket.emit("leave-room", "room" + data.data.room._id);
+            dispatch(getRoomList(props.user));
+          }
         }
         console.log("Socket io Client Access ", data);
       });
 
       socket.on("area", function (data) {
         if (data.message == "add") {
-          console.log(data);
+          checkAnoUserAction(
+            data.data.room._id,
+            data.data.actionBy,
+            addAreaSuccess(data.data.area)
+          );
         }
         if (data.message == "edit") {
-          console.log(data);
+          if (props.currentArea && props.currentArea._id === data.data.area._id)
+            checkAnoUserAction(
+              data.data.room._id,
+              data.data.actionBy,
+              updateAreaSuccess(data.data.area)
+            );
         }
         if (data.message == "delete") {
-          console.log(data);
+          checkAnoUserAction(
+            data.data.room._id,
+            data.data.actionBy,
+            deleteAreaSuccess(data.data.area._id)
+          );
         }
         if (data.message == "add-monitor") {
-          console.log(data);
+          if (props.currentArea && props.currentArea._id === data.data.area._id)
+            checkAnoUserAction(
+              data.data.room._id,
+              data.data.actionBy,
+              addMonitorSuccess(data.data.monitors)
+            );
         }
         if (data.message == "edit-monitor") {
-          console.log(data);
+          if (props.currentArea && props.currentArea._id === data.data.area._id)
+            checkAnoUserAction(
+              data.data.room._id,
+              data.data.actionBy,
+              updateMonitorSuccess(data.data.monitor)
+            );
         }
         if (data.message == "switch-monitor") {
-          console.log(data);
+          if (props.currentArea && props.currentArea._id === data.data.area._id)
+            checkAnoUserAction(
+              data.data.room._id,
+              data.data.actionBy,
+              updateMonitorSuccess(data.data.monitor)
+            );
         }
         if (data.message == "delete-monitor") {
-          console.log(data);
+          if (props.currentArea && props.currentArea._id === data.data.area._id)
+            checkAnoUserAction(
+              data.data.room._id,
+              data.data.actionBy,
+              deleteMonitorSuccess(data.data.monitors)
+            );
         }
-        console.log("Socket io Client Area ", data);
+        console.log("Socket io Client Area Info", data);
       });
 
       socket.on("activate", function (data) {
         if (data.message == "add") {
-          console.log(data);
+          checkAnoUserAction(
+            data.data.room._id,
+            data.data.actionBy,
+            addActivateSuccess(data.data.activate)
+          );
         }
         if (data.message == "delete") {
-          console.log(data);
+          checkAnoUserAction(
+            data.data.room._id,
+            data.data.actionBy,
+            deleteActivateSuccess(data.data.activate._id)
+          );
         }
 
         console.log("Socket io Client Activate ", data);
@@ -173,8 +286,19 @@ const UserProfile = (props) => {
 
       socket.on("room", function (data) {
         if (data.message == "edit") {
+          checkAnoUserAction(
+            data.data.room._id,
+            data.data.actionBy,
+            updateRoomSuccess(data.data.room)
+          );
         }
         if (data.message == "delete") {
+          socket.emit("leave-room", "room" + data.data.room._id);
+          checkAnoUserAction(
+            data.data.room._id,
+            data.data.actionBy,
+            deleteRoomSuccess(data.data.room._id)
+          );
         }
 
         console.log("Socket io Room Info ", data);
@@ -182,13 +306,25 @@ const UserProfile = (props) => {
 
       socket.on("structure", function (data) {
         if (data.message == "add") {
-          console.log(data);
+          checkAnoUserAction(
+            data.data.room._id,
+            data.data.actionBy,
+            addSensorSuccess(data.data.structure)
+          );
         }
         if (data.message == "update") {
-          console.log(data);
+          checkAnoUserAction(
+            data.data.room._id,
+            data.data.actionBy,
+            updateSensorSuccess(data.data.structure)
+          );
         }
         if (data.message == "delete") {
-          console.log(data);
+          checkAnoUserAction(
+            data.data.room._id,
+            data.data.actionBy,
+            deleteSensorSuccess(data.data.structure)
+          );
         }
 
         console.log("Socket io Client Structure ", data);
@@ -333,10 +469,10 @@ class LeftSidebar extends Component {
 }
 const mapStateToProps = (state) => {
   const { user, loading, error } = state.Auth;
-
+  const { currentArea } = state.RoomArea;
   const currentRoom_id = state.RoomList.currentRoom
     ? state.RoomList.currentRoom.room._id
     : null;
-  return { user, loading, error, currentRoom_id };
+  return { user, loading, error, currentRoom_id, currentArea };
 };
 export default connect(mapStateToProps, {})(LeftSidebar);

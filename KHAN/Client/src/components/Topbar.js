@@ -123,6 +123,13 @@ const Topbar = (props) => {
     if (props.user == null) {
       setCurrentRoom(null);
     }
+    return () => {
+      dispatch(getAreaDataFailed(null));
+      dispatch(getCurrentDataFailed(null));
+      dispatch(getSensorDataFailed(null));
+      dispatch(getCubeDataFailed(null));
+      dispatch(getCurrentRoomInfoFailed(null));
+    };
   }, [props.user, props.currentRoom]);
 
   const setCurrent = (obj) => {
