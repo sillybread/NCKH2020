@@ -139,6 +139,8 @@ exports.NoiSuyBaChieu = (data, config) => {
   )
     data.push({ x: xBlock, y: yBlock, z: zBlock, value: avg });
 
+  data = data.filter((dt) => dt.value < 99 && dt.value > -99);
+
   data.map((item) => {
     result[item.x][item.y][item.z] = item.value;
   });
