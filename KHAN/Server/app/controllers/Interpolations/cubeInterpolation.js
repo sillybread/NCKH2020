@@ -324,7 +324,7 @@ exports.NoiSuyBaChieu = (data, config) => {
   let minTemp = Math.min(...tempArray);
   return {
     values: result,
-    max: maxTemp,
-    min: minTemp === maxTemp ? minTemp - 1 : minTemp,
+    max: minTemp === maxTemp ? maxTemp + 1 : maxTemp,
+    min: minTemp,
   };
 };
