@@ -94,6 +94,7 @@ class Helper {
     this.controls = controls;
     this.renderer = renderer;
     this.axesHelper = axesHelper;
+	this.container.innerHTML = "";
     this.container.appendChild(renderer.domElement);
   }
   makeDoor() {
