@@ -14,13 +14,16 @@ import { LineChart } from "react-native-chart-kit";
 import { useSelector, useDispatch } from "react-redux";
 import AreaRoom from "../../components/areaRoom.component";
 import { setCurrentRoom } from "../../redux/actions";
-export default function MyLineChart({ navigation, state }) {
+import { useNavigationState } from "@react-navigation/native";
+export default function MyLineChart(props) {
   const dispatch = useDispatch();
   const myRoom = useSelector((state) => state.RoomList.myRoom);
   const sharedRoom = useSelector((state) => state.RoomList.sharedRoom);
   const [mtemp, setMTemp] = React.useState([]);
   const [stemp, setSTemp] = React.useState([]);
-
+  const screenName = useNavigationState(
+    (state) => state.routes[state.index].name
+  );
   const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = React.useState(new IndexPath(0, 0));
   const [warehouse, setWarehouse] = React.useState([
@@ -55,52 +58,95 @@ export default function MyLineChart({ navigation, state }) {
     }
   }, [selectedIndex]);
 
-  const [areaIndex, setAreaIndex] = React.useState(0);
-  const [dataArray, setDataArray] = React.useState([
-    Math.random(),
-    Math.random(),
-    Math.random(),
-    Math.random(),
-    Math.random(),
-    Math.random(),
-  ]);
+  const [areaIndex, setAreaIndex] = React.useState(null);
+  const [dataArray, setDataArray] = React.useState({
+    datas: [],
+    labels: [],
+  });
   React.useEffect(() => {
-    setDataArray([
-      Math.random(),
-      Math.random(),
-      Math.random(),
-      Math.random(),
-      Math.random(),
-      Math.random(),
-    ]);
-  }, [selectedIndex, areaIndex]);
-  const [data, setData] = React.useState([
-    { id: 0, title: "Khu vực cá ba sa", temperature: -18, status: "decrease" },
-    { id: 1, title: "Khu vực tôm thẻ", temperature: -17, status: "increase" },
-    { id: 2, title: "Khu vực thát lát", temperature: -10, status: "stability" },
-    {
-      id: 3,
-      title: "Khu vực tôm càng xanh",
-      temperature: -1,
-      status: "stability",
-    },
-  ]);
+    if (areaData && areaIndex != null) {
+      console.log(areaIndex);
+      let coppyLable = [...areaData].map((dt) =>
+        dt.areas[areaIndex] ? "khan" : "null"
+      );
+      let copyData = [...areaData].map((dt) =>
+        dt.areas[areaIndex]
+          ? dt.areas[areaIndex].average
+            ? dt.areas[areaIndex].average
+            : dt.areas[areaIndex].value
+          : 0
+      );
+      setDataArray({
+        datas: [...copyData],
+        labels: [...coppyLable],
+      });
+    } else {
+      setAreaIndex(null);
+    }
+  }, [areaIndex]);
+
+  const [data, setData] = React.useState([]);
   const areaData = useSelector((state) => state.RoomData.areaData);
   React.useEffect(() => {
     if (areaData && areaData[0] && areaData[areaData.length - 1].areas[0]) {
-      setData(
-        [...areaData[areaData.length - 1].areas].map((area) => ({
-          id: area._id,
-          title: area.name,
-          status: "stability",
-          temperature:
-            Math.round((area.average ? area.average : area.value) * 100) / 100,
-        }))
-      );
+      if (areaData[areaData.length - 1].areas.length != data.length) {
+        if (areaIndex == null) setAreaIndex(0);
+        setData(
+          [...areaData[areaData.length - 1].areas].map((area, index) => ({
+            id: area._id,
+            index: index,
+            title: area.name,
+            status: "stability",
+            temperature:
+              Math.round((area.average ? area.average : area.value) * 100) /
+              100,
+          }))
+        );
+      } else {
+        if (
+          areaIndex != null &&
+          screenName &&
+          screenName === "LineChart" &&
+          props.parentScreen &&
+          props.parentScreen === "Status"
+        ) {
+          setData(
+            [...areaData[areaData.length - 1].areas].map((area, index) => ({
+              id: area._id,
+              index: index,
+              title: area.name,
+              status: "stability",
+              temperature:
+                Math.round((area.average ? area.average : area.value) * 100) /
+                100,
+            }))
+          );
+
+          let coppyLable = [...areaData].map((dt) =>
+            dt.areas[areaIndex] ? "khan" : "null"
+          );
+          let copyData = [...areaData].map((dt) =>
+            dt.areas[areaIndex]
+              ? dt.areas[areaIndex].average
+                ? dt.areas[areaIndex].average
+                : dt.areas[areaIndex].value
+              : 0
+          );
+          setDataArray({
+            datas: [...copyData],
+            labels: [...coppyLable],
+          });
+        }
+      }
     } else {
       setData([]);
+      setDataArray({
+        datas: [],
+        labels: [],
+      });
+      setAreaIndex(null);
     }
-  }, [areaData]);
+  }, [areaData, props.parentScreen]);
 
   const styles = StyleSheet.create({
     selectInput: { width: "95%", marginTop: 15, marginBottom: 10 },
@@ -146,46 +192,48 @@ export default function MyLineChart({ navigation, state }) {
         </SelectGroup>
       </Select>
       <View style={styles.chartView}>
-        <Text style={styles.chartTitle}>
-          {data && data[areaIndex] && data[areaIndex].title}
-        </Text>
-        <LineChart
-          withInnerLines={false}
-          data={{
-            labels: ["19:02", "19:03", "19:04", "19:05", "19:06", "19:07"],
-            datasets: [
-              {
-                data: dataArray,
+        {areaIndex != null && data && (
+          <Text style={styles.chartTitle}>{data[areaIndex].title}</Text>
+        )}
+        {areaIndex != null && dataArray && dataArray && dataArray.datas[0] && (
+          <LineChart
+            withInnerLines={false}
+            data={{
+              labels: dataArray.labels,
+              datasets: [
+                {
+                  data: dataArray.datas,
+                },
+              ],
+            }}
+            width={Dimensions.get("window").width * 0.9} // from react-native
+            height={Dimensions.get("window").width * 0.5}
+            yAxisLabel="-"
+            yAxisSuffix="°C"
+            yAxisInterval={1} // optional, defaults to 1
+            bezier
+            style={{
+              marginVertical: 15,
+              borderRadius: 5,
+            }}
+            chartConfig={{
+              backgroundColor: "#000000",
+              backgroundGradientFrom: theme["background-basic-color-4"],
+              backgroundGradientTo: theme["background-basic-color-4"],
+              decimalPlaces: 2, // optional, defaults to 2dp
+              color: (lever) => theme["color-primary-default"],
+              labelColor: (lever) => theme["text-basic-color"],
+              style: {
+                borderRadius: 16,
               },
-            ],
-          }}
-          width={Dimensions.get("window").width * 0.9} // from react-native
-          height={Dimensions.get("window").width * 0.5}
-          yAxisLabel="-"
-          yAxisSuffix="°C"
-          yAxisInterval={1} // optional, defaults to 1
-          bezier
-          style={{
-            marginVertical: 15,
-            borderRadius: 5,
-          }}
-          chartConfig={{
-            backgroundColor: "#000000",
-            backgroundGradientFrom: theme["background-basic-color-4"],
-            backgroundGradientTo: theme["background-basic-color-4"],
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (lever) => theme["color-primary-default"],
-            labelColor: (lever) => theme["text-basic-color"],
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: "2",
-              strokeWidth: "4",
-              stroke: theme["color-primary-default"],
-            },
-          }}
-        />
+              propsForDots: {
+                r: "2",
+                strokeWidth: "4",
+                stroke: theme["color-primary-default"],
+              },
+            }}
+          />
+        )}
       </View>
       <View style={styles.srollViewAre}>
         <ScrollView
@@ -198,10 +246,11 @@ export default function MyLineChart({ navigation, state }) {
             data.map((dt) => (
               <AreaRoom
                 data={dt}
-                key={dt.id}
-                focus={dt.id == areaIndex ? true : false}
-                onPressView={(key) => {
-                  setAreaIndex(key);
+                key={dt.index}
+                focus={dt.index === areaIndex ? true : false}
+                onPressView={() => {
+                  console.log(dt.index);
+                  setAreaIndex(dt.index);
                 }}
               />
             ))}

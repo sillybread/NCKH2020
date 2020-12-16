@@ -12,13 +12,23 @@ import {
 } from "@ui-kitten/components";
 import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
+import { useNavigationState } from "@react-navigation/native";
 
 export default function Sensor({ navigation, state }) {
   const theme = useTheme();
   const [data, setData] = React.useState([]);
   const sensorData = useSelector((state) => state.RoomData.sensorData);
+  const screenName = useNavigationState(
+    (state) => state.routes[state.index].name
+  );
+
   React.useEffect(() => {
-    if (sensorData && sensorData.datas) {
+    if (
+      sensorData &&
+      sensorData.datas &&
+      screenName &&
+      screenName === "Sensor"
+    ) {
       setData(
         [...sensorData.datas].map((sr) => ({
           title: sr.name,
@@ -27,7 +37,7 @@ export default function Sensor({ navigation, state }) {
         }))
       );
     }
-  }, [sensorData]);
+  }, [sensorData, screenName]);
 
   const TemperatureValue = (props) => {
     return (

@@ -52,18 +52,19 @@ function Chart(props) {
   const orbitControls = useRef(null);
   const [camera, setCamera] = useState(null);
   const chartView = useRef(null);
+  const chart = useRef(null);
 
   const onContextCreate = async (gl) => {
     console.log("=> onContextCreate");
-    let chart = new nativeChart(null);
-    chart.setConfig(props.config);
-    chart.initWorld(gl);
-    setCamera(chart.camera);
-    chart.makeDoor();
-    chart.makeWireFrame();
-    chart.reCalculationLimit(props.slice);
-    chart.makeFrame();
-    chart.updateChart(props.data);
+    chart.current = new nativeChart(null);
+    chart.current.setConfig(props.config);
+    chart.current.initWorld(gl);
+    setCamera(chart.current.camera);
+    chart.current.makeDoor();
+    chart.current.makeWireFrame();
+    chart.current.reCalculationLimit(props.slice);
+    chart.current.makeFrame();
+    chart.current.updateChart(props.data);
     console.log("onContextCreate =>");
   };
 
@@ -107,6 +108,14 @@ function Chart(props) {
     };
   }, []);
 
+  useEffect(() => {
+    if (chart.current) chart.current.updateChart(props.data);
+  }, [props.data]);
+
+  useEffect(() => {
+    console.log("Change Slice");
+    if (chart.current) chart.current.reCalculationLimit(props.slice);
+  }, [props.slice]);
   return (
     <>
       {console.log("=> Component return")}

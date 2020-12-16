@@ -14,11 +14,15 @@ import {
 } from "@ui-kitten/components";
 import { StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigationState } from "@react-navigation/native";
 
 export default function Notification({ navigation, state }) {
   const theme = useTheme();
   const [data, setData] = React.useState([]);
   const notifications = useSelector((state) => state.Notification.list);
+  const screenName = useNavigationState(
+    (state) => state.routes[state.index].name
+  );
 
   const mapType = {
     WARRING_LOW_TEMPERATURE: {
@@ -49,7 +53,7 @@ export default function Notification({ navigation, state }) {
   };
 
   React.useEffect(() => {
-    if (notifications) {
+    if (notifications && screenName && screenName === "Notification") {
       setData(
         [...notifications].map((nt) => ({
           title: mapType[nt.type].name,
@@ -59,7 +63,7 @@ export default function Notification({ navigation, state }) {
         }))
       );
     }
-  }, [notifications]);
+  }, [notifications, screenName]);
 
   const renderMoreAction = (props) => <MoreAction {...props} />;
   const RenderItemIcon = (props) => <Icon {...props} name={props.name} />;
