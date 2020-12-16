@@ -5,7 +5,7 @@ import {
   GET_CURR_ROOM_SENSOR_MAP,
   UPDATE_SENSOR,
   DELETE_SENSOR,
-} from "./constants";
+} from "../constants";
 
 import {
   addSensorFailed,
@@ -16,7 +16,7 @@ import {
   getRoomStructureSuccess,
   updateSensorFailed,
   updateSensorSuccess,
-} from "./actions";
+} from "../actions";
 
 import { requestApi } from "../../helpers/api";
 

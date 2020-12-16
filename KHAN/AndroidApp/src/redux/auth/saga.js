@@ -8,7 +8,7 @@ import {
   LOGOUT_USER,
   REGISTER_USER,
   FORGET_PASSWORD,
-} from "./constants";
+} from "../constants";
 
 import {
   loginUserSuccess,
@@ -19,15 +19,12 @@ import {
   forgetPasswordFailed,
   setCurrentRoom,
   getCurrentRoomInfoFailed,
-} from "redux/actions";
-import { getNotificationListFailed } from "redux/notification/actions";
-import {
+  getNotificationListFailed,
   getAreaDataFailed,
   getCubeDataFailed,
   getCurrentDataFailed,
   getSensorDataFailed,
-} from "redux/roomData/actions";
-
+} from "../actions";
 /**
  * Sets the session
  * @param {*} user

@@ -8,7 +8,7 @@ import {
   GET_ROOM_LIST,
   SET_CURR_ROOM,
   UPDATE_ROOM,
-} from "./constants";
+} from "../constants";
 
 import {
   getRoomListSuccess,
@@ -21,7 +21,7 @@ import {
   deleteRoomFailed,
   getCurrentRoomInfoSuccess,
   getCurrentRoomInfoFailed,
-} from "./actions";
+} from "../actions";
 
 function* getRoomList({ payload: { user } }) {
   try {

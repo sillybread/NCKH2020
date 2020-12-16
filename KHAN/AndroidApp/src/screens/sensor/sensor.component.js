@@ -11,26 +11,34 @@ import {
   Text,
 } from "@ui-kitten/components";
 import { StyleSheet } from "react-native";
-
-const data = new Array(13).fill({
-  title: "Cảm biến",
-  description: "SENSOR0000",
-  value: -Math.random() * 100,
-});
+import { useSelector } from "react-redux";
 
 export default function Sensor({ navigation, state }) {
   const theme = useTheme();
+  const [data, setData] = React.useState([]);
+  const sensorData = useSelector((state) => state.RoomData.sensorData);
+  React.useEffect(() => {
+    if (sensorData && sensorData.datas) {
+      setData(
+        [...sensorData.datas].map((sr) => ({
+          title: sr.name,
+          status: sr.status,
+          value: Math.round(sr.value * 100) / 100,
+        }))
+      );
+    }
+  }, [sensorData]);
 
   const TemperatureValue = (props) => {
     return (
       <Text category="s1" style={styles.temperature}>
-        {Math.round(props.value * 100) / 100}°C
+        {Math.round(props.value * 100) / 100} °C
       </Text>
     );
   };
-  const renderItemIcon = (props) => (
-    <Icon {...props} name="info" fill={theme["color-primary-default"]} />
-  );
+  const RenderItemIcon = (props) => {
+    return <Icon {...props} pack="feather" name="cpu" />;
+  };
 
   const renderCheckIcon = (props) => (
     <Icon
@@ -47,14 +55,27 @@ export default function Sensor({ navigation, state }) {
     },
   });
 
-  const renderItem = ({ item, index }) => (
-    <ListItem
-      title={`${item.title} ${index + 1}`}
-      description={`${item.description} ${index + 1}`}
-      accessoryLeft={renderItemIcon}
-      accessoryRight={() => <TemperatureValue value={item.value} />}
-    />
-  );
+  const renderItem = ({ item, index }) => {
+    const mapStatus = {
+      RUNNING: { name: "Đang chạy", color: "success" },
+      ON: { name: "Đang bật", color: "primary" },
+      OFF: { name: "Đang tắt", color: "danger" },
+      USSING: { name: "Đã thêm vào kho", color: "warning" },
+    };
+
+    return (
+      <ListItem
+        title={() => <Text category="s1">{item.title}</Text>}
+        description={() => (
+          <Text category="p2" status={mapStatus[item.status].color}>
+            {mapStatus[item.status].name}
+          </Text>
+        )}
+        accessoryLeft={RenderItemIcon}
+        accessoryRight={() => <TemperatureValue value={item.value} />}
+      />
+    );
+  };
 
   return (
     <Layout style={{ flex: 1 }} level="2">

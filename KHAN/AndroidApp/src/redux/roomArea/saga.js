@@ -9,7 +9,7 @@ import {
   GET_AREA_INFO,
   UPDATE_AREA,
   UPDATE_MONITOR,
-} from "./constants";
+} from "../constants";
 
 import {
   addAreaFailed,
@@ -28,7 +28,7 @@ import {
   updateAreaSuccess,
   updateMonitorFailed,
   updateMonitorSuccess,
-} from "./actions";
+} from "../actions";
 import { requestApi } from "../../helpers/api";
 
 function* GetAreasApi({ payload: { user, room_id } }) {

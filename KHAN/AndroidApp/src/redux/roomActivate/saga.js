@@ -5,9 +5,7 @@ import {
   getCubeData,
   getCurrentData,
   getSensorData,
-} from "redux/roomData/actions";
-import { getRoomStructure } from "redux/roomStructrure/actions";
-import {
+  getRoomStructure,
   getActivatesFailed,
   getActivatesSuccess,
   getStationsSuccess,
@@ -16,13 +14,13 @@ import {
   addActivateFailed,
   deleteActivateSuccess,
   deleteActivateFailed,
-} from "./actions";
+} from "../actions";
 import {
   ADD_ACTIVATE,
   DELETE_ACTIVATE,
   GET_ACTIVATES,
   GET_STATIONS,
-} from "./constants";
+} from "../constants";
 
 function* getActivatesApi({ payload: { user, room_id } }) {
   try {

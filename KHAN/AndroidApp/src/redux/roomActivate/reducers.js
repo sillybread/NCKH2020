@@ -1,4 +1,3 @@
-import f from "redux/appMenu/utils";
 import {
   GET_ACTIVATES,
   GET_ACTIVATES_SUCCESS,

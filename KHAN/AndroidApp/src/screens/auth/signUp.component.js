@@ -51,11 +51,11 @@ const SignUp = ({ navigation }) => {
       setFirstRender(true);
       setVisible2(true);
     }
-    if (firstRender && state.error && !state.loading) {
+    if (firstRender && state.errorRegister && !state.loading) {
       setFirstRender(true);
       setVisibles(true);
     }
-  }, [state.loading]);
+  }, [state.loading, state.errorRegister]);
 
   const LoadingIndicator = (props) => {
     if (props.isLoading)
@@ -90,7 +90,7 @@ const SignUp = ({ navigation }) => {
       <MyAlert
         status="danger"
         title="Lỗi"
-        text={state.error}
+        text={state.errorRegister}
         visible={visibles}
         setVisible={(value) => setVisibles(value)}
       ></MyAlert>

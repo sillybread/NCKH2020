@@ -6,7 +6,7 @@ import {
   GET_USER_ACCESS,
   REPLY_ACCESS,
   UPDATE_ACCESS,
-} from "./constants";
+} from "../constants";
 
 import {
   AddAccessFailed,
@@ -19,7 +19,7 @@ import {
   replyAccessSuccess,
   updateAccessFailed,
   updateAccessSuccess,
-} from "./actions";
+} from "../actions";
 
 import { requestApi } from "../../helpers/api";
 

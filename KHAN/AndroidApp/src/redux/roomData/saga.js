@@ -5,7 +5,7 @@ import {
   GET_CUBE_DATA,
   GET_CURRENT_DATA,
   GET_SENSOR_DATA,
-} from "./constants";
+} from "../constants";
 
 import {
   getAreaDataSuccess,
@@ -16,7 +16,7 @@ import {
   getSensorDataFailed,
   getCubeDataSuccess,
   getCubeDataFailed,
-} from "./actions";
+} from "../actions";
 
 import { requestApi } from "../../helpers/api";
 

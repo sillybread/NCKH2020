@@ -55,8 +55,8 @@ const SignIn = ({ navigation }) => {
   };
 
   React.useEffect(() => {
-    setVisible(state.error && !state.loading);
-  }, [state.loading]);
+    setVisible(state.errorLogin && !state.loading);
+  }, [state.loading, state.errorLogin]);
 
   const renderIcon = (props) => (
     <TouchableWithoutFeedback onPress={toggleSecureEntry}>
@@ -69,7 +69,7 @@ const SignIn = ({ navigation }) => {
       <MyAlert
         status="danger"
         title="Lỗi"
-        text={state.error}
+        text={state.errorLogin}
         visible={visible}
         setVisible={(value) => setVisible(value)}
       ></MyAlert>

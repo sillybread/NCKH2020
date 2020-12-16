@@ -4,90 +4,8 @@ import OrbitControlsView from "expo-three-orbit-controls";
 import React, { useState, useRef, useEffect } from "react";
 import * as THREE from "three";
 import perfectChart from "./perfectChart.js";
-
-let Config = {
-  size: {
-    x: 3,
-    y: 3,
-    z: 3,
-    tilesize: 5,
-  },
-  door: {
-    show: true,
-    direction: "A", //"4 hướng là 4 cạnh của hình chữ nhật có thể đánh dấu A B C D"
-  },
-  "axis-labels": {
-    "axis-x": {
-      show: true,
-      list: [0, 5, 12, 19],
-    },
-    "axis-y": {
-      show: true,
-      list: [2, 6],
-    },
-    "axis-z": {
-      show: true,
-      list: [5, 9],
-    },
-  },
-};
-
-let _3rd = () => {
-  let iMin = 999;
-  let iMax = -999;
-  let rd;
-  return {
-    values: new Array(50).fill(0).map((x) =>
-      new Array(23).fill(0).map((x) =>
-        new Array(24).fill(0).map((x) => {
-          rd = Math.random() * 1024;
-          if (rd < iMin) iMin = rd;
-          if (rd > iMax) iMax = rd;
-          return rd;
-        })
-      )
-    ),
-    min: iMin,
-    max: iMax,
-  };
-};
-let Data = {
-  values: [
-    [
-      [0, 1, 2],
-      [0, 1, 2],
-      [0, 1, 2],
-    ],
-    [
-      [0, 1, 2],
-      [0, 1, 2],
-      [0, 1, 2],
-    ],
-    [
-      [0, 1, 2],
-      [0, 1, 2],
-      [0, 1, 2],
-    ],
-  ],
-  min: 0,
-  max: 2,
-};
-
-let Slice = {
-  origin: null,
-  destination: null,
-};
-
-export default function App() {
-  //const [s, setS] = new useState(null)
-
-  useEffect(() => {}, []);
-
-  return (
-    <>
-      <Chart config={Config} data={Data} slice={Slice} />
-    </>
-  );
+export default function Tchart(props) {
+  return <Chart config={props.config} data={props.data} slice={props.slice} />;
 }
 
 class nativeChart extends perfectChart {
@@ -105,9 +23,9 @@ class nativeChart extends perfectChart {
     camera.up.set(0, 0, 1);
     const sz = this.config.size;
     camera.position.set(
-      (sz.x + 5) * sz.tilesize,
-      (sz.y + 5) * sz.tilesize,
-      (sz.z + 5) * sz.tilesize
+      (sz.x + 25) * sz.tilesize,
+      (sz.y + 25) * sz.tilesize,
+      (sz.z + 25) * sz.tilesize
     );
 
     //make axesHelper

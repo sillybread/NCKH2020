@@ -11,14 +11,50 @@ import {
 import React from "react";
 import { Dimensions, ScrollView, View, StyleSheet, Alert } from "react-native";
 import { LineChart } from "react-native-chart-kit";
+import { useSelector, useDispatch } from "react-redux";
 import AreaRoom from "../../components/areaRoom.component";
+import { setCurrentRoom } from "../../redux/actions";
 export default function MyLineChart({ navigation, state }) {
+  const dispatch = useDispatch();
+  const myRoom = useSelector((state) => state.RoomList.myRoom);
+  const sharedRoom = useSelector((state) => state.RoomList.sharedRoom);
+  const [mtemp, setMTemp] = React.useState([]);
+  const [stemp, setSTemp] = React.useState([]);
+
   const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = React.useState(new IndexPath(0, 0));
   const [warehouse, setWarehouse] = React.useState([
     ["Kho 1", "Kho 2"],
     ["Kho 3"],
   ]);
+  React.useEffect(() => {
+    let a = [...warehouse[0]];
+    let b = [...warehouse[1]];
+    if (myRoom) {
+      a = [...myRoom].map((r) => r.room.name);
+      setMTemp(a);
+    }
+    if (sharedRoom) {
+      b = [...sharedRoom].map((r) => r.room.name);
+      setSTemp(b);
+    }
+    setWarehouse([[...a], [...b]]);
+
+    console.log([[...a], [...b]]);
+  }, [myRoom, sharedRoom]);
+  React.useEffect(() => {
+    console.log("run");
+    if (selectedIndex.section === 0 && myRoom && myRoom[selectedIndex.row]) {
+      dispatch(setCurrentRoom(myRoom[selectedIndex.row]));
+    } else if (
+      selectedIndex.section === 1 &&
+      sharedRoom &&
+      sharedRoom[selectedIndex.row]
+    ) {
+      dispatch(setCurrentRoom(sharedRoom[selectedIndex.row]));
+    }
+  }, [selectedIndex]);
+
   const [areaIndex, setAreaIndex] = React.useState(0);
   const [dataArray, setDataArray] = React.useState([
     Math.random(),
@@ -38,7 +74,7 @@ export default function MyLineChart({ navigation, state }) {
       Math.random(),
     ]);
   }, [selectedIndex, areaIndex]);
-  const data = [
+  const [data, setData] = React.useState([
     { id: 0, title: "Khu vực cá ba sa", temperature: -18, status: "decrease" },
     { id: 1, title: "Khu vực tôm thẻ", temperature: -17, status: "increase" },
     { id: 2, title: "Khu vực thát lát", temperature: -10, status: "stability" },
@@ -48,7 +84,23 @@ export default function MyLineChart({ navigation, state }) {
       temperature: -1,
       status: "stability",
     },
-  ];
+  ]);
+  const areaData = useSelector((state) => state.RoomData.areaData);
+  React.useEffect(() => {
+    if (areaData && areaData[0] && areaData[areaData.length - 1].areas[0]) {
+      setData(
+        [...areaData[areaData.length - 1].areas].map((area) => ({
+          id: area._id,
+          title: area.name,
+          status: "stability",
+          temperature:
+            Math.round((area.average ? area.average : area.value) * 100) / 100,
+        }))
+      );
+    } else {
+      setData([]);
+    }
+  }, [areaData]);
 
   const styles = StyleSheet.create({
     selectInput: { width: "95%", marginTop: 15, marginBottom: 10 },
@@ -83,15 +135,20 @@ export default function MyLineChart({ navigation, state }) {
         onSelect={(index) => setSelectedIndex(index)}
       >
         <SelectGroup title="Kho của tôi">
-          <SelectItem title="Kho 1" key="A" />
-          <SelectItem title="Kho 2" key="B" />
+          {mtemp.map((t) => (
+            <SelectItem title={t} key={t} />
+          ))}
         </SelectGroup>
         <SelectGroup title="Kho được chia sẽ">
-          <SelectItem title="Kho 3" key="C" />
+          {stemp.map((t) => (
+            <SelectItem title={t} key={t} />
+          ))}
         </SelectGroup>
       </Select>
       <View style={styles.chartView}>
-        <Text style={styles.chartTitle}>{data[areaIndex].title}</Text>
+        <Text style={styles.chartTitle}>
+          {data && data[areaIndex] && data[areaIndex].title}
+        </Text>
         <LineChart
           withInnerLines={false}
           data={{
@@ -136,16 +193,18 @@ export default function MyLineChart({ navigation, state }) {
           contentContainerStyle={{ paddingHorizontal: 10 }}
           showsHorizontalScrollIndicator={false}
         >
-          {data.map((dt) => (
-            <AreaRoom
-              data={dt}
-              key={dt.id}
-              focus={dt.id == areaIndex ? true : false}
-              onPressView={(key) => {
-                setAreaIndex(key);
-              }}
-            />
-          ))}
+          {data &&
+            data[0] &&
+            data.map((dt) => (
+              <AreaRoom
+                data={dt}
+                key={dt.id}
+                focus={dt.id == areaIndex ? true : false}
+                onPressView={(key) => {
+                  setAreaIndex(key);
+                }}
+              />
+            ))}
         </ScrollView>
       </View>
     </Layout>

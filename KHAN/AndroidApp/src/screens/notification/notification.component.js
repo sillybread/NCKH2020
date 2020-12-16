@@ -10,25 +10,59 @@ import {
   OverflowMenu,
   TopNavigationAction,
   TopNavigation,
-  Button,
+  Text,
 } from "@ui-kitten/components";
 import { StyleSheet } from "react-native";
-
-const data = new Array(13).fill({
-  title: "Cảnh báo nhiệt độ",
-  description: "kho lạnh số 1/ khu vực",
-});
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Notification({ navigation, state }) {
   const theme = useTheme();
+  const [data, setData] = React.useState([]);
+  const notifications = useSelector((state) => state.Notification.list);
+
+  const mapType = {
+    WARRING_LOW_TEMPERATURE: {
+      name: "Cảnh báo nhiệt độ thấp",
+      icon: "trending-down",
+      color: "warning",
+    },
+    WARRING_HIGH_TEMPERATURE: {
+      name: "Cảnh báo nhiệt độ cao",
+      icon: "trending-up",
+      color: "warning",
+    },
+    "Access-Invite": {
+      name: "Lời mời kết bạn",
+      icon: "mail",
+      color: "success",
+    },
+    SUCCESS: {
+      name: "Thành công",
+      icon: "check-circle",
+      color: "success",
+    },
+    ERRO: {
+      name: "Lỗi",
+      icon: "alert-triangle",
+      color: "danger",
+    },
+  };
+
+  React.useEffect(() => {
+    if (notifications) {
+      setData(
+        [...notifications].map((nt) => ({
+          title: mapType[nt.type].name,
+          description: nt.content,
+          icon: mapType[nt.type].icon,
+          color: mapType[nt.type].color,
+        }))
+      );
+    }
+  }, [notifications]);
+
   const renderMoreAction = (props) => <MoreAction {...props} />;
-  const renderItemIcon = (props) => (
-    <Icon
-      {...props}
-      name="alert-triangle"
-      fill={theme["color-danger-default"]}
-    />
-  );
+  const RenderItemIcon = (props) => <Icon {...props} name={props.name} />;
 
   const renderCheckIcon = (props) => (
     <Icon
@@ -42,9 +76,13 @@ export default function Notification({ navigation, state }) {
 
   const renderItem = ({ item, index }) => (
     <ListItem
-      title={`${item.title} ${index + 1}`}
-      description={`${item.description} ${index + 1}`}
-      accessoryLeft={renderItemIcon}
+      title={() => (
+        <Text category="s1" status={item.color}>
+          {item.title}
+        </Text>
+      )}
+      description={() => <Text category="p2">{item.description}</Text>}
+      accessoryLeft={(props) => <RenderItemIcon {...props} name={item.icon} />}
       accessoryRight={renderMoreAction}
     />
   );

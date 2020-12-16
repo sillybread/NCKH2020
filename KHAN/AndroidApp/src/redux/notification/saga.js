@@ -4,7 +4,7 @@ import {
   GET_NOTIFICATION_LIST,
   DELETE_NOTIFICATION,
   DELETE_ALL_NOTIFICATION,
-} from "./constants";
+} from "../constants";
 
 import {
   getNotificationListSuccess,
@@ -13,7 +13,7 @@ import {
   deleteNotificationFailed,
   deleteAllNotificationSuccess,
   deleteAllNotificationFailed,
-} from "./actions";
+} from "../actions";
 
 function* getNotificationList({ payload: { user } }) {
   const res = yield call(requestApi, {
