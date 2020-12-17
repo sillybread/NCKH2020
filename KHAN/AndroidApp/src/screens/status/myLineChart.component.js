@@ -15,6 +15,8 @@ import { useSelector, useDispatch } from "react-redux";
 import AreaRoom from "../../components/areaRoom.component";
 import { setCurrentRoom } from "../../redux/actions";
 import { useNavigationState } from "@react-navigation/native";
+import { SortTimeToString } from "../../helpers/datetimeCover";
+
 export default function MyLineChart(props) {
   const dispatch = useDispatch();
   const myRoom = useSelector((state) => state.RoomList.myRoom);
@@ -67,7 +69,7 @@ export default function MyLineChart(props) {
     if (areaData && areaIndex != null) {
       console.log(areaIndex);
       let coppyLable = [...areaData].map((dt) =>
-        dt.areas[areaIndex] ? "khan" : "null"
+        dt.areas[areaIndex] ? SortTimeToString(dt.time) : "null"
       );
       let copyData = [...areaData].map((dt) =>
         dt.areas[areaIndex]
@@ -123,7 +125,7 @@ export default function MyLineChart(props) {
           );
 
           let coppyLable = [...areaData].map((dt) =>
-            dt.areas[areaIndex] ? "khan" : "null"
+            dt.areas[areaIndex] ? SortTimeToString(dt.time) : "null"
           );
           let copyData = [...areaData].map((dt) =>
             dt.areas[areaIndex]
