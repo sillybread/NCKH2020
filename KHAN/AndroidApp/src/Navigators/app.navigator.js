@@ -1,4 +1,3 @@
-import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthNavigator from "./auth.navigator";
 import MainNavigator from "./main.navigator";
@@ -38,10 +37,61 @@ import {
   AddAccessSuccess,
   deleteAccessSuccess,
 } from "../redux/actions";
+
+////////////////////////////////
+
+import Constants from "expo-constants";
+import * as Notifications from "expo-notifications";
+import * as Permissions from "expo-permissions";
+import React, { useState, useEffect, useRef } from "react";
+import { Text, View, Button, Platform } from "react-native";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
+/////////////
+
 var io = require("socket.io-client");
 const { BASE_URL } = require("../constants/apiConfig");
 
 function AppNavigator(props) {
+  ////////////////////////////////
+
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) =>
+      setExpoPushToken(token)
+    );
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        setNotification(notification);
+      }
+    );
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        console.log(response);
+      }
+    );
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    };
+  }, []);
+
+  /////////////////////////////////////
+
   const state = useSelector((state) => state.Auth);
   const currentRoom = useSelector((state) => state.RoomList.currentRoom);
   const webSocket = React.useRef(null);
@@ -139,6 +189,7 @@ function AppNavigator(props) {
         socket.on("notification", function (data) {
           if (data.message == "add") {
             dispatch(pushNotification(data.data));
+            schedulePushNotification(data.data).then();
           }
           if (data.message == "update") {
             dispatch(updateNotification(data.data._id, data.data));
@@ -270,5 +321,77 @@ function AppNavigator(props) {
     </NavigationContainer>
   );
 }
+const mapType = {
+  WARRING_LOW_TEMPERATURE: {
+    name: "Cảnh báo nhiệt độ thấp",
+    icon: "trending-down",
+    color: "warning",
+  },
+  WARRING_HIGH_TEMPERATURE: {
+    name: "Cảnh báo nhiệt độ cao",
+    icon: "trending-up",
+    color: "warning",
+  },
+  "Access-Invite": {
+    name: "Lời mời kết bạn",
+    icon: "mail",
+    color: "success",
+  },
+  SUCCESS: {
+    name: "Thành công",
+    icon: "check-circle",
+    color: "success",
+  },
+  ERRO: {
+    name: "Lỗi",
+    icon: "alert-triangle",
+    color: "danger",
+  },
+};
+async function schedulePushNotification(data) {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "Quản lý nhiệt độ kho lạnh",
+      body: data.content,
+      data: { data: data._id },
+    },
+    trigger: { seconds: 1 },
+  });
+}
+///
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    );
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F",
+    });
+  }
+
+  return token;
+}
+
+/////
 
 export default AppNavigator;

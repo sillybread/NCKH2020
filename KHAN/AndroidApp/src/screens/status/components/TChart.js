@@ -4,6 +4,7 @@ import OrbitControlsView from "expo-three-orbit-controls";
 import React, { useState, useRef, useEffect } from "react";
 import * as THREE from "three";
 import perfectChart from "./perfectChart.js";
+
 export default function Tchart(props) {
   return <Chart config={props.config} data={props.data} slice={props.slice} />;
 }
@@ -14,7 +15,7 @@ class nativeChart extends perfectChart {
     const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x151a30);
+    scene.background = new THREE.Color("#fafafa");
 
     const renderer = new Renderer({ gl });
     renderer.setSize(width, height);

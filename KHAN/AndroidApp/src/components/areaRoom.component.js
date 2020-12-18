@@ -40,12 +40,20 @@ export default function AreaRoom(props) {
   return (
     <Pressable onPress={onPressView}>
       <View style={getTheme}>
-        <Text style={styles.title} category="s1">
+        <Text
+          style={styles.title}
+          status={props.focus ? "control" : null}
+          category="s1"
+        >
           {props.data.title}
         </Text>
         <View style={styles.horizontalContent}>
           <MyIcon type={props.data.status} />
-          <Text style={styles.temperature} category="h6">
+          <Text
+            style={styles.temperature}
+            status={props.focus ? "control" : null}
+            category="h6"
+          >
             {props.data.temperature + "°C"}
           </Text>
         </View>

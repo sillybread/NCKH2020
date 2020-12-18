@@ -120,7 +120,7 @@ class perfectChart {
   initWorld() {
     //console.info("makeWorld");
     let e = new THREE.Scene();
-    e.background = new THREE.Color(15663086);
+    e.background = new THREE.Color("#ffffff");
     let t = new THREE.PerspectiveCamera(
       60,
       this.container.clientWidth / this.container.clientHeight,
@@ -210,7 +210,7 @@ class perfectChart {
         r = 8 * t.tilesize,
         o = 2 * t.tilesize,
         c = 1 * t.tilesize,
-        l = new THREE.ArrowHelper(s.normalize(), a, r, 0xffffff, o, c);
+        l = new THREE.ArrowHelper(s.normalize(), a, r, 0x000000, o, c);
       l.up.set(0, 0, 1);
       this.scene.add(l);
     }

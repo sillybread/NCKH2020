@@ -2,7 +2,7 @@
 import { TOGGLE_THEME } from "../constants";
 
 const INIT_STATE = {
-  theme: "dark",
+  theme: "light",
 };
 
 const Layout = (state = INIT_STATE, action) => {

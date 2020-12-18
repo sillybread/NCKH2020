@@ -31,7 +31,7 @@ export default function Application() {
 const mainStyle = StyleService.create({
   droidSafeArea: {
     flex: 1,
-    backgroundColor: "#2c3e50",
+    backgroundColor: "#ffffff",
     paddingTop: Platform.OS === "android" ? 25 : 0,
   },
 });
