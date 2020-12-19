@@ -88,10 +88,6 @@ const statusRoutes = {
   path: "/Status",
   name: "Giám sát",
   icon: FeatherIcon.Activity,
-  badge: {
-    variant: "success",
-    text: "1",
-  },
   component: Status,
   roles: ["Owner", "Manager", "Viewer"],
   route: PrivateRoute,
