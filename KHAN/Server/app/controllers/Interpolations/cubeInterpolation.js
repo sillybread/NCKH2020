@@ -132,7 +132,7 @@ exports.NoiSuyBaChieu = (data, config) => {
     data.push({ x: xBlock, y: yBlock, z: zBlock, value: avg });
 
   data = data.filter((dt) => dt.value < 99 && dt.value > -99);
-  let tempArray = copyData.map((item) => {
+  let tempArray = data.map((item) => {
     result[item.x][item.y][item.z] = item.value;
     return item.value;
   });
@@ -315,7 +315,7 @@ exports.NoiSuyBaChieu = (data, config) => {
     }
   }
   let maxTemp = Math.max(...tempArray);
-  console.log(tempArray);
+  /* console.log(tempArray); */
   let minTemp = Math.min(...tempArray);
 
   return {
