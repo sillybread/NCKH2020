@@ -116,7 +116,7 @@ const AddUser = (props) => {
         </Card>
         <ModalFooter>
           <Button
-            disabled={selectedUsers && selectedUsers.length === 0}
+            disabled={selectedUsers ? selectedUsers.length === 0 : true}
             color={state.color}
             onClick={() => {
               props.submitAdd(selectedUsers, role.value);
