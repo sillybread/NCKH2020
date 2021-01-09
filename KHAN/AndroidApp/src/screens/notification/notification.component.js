@@ -15,11 +15,14 @@ import {
 import { StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigationState } from "@react-navigation/native";
+import { deleteAllNotification } from "../../redux/actions";
 
 export default function Notification({ navigation, state }) {
   const theme = useTheme();
   const [data, setData] = React.useState([]);
   const notifications = useSelector((state) => state.Notification.list);
+  const auth = useSelector((state) => state.Auth);
+  const dispatch = useDispatch();
   const screenName = useNavigationState(
     (state) => state.routes[state.index].name
   );
@@ -76,7 +79,14 @@ export default function Notification({ navigation, state }) {
     />
   );
 
-  const renderTopBar = () => <TopNavigationAction icon={renderCheckIcon} />;
+  const renderTopBar = () => (
+    <TopNavigationAction
+      icon={renderCheckIcon}
+      onPress={() => {
+        dispatch(deleteAllNotification(auth.user));
+      }}
+    />
+  );
 
   const renderItem = ({ item, index }) => (
     <ListItem
